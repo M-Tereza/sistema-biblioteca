@@ -3,9 +3,9 @@ import React from 'react';
 import ListagemClientes from './views/listagem-clientes';
 import ListagemExemplares from './views/listagem-exemplares';
 import ListagemMultas from './views/listagem-multas';
+import ListagemObras from './views/listagem-obras';
 
 
-import Login from './views/login';
 import CadastroCliente from './views/cadastro-cliente';
 import CadastroObra from './views/cadastro-obra';
 import CadastroExemplar from './views/cadastro-exemplar';
@@ -18,7 +18,6 @@ function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<Login />} />
         <Route
           path='/cadastro-cliente/:idParam?'
           element={<CadastroCliente />}
