@@ -7,6 +7,7 @@ import ListagemMultas from './views/listagem-multas';
 
 import Login from './views/login';
 import CadastroCliente from './views/cadastro-cliente';
+import CadastroObra from './views/cadastro-obra';
 import CadastroExemplar from './views/cadastro-exemplar';
 import CadastroMulta from './views/cadastro-multa';
 
@@ -23,6 +24,10 @@ function Rotas(props) {
           element={<CadastroCliente />}
         />
         <Route
+          path='/cadastro-obra/:idParam?'
+          element={<CadastroObra />}
+        />
+        <Route
           path='/cadastro-exemplar/:idParam?'
           element={<CadastroExemplar />}
         />
@@ -32,6 +37,7 @@ function Rotas(props) {
         />
 
         <Route path='/listagem-clientes' element={<ListagemClientes />} />
+         <Route path='/listagem-obras' element={<ListagemObras />} />
         <Route path='/listagem-exemplares' element={<ListagemExemplares />} />
         <Route path='/listagem-multas' element={<ListagemMultas />} />
 
