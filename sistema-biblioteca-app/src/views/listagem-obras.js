@@ -16,17 +16,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/clientes`;
+const baseURL = `${BASE_URL}/obras`;
 
-function ListagemClientes() {
+function ListagemObras() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-clientes`);
+    navigate(`/cadastro-obras`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-clientes/${id}`);
+    navigate(`/cadastro-obras/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemClientes() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Cliente excluído com sucesso!`);
+        mensagemSucesso(`Obra excluída com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemClientes() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o cliente`);
+        mensagemErro(`Erro ao excluir a obra`);
       });
   }
 
@@ -62,7 +62,7 @@ function ListagemClientes() {
 
   return (
     <div className='container'>
-      <Card title='Listagem de Clientes'>
+      <Card title='Listagem de Obras'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
@@ -76,33 +76,29 @@ function ListagemClientes() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>Nome</th>
-                    <th scope='col'>CPF</th>
-                    <th scope='col'>CEP</th>
-                    <th scope='col'>Rua</th>
-                    <th scope='col'>Número</th>
-                    <th scope='col'>Bairro</th>
-                    <th scope='col'>Complemento</th>
-                    <th scope='col'>Data de Nascimento</th>
-                    <th scope='col'>Telefone</th>
-                    <th scope='col'>Cidade</th>
-                    <th scope='col'>Estado</th>
+                    <th scope='col'>Genero</th>
+                    <th scope='col'>Seção</th>
+                    <th scope='col'>Editora</th>
+                    <th scope='col'>Idioma</th>
+                    <th scope='col'>Título</th>
+                    <th scope='col'>ISBN</th>
+                    <th scope='col'>Edição</th>
+                    <th scope='col'>Autor</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.nome}</td>
-                      <td>{dado.cpf}</td>
-                      <td>{dado.cep}</td>
-                      <td>{dado.rua}</td>
-                      <td>{dado.numero}</td>
-                      <td>{dado.bairro}</td>
-                      <td>{dado.complemento}</td>
-                      <td>{dado.dataNascimento}</td>
-                      <td>{dado.telefone}</td>
-                      <td>{dado.cidade}</td>
-                      <td>{dado.estado}</td>
+                      <td>{dado.genero}</td>
+                      <td>{dado.secao}</td>
+                      <td>{dado.login}</td>
+                      <td>{dado.editora}</td>
+                      <td>{dado.idioma}</td>
+                      <td>{dado.titulo}</td>
+                      <td>{dado.isbn}</td>
+                      <td>{dado.edicao}</td>
+                      <td>{dado.autor}</td>
+                      
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
@@ -131,4 +127,4 @@ function ListagemClientes() {
   );
 }
 
-export default ListagemClientes;
+export default ListagemObras;
