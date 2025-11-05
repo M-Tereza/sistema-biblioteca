@@ -71,7 +71,7 @@ function ListagemObras() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Usuário
+                Nova Obra
               </button>
               <table className='table table-hover'>
                 <thead>

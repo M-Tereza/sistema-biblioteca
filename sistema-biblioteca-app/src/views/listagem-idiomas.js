@@ -16,17 +16,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/multas`;
+const baseURL = `${BASE_URL}/idiomas`;
 
-function ListagemMultas() {
+function ListagemIdiomas() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-multas`);
+    navigate(`/cadastro-idiomas`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-multas/${id}`);
+    navigate(`/cadastro-idiomas/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemMultas() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Multa excluída com sucesso!`);
+        mensagemSucesso(`Idioma excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemMultas() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir a multa`);
+        mensagemErro(`Erro ao excluir o idioma`);
       });
   }
 
@@ -62,7 +62,7 @@ function ListagemMultas() {
 
   return (
     <div className='container'>
-      <Card title='Listagem de Multas'>
+      <Card title='Listagem de Idiomas'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
@@ -71,22 +71,18 @@ function ListagemMultas() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Multa
+                Novo Idioma
               </button>
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>Valor</th>
-                    <th scope='col'>Nome do Cliente</th>
-                    <th scope='col'>Status</th>
+                    <th scope='col'>Idioma</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.valor}</td>
-                      <td>{dado.nomeCliente}</td>
-                      <td>{dado.status}</td>
+                      <td>{dado.idioma}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
@@ -115,4 +111,4 @@ function ListagemMultas() {
   );
 }
 
-export default ListagemMultas;
+export default ListagemIdiomas;

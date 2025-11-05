@@ -1,32 +1,32 @@
-import React from 'react';
+import React from "react";
 
-import Card from '../components/card';
+import Card from "../components/card";
 
-import { mensagemSucesso, mensagemErro } from '../components/toastr';
+import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
-import '../custom.css';
+import "../custom.css";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import Stack from '@mui/material/Stack';
-import { IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import Stack from "@mui/material/Stack";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import axios from "axios";
+import { BASE_URL } from "../config/axios";
 
-const baseURL = `${BASE_URL}/multas`;
+const baseURL = `${BASE_URL}/secoes`;
 
-function ListagemMultas() {
+function ListagemSecoes() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-multas`);
+    navigate(`/cadastro-secoes`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-multas/${id}`);
+    navigate(`/cadastro-secoes/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -37,10 +37,10 @@ function ListagemMultas() {
     console.log(url);
     await axios
       .delete(url, data, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       })
       .then(function (response) {
-        mensagemSucesso(`Multa excluída com sucesso!`);
+        mensagemSucesso(`Seção excluída com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemMultas() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir a multa`);
+        mensagemErro(`Erro ao excluir a seção`);
       });
   }
 
@@ -61,42 +61,38 @@ function ListagemMultas() {
   if (!dados) return null;
 
   return (
-    <div className='container'>
-      <Card title='Listagem de Multas'>
-        <div className='row'>
-          <div className='col-lg-12'>
-            <div className='bs-component'>
+    <div className="container">
+      <Card title="Listagem de Autores">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="bs-component">
               <button
-                type='button'
-                className='btn btn-warning'
+                type="button"
+                className="btn btn-warning"
                 onClick={() => cadastrar()}
               >
-                Novo Multa
+                Nova Seção
               </button>
-              <table className='table table-hover'>
+              <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope='col'>Valor</th>
-                    <th scope='col'>Nome do Cliente</th>
-                    <th scope='col'>Status</th>
+                    <th scope="col">Nome</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.valor}</td>
-                      <td>{dado.nomeCliente}</td>
-                      <td>{dado.status}</td>
+                      <td>{dado.nome}</td>
                       <td>
-                        <Stack spacing={1} padding={0} direction='row'>
+                        <Stack spacing={1} padding={0} direction="row">
                           <IconButton
-                            aria-label='edit'
+                            aria-label="edit"
                             onClick={() => editar(dado.id)}
                           >
                             <EditIcon />
                           </IconButton>
                           <IconButton
-                            aria-label='delete'
+                            aria-label="delete"
                             onClick={() => excluir(dado.id)}
                           >
                             <DeleteIcon />
@@ -106,7 +102,7 @@ function ListagemMultas() {
                     </tr>
                   ))}
                 </tbody>
-              </table>{' '}
+              </table>{" "}
             </div>
           </div>
         </div>
@@ -115,4 +111,4 @@ function ListagemMultas() {
   );
 }
 
-export default ListagemMultas;
+export default ListagemSecoes;

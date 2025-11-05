@@ -123,5 +123,78 @@
       "nome": "Cliente 3",
       "status": "Pendente"
     }
+  ],
+  "editoras": [
+    {
+      "id": 1,
+      "nome": "Editora 01",
+      "cnpj": "111111111"
+    },
+    {
+      "id": 2,
+      "nome": "Editora 2",
+      "cnpj": "111111111"
+    },
+    {
+      "id": 3,
+      "nome": "Editora 3",
+      "cnpj": "111111111"
+    }
+  ],
+  "idiomas": [
+    {
+      "id": 1,
+      "nome": "Idioma 01"
+    },
+    {
+      "id": 2,
+      "nome": "Idioma 2"
+    },
+    {
+      "id": 3,
+      "nome": "Idioma 3"
+    }
+  ],
+  "secoes": [
+    {
+      "id": 1,
+      "nome": "Seção 1"
+    },
+    {
+      "id": 2,
+      "nome": "Seção 2"
+    },
+    {
+      "id": 3,
+      "nome": "Seção 3"
+    }
+  ],
+  "autores": [
+    {
+      "id": 1,
+      "nome": "Autor 1"
+    },
+    {
+      "id": 2,
+      "nome": "Autor 2"
+    },
+    {
+      "id": 3,
+      "nome": "Autor 3"
+    }
+  ],
+  "generos": [
+    {
+      "id": 1,
+      "nome": "Aventura"
+    },
+    {
+      "id": 2,
+      "nome": "Terror"
+    },
+    {
+      "id": 3,
+      "nome": "Romance"
+    }
   ]
 }
