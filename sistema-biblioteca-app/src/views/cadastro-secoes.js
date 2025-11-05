@@ -11,26 +11,23 @@ import 'dayjs/locale/pt-br';
 
 import Card from '../components/card';
 import FormGroup from '../components/form-group';
-
 import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
-
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
 function CadastroSecoes() {
   const { idParam } = useParams();
-
   const navigate = useNavigate();
-
   const baseURL = `${BASE_URL}/secoes`;
 
   const [id, setId] = useState('');
   const [idNomeSecao, setIdNomeSecao] = useState(0);
   const [link, setLink] = useState('');
 
-  const [dados, setDados] = React.useState([]);
+  const [dados, setDados] = useState({});
+  const [dadosSecoes, setDadosSecoes] = useState([]);
 
   function inicializar() {
     if (idParam == null) {
@@ -39,7 +36,7 @@ function CadastroSecoes() {
       setLink('');
     } else {
       setId(dados.id);
-      setIdNomeSecao(dados.idNomeIdioma);
+      setIdNomeSecao(dados.idNomeSecao);
       setLink(dados.link);
     }
   }
@@ -51,47 +48,61 @@ function CadastroSecoes() {
       link,
     };
     data = JSON.stringify(data);
+
+    // 🔎 Encontra o nome da seção selecionada
+    const secaoSelecionada = dadosSecoes.find(
+      (d) => d.id === parseInt(idNomeSecao)
+    );
+
     if (idParam == null) {
+      // Cadastrar nova seção
       await axios
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
-        .then(function (response) {
+        .then(function () {
           mensagemSucesso(
-            `Seção ${idNomeIdioma} cadastrada com sucesso!`
+            `Seção ${secaoSelecionada?.secao || ''} cadastrada com sucesso!`
           );
           navigate(`/listagem-secoes`);
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data || 'Erro ao cadastrar seção.');
         });
     } else {
+      // Atualizar seção existente
       await axios
         .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
-        .then(function (response) {
+        .then(function () {
           mensagemSucesso(
-            `Seção ${titulo} alterada com sucesso!`
+            `Seção ${secaoSelecionada?.secao || ''} alterada com sucesso!`
           );
           navigate(`/listagem-secoes`);
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data || 'Erro ao alterar seção.');
         });
     }
   }
 
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      setDados(response.data);
-    });
-    setId(dados.id);
-    setIdNomeSecao(dados.idNomeSecao);
-    setLink(dados.link);
+    if (idParam != null) {
+      await axios
+        .get(`${baseURL}/${idParam}`)
+        .then((response) => {
+          const dadosSecao = response.data;
+          setDados(dadosSecao);
+          setId(dadosSecao.id);
+          setIdNomeSecao(dadosSecao.idNomeSecao);
+          setLink(dadosSecao.link);
+        })
+        .catch((error) => {
+          mensagemErro('Erro ao buscar dados da seção.');
+        });
+    }
   }
-
-  const [dadosSecoes, setDadosSecoes] = React.useState(null);
 
   useEffect(() => {
     axios.get(`${BASE_URL}/secoes`).then((response) => {
@@ -101,9 +112,8 @@ function CadastroSecoes() {
 
   useEffect(() => {
     buscar(); // eslint-disable-next-line
-  }, [id]);
+  }, [idParam]);
 
-  if (!dados) return null;
   if (!dadosSecoes) return null;
 
   return (
@@ -114,7 +124,7 @@ function CadastroSecoes() {
             <div className='bs-component'>
               <FormGroup label='Nome da Seção: *' htmlFor='selectSecao'>
                 <select
-                  class='form-select'
+                  className='form-select'
                   id='selectSecao'
                   name='idNomeSecao'
                   value={idNomeSecao}
@@ -130,7 +140,7 @@ function CadastroSecoes() {
                   ))}
                 </select>
               </FormGroup>
-              
+
               <FormGroup label='Link:' htmlFor='inputLink'>
                 <input
                   type='text'
@@ -141,6 +151,7 @@ function CadastroSecoes() {
                   onChange={(e) => setLink(e.target.value)}
                 />
               </FormGroup>
+
               <Stack spacing={1} padding={1} direction='row'>
                 <button
                   onClick={salvar}
