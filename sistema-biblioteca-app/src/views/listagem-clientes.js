@@ -31,7 +31,7 @@ function ListagemClientes() {
 
   const [dados, setDados] = React.useState(null);
 
-    async function excluir(id) {
+  async function excluir(id) {
   let url = `${baseURL}/${id}`;
   console.log(url);
   await axios
