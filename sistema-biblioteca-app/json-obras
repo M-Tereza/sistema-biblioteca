@@ -1,0 +1,68 @@
+{
+"obras": [
+    {
+      "id": 1,
+      "título": "Obra 1",
+      "isbn": 1,
+      "edicao": 1,
+      "editora": "A",
+      "genero": "A",
+      "idioma": "A",
+      "secao": 1
+    },
+    {
+      "id": 2,
+      "título": "Obra 2",
+      "isbn": 2,
+      "edicao": 2,
+      "editora": "B",
+      "genero": "B",
+      "idioma": "B",
+      "secao": 2
+    },
+    {
+      "id": 3,
+      "título": "Obra 3",
+      "isbn": 3,
+      "edicao": 3,
+      "editora": "C",
+      "genero": "B",
+      "idioma": "B",
+      "secao": 3
+    }
+  ],
+"editoras": [
+    {
+      "id": 1,
+      "nome": "Editora 01",
+      "cnpj": "111111111"
+    },
+    {
+      "id": 2,
+      "nome": "Editora 2",
+      "cnpj": "111111111"
+    },
+    {
+      "id": 3,
+      "nome": "Editora 3",
+      "cnpj": "111111111"
+    }
+  ],
+  "editoras": [
+    {
+      "id": 1,
+      "nome": "Editora 01",
+      "cnpj": "111111111"
+    },
+    {
+      "id": 2,
+      "nome": "Editora 2",
+      "cnpj": "111111111"
+    },
+    {
+      "id": 3,
+      "nome": "Editora 3",
+      "cnpj": "111111111"
+    }
+  ],
+}
