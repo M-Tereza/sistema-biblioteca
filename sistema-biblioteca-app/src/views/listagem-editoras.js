@@ -13,10 +13,10 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from "../config/axios";
+import { API_URLS } from "../config/api";
 
-const baseURL = `${BASE_URL}/editoras`;
+const baseURL = `${API_URLS.editoras}/editoras`;
 
 function ListagemEditoras() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ function ListagemEditoras() {
     let data = JSON.stringify({ id });
     let url = `${baseURL}/${id}`;
     console.log(url);
-    await axios
+    await api
       .delete(url, data, {
         headers: { 'Content-Type': 'application/json' },
       })
@@ -53,7 +53,7 @@ function ListagemEditoras() {
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
+    api.get(baseURL).then((response) => {
       setDados(response.data);
     });
   }, []);

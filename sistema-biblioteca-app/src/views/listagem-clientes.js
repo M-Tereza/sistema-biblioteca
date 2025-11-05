@@ -13,10 +13,10 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import axios from "axios";
-import { BASE_URL } from "../config/axios";
+import api from "../config/axios";
+import { API_URLS } from "../config/api";
 
-const baseURL = `${BASE_URL}/clientes`;
+const baseURL = `${API_URLS.clientes}/clientes`;
 
 function ListagemClientes() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ function ListagemClientes() {
   async function excluir(id) {
   let url = `${baseURL}/${id}`;
   console.log(url);
-  await axios
+  await api
     .delete(url, {
       headers: { 'Content-Type': 'application/json' },
       data: { id },
@@ -49,7 +49,7 @@ function ListagemClientes() {
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
+    api.get(baseURL).then((response) => {
       setDados(response.data);
     });
   }, []);

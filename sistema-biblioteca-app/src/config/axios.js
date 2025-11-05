@@ -1,1 +1,2 @@
-export const BASE_URL = 'https://my-json-server.typicode.com/GiovPereira/json-fake';
+import axios from "axios";
+export default axios;
