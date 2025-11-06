@@ -22,11 +22,11 @@ function ListagemSecoes() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-secoes`);
+    navigate(`/cadastro-secao`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-secoes/${id}`);
+    navigate(`/cadastro-secao/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -62,7 +62,7 @@ function ListagemSecoes() {
 
   return (
     <div className="container">
-      <Card title="Listagem de Autores">
+      <Card title="Listagem de Seções">
         <div className="row">
           <div className="col-lg-12">
             <div className="bs-component">
