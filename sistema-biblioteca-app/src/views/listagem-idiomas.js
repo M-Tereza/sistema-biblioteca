@@ -82,7 +82,7 @@ function ListagemIdiomas() {
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.idioma}</td>
+                      <td>{dado.nome}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
