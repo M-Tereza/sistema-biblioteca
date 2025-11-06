@@ -22,11 +22,11 @@ function ListagemIdiomas() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-idiomas`);
+    navigate(`/cadastro-idioma`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-idiomas/${id}`);
+    navigate(`/cadastro-idioma/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);

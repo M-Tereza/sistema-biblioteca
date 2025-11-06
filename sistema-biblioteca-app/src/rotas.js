@@ -16,8 +16,13 @@ import ListagemEditoras from './views/listagem-editoras';
 // import CadastroExemplar from './views/cadastro-exemplares';
 // import CadastroMulta from './views/cadastro-multas';
 // import CadastroGenero from './views/cadastro-generos';
+<<<<<<< HEAD
 import CadastroIdiomas from './views/cadastro-idiomas';
 import CadastroSecao from './views/cadastro-secao';
+=======
+import CadastroIdioma from './views/cadastro-idioma';
+import CadastroSecoes from './views/cadastro-secoes';
+>>>>>>> ad53d6efa88bdfcf3cd6bd0d2847d73b46cbe569
 // import CadastroAutor from './views/cadastro-autores';
 // import CadastroEditora from './views/cadastro-editoras';
 
@@ -49,8 +54,8 @@ function Rotas(props) {
           element={<CadastroGenero />
         /> */}
         <Route
-          path='/cadastro-idiomas/:idParam?'
-          element={<CadastroIdiomas />}
+          path='/cadastro-idioma/:idParam?'
+          element={<CadastroIdioma />}
         />
         <Route
           path='/cadastro-secao/:idParam?'
