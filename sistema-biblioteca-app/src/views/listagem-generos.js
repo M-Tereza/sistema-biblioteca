@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import api from "../config/axios";
 import { API_URLS } from "../config/api";
 
-const baseURL = `${API_URLS.clientes}`;
+const baseURL = `${API_URLS.generos}/generos`;
 
 function ListagemGeneros() {
   const navigate = useNavigate();
@@ -32,24 +32,20 @@ function ListagemGeneros() {
   const [dados, setDados] = React.useState(null);
 
   async function excluir(id) {
-    let data = JSON.stringify({ id });
-    let url = `${baseURL}/${id}`;
-    console.log(url);
-    await api
-      .delete(url, data, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .then(function (response) {
-        mensagemSucesso(`Gênero excluído com sucesso!`);
-        setDados(
-          dados.filter((dado) => {
-            return dado.id !== id;
-          })
-        );
-      })
-      .catch(function (error) {
-        mensagemErro(`Erro ao excluir o gênero`);
-      });
+  let url = `${baseURL}/${id}`;
+  console.log(url);
+  await api
+    .delete(url, {
+      headers: { 'Content-Type': 'application/json' },
+      data: { id },
+    })
+    .then(function (response) {
+      mensagemSucesso(`Gênero excluído com sucesso!`);
+      setDados(dados.filter((dado) => dado.id !== id));
+    })
+    .catch(function (error) {
+      mensagemErro(`Erro ao excluir o gênero`);
+    });
   }
 
   React.useEffect(() => {
