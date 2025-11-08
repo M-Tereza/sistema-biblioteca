@@ -11,85 +11,73 @@ import "dayjs/locale/pt-br";
 
 import Card from "../components/card";
 import FormGroup from "../components/form-group";
+
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 import "../custom.css";
-import api from "../config/axios";
-import { API_URLS } from "../config/api";
+
+import axios from 'axios';
+import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS.secoes}/secoes`;
 
 function CadastroSecao() {
   const { idParam } = useParams();
   const navigate = useNavigate();
-  const baseURL = `${API_URLS}/secoes`;
 
-  const [id, setId] = useState("");
-  const [idNomeSecao, setIdNomeSecao] = useState('');
+  const [id, setId] = useState('');
+  const [nome, setNome] = useState('');
 
-  const [dados, setDados] = useState({});
-  const [dadosSecoes, setDadosSecoes] = useState([]);
+  const [dados, setDados] = React.useState({});
 
   function inicializar() {
     if (idParam == null) {
-      setId("");
-      setIdNomeSecao('');
+      setId('');
+      setNome('');
     } else {
       setId(dados.id);
-      setIdNomeSecao(dados.idNomeSecao);
+      setNome(dados.nome);
     }
   }
 
   async function salvar() {
-    let data = {
-      id,
-      idNomeSecao: idNomeSecao,
-    };
+    let data = { id, nome };
     data = JSON.stringify(data);
-    const secaoSelecionada = dadosSecoes.find(
-      (d) => d.id === parseInt(idNomeSecao)
-    );
-
     if (idParam == null) {
-      await api
+      await axios
         .post(baseURL, data, {
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         })
-        .then(function () {
-          mensagemSucesso(
-            `Seção ${secaoSelecionada?.secao || ""} cadastrada com sucesso!`
-          );
+        .then(function (response) {
+          mensagemSucesso(`Seção ${nome} cadastrada com sucesso!`);
           navigate(`/listagem-secoes`);
         })
         .catch(function (error) {
-          mensagemErro(error.response?.data || "Erro ao cadastrar seção.");
+          mensagemErro(error.response.data);
         });
     } else {
-      await api
+      await axios
         .put(`${baseURL}/${idParam}`, data, {
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         })
-        .then(function () {
-          mensagemSucesso(
-            `Seção ${secaoSelecionada?.secao || ""} alterada com sucesso!`
-          );
+        .then(function (response) {
+          mensagemSucesso(`Seção ${nome} alterada com sucesso!`);
           navigate(`/listagem-secoes`);
         })
         .catch(function (error) {
-          mensagemErro(error.response?.data || "Erro ao alterar seção.");
+          mensagemErro(error.response.data);
         });
     }
   }
 
   async function buscar() {
     if (idParam != null) {
-      await api
+      await axios
         .get(`${baseURL}/${idParam}`)
         .then((response) => {
-          const dadosSecao = response.data;
-          setDados(dadosSecao);
-          setId(dadosSecao.id);
-          setIdNomeSecao(dadosSecao.idNomeSecao);
+          setDados(response.data);
+          setId(dados.id);
+          setNome(dados.nome);
         })
         .catch((error) => {
           mensagemErro("Erro ao buscar dados da seção.");
@@ -97,38 +85,32 @@ function CadastroSecao() {
     }
   }
 
-  useEffect(() => {
-    api.get(`${API_URLS}/secoes`).then((response) => {
-      setDadosSecoes(response.data);
-    });
-  }, []);
 
   useEffect(() => {
     buscar(); // eslint-disable-next-line
-  }, [idParam]);
+  }, [id]);
 
-  if (!dadosSecoes) return null;
+  if (!dados) return null;
 
   return (
     <div className="container">
-      <Card title="Cadastro de Seções">
+      <Card title="Cadastro de Seção">
         <div className="row">
           <div className="col-lg-12">
             <div className="bs-component">
-              <FormGroup label="Nome da Seção: *" htmlFor="inputNomeSecao">
+              <FormGroup label="Nome da Seção: *" htmlFor="inputNome">
                 <div>
                   <input
                     type='text'
                     className="form-control"
-                    id="inputNomeSecao"
-                    name="idNomeSecao"
-                    value={idNomeSecao}
-                    onChange={(e) => setIdNomeSecao(e.target.value)}
+                    id="inputNome"
+                    name="nome"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
                   >
                   </input>
                 </div>
               </FormGroup>
-
               <Stack spacing={1} padding={1} direction="row">
                 <button
                   onClick={salvar}

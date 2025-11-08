@@ -13,8 +13,8 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import api from "../config/axios";
-import { API_URLS } from "../config/api";
+import axios from "../config/axios";
+import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS.secoes}/secoes`;
 
@@ -35,7 +35,7 @@ function ListagemSecoes() {
     let data = JSON.stringify({ id });
     let url = `${baseURL}/${id}`;
     console.log(url);
-    await api
+    await axios
       .delete(url, data, {
         headers: { "Content-Type": "application/json" },
       })
@@ -53,7 +53,7 @@ function ListagemSecoes() {
   }
 
   React.useEffect(() => {
-    api.get(baseURL).then((response) => {
+    axios.get(baseURL).then((response) => {
       setDados(response.data);
     });
   }, []);

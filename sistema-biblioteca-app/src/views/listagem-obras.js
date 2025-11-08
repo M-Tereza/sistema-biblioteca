@@ -13,8 +13,8 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import api from "../config/axios";
-import { API_URLS } from "../config/api";
+import axios from "../config/axios";
+import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS.obras}/obras`;
 
@@ -22,11 +22,11 @@ function ListagemObras() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-obras`);
+    navigate(`/cadastro-obra`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-obras/${id}`);
+    navigate(`/cadastro-obra/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -35,7 +35,7 @@ function ListagemObras() {
     let data = JSON.stringify({ id });
     let url = `${baseURL}/${id}`;
     console.log(url);
-    await api
+    await axios
       .delete(url, data, {
         headers: { 'Content-Type': 'application/json' },
       })
@@ -53,7 +53,7 @@ function ListagemObras() {
   }
 
   React.useEffect(() => {
-    api.get(baseURL).then((response) => {
+    axios.get(baseURL).then((response) => {
       setDados(response.data);
     });
   }, []);

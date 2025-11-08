@@ -16,33 +16,32 @@ import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 import "../custom.css";
 
-import axios from "../config/axios";
-import { API_URLS } from "../config/api";
+import axios from 'axios';
+import { API_URLS } from "../config/axios";
+
+const baseURL = `${API_URLS.idiomas}/idiomas`;
 
 function CadastroIdioma() {
   const { idParam } = useParams();
-
   const navigate = useNavigate();
 
-  const baseURL = `${API_URLS}/idiomas`;
-
   const [id, setId] = useState('');
-  const [nomeIdioma, setNomeIdioma] = useState('');
+  const [nome, setNome] = useState('');
 
-  const [dados, setDados] = useState([]);
+  const [dados, setDados] = React.useState([]);
 
   function inicializar() {
     if (idParam == null) {
       setId('');
-      setNomeIdioma('');
+      setNome('');
     } else {
       setId(dados.id);
-      setNomeIdioma(dados.nomeIdioma);
+      setNome(dados.nome);
     }
   }
 
   async function salvar() {
-    let data = { id, nomeIdioma};
+    let data = { id, nome };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -50,7 +49,7 @@ function CadastroIdioma() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Idioma ${nomeIdioma} cadastrado com sucesso!`);
+          mensagemSucesso(`Idioma ${nome} cadastrado com sucesso!`);
           navigate(`/listagem-idiomas`);
         })
         .catch(function (error) {
@@ -62,7 +61,7 @@ function CadastroIdioma() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Idioma ${nomeIdioma} alterado com sucesso!`);
+          mensagemSucesso(`Idioma ${nome} alterado com sucesso!`);
           navigate(`/listagem-idiomas`);
         })
         .catch(function (error) {
@@ -71,13 +70,20 @@ function CadastroIdioma() {
     }
   }
 
-  async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      setDados(response.data);
-    });
-    setId(dados.id);
 
-    setNomeIdioma(dados.nomeIdioma);
+  async function buscar() {
+    if (idParam != null) {
+      await axios
+        .get(`${baseURL} / ${idParam}`)
+        .then((response) => {
+          setDados(response.data);
+          setId(dados.id);
+          setNome(dados.nome);
+        })
+        .catch(() => {
+          mensagemErro("Erro ao buscar dados do idioma.");
+        });
+    }
   }
 
   useEffect(() => {
@@ -92,15 +98,15 @@ function CadastroIdioma() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='Nome do Idioma: *' htmlFor='inputNomeIdioma'>
+              <FormGroup label='Nome do Idioma: *' htmlFor='inputNome'>
                 <input
                   type='text'
                   maxLength='30'
-                  id='inputNomeIdioma'
-                  value={nomeIdioma}
+                  id='inputNome'
+                  value={nome}
                   className='form-control'
-                  name='nomeIdioma'
-                  onChange={(e) => setNomeIdioma(e.target.value)}
+                  name='nome'
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
               <Stack spacing={1} padding={1} direction='row'>
