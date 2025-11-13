@@ -29,23 +29,23 @@ function Rotas(props) {
     <BrowserRouter>
       <Routes>
         {/* <Route
-          path='/cadastro-clientes/:idParam?'
+          path='/cadastro-cliente/:idParam?'
           element={<CadastroCliente />}
         /> */}
         {/* <Route
-          path='/cadastro-obras/:idParam?'
+          path='/cadastro-obra/:idParam?'
           element={<CadastroObra />}
         /> */}
         {/* <Route
-          path='/cadastro-exemplares/:idParam?'
+          path='/cadastro-exemplar/:idParam?'
           element={<CadastroExemplar />}
         />
         <Route
-          path='/cadastro-multas/:idParam?'
+          path='/cadastro-multa/:idParam?'
           element={<CadastroMulta />}
         /> */}
         <Route
-          path='/cadastro-generos/:idParam?'
+          path='/cadastro-genero/:idParam?'
           element={<CadastroGenero />}
         />
         <Route
@@ -57,7 +57,7 @@ function Rotas(props) {
           element={<CadastroSecao />}
         />
         <Route
-          path='/cadastro-autores/:idParam?'
+          path='/cadastro-autor/:idParam?'
           element={<CadastroAutor />}
         />
         <Route

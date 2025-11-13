@@ -19,7 +19,7 @@ import "../custom.css";
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.editoras}/idiomas`;
+const baseURL = `${API_URLS.idiomas}/idiomas`;
 
 function CadastroIdioma() {
   const { idParam } = useParams();
