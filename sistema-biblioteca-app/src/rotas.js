@@ -11,15 +11,15 @@ import ListagemAutores from './views/listagem-autores';
 import ListagemEditoras from './views/listagem-editoras';
 
 
-// import CadastroCliente from './views/cadastro-clientes';
-// import CadastroObra from './views/cadastro-obras';
-// import CadastroExemplar from './views/cadastro-exemplares';
-// import CadastroMulta from './views/cadastro-multas';
-// import CadastroGenero from './views/cadastro-generos';
+// import CadastroCliente from './views/cadastro-cliente';
+// import CadastroObra from './views/cadastro-obra';
+// import CadastroExemplar from './views/cadastro-exemplar';
+// import CadastroMulta from './views/cadastro-multa';
+import CadastroGenero from './views/cadastro-genero';
 import CadastroSecao from './views/cadastro-secao';
 import CadastroIdioma from './views/cadastro-idioma';
-// import CadastroAutor from './views/cadastro-autores';
-// import CadastroEditora from './views/cadastro-editoras';
+import CadastroAutor from './views/cadastro-autor';
+// import CadastroEditora from './views/cadastro-editora';
 
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
@@ -31,23 +31,23 @@ function Rotas(props) {
         {/* <Route
           path='/cadastro-clientes/:idParam?'
           element={<CadastroCliente />}
-        />
-        <Route
+        /> */}
+        {/* <Route
           path='/cadastro-obras/:idParam?'
           element={<CadastroObra />}
-        />
-        <Route
+        /> */}
+        {/* <Route
           path='/cadastro-exemplares/:idParam?'
           element={<CadastroExemplar />}
         />
         <Route
           path='/cadastro-multas/:idParam?'
           element={<CadastroMulta />}
-        />
+        /> */}
         <Route
           path='/cadastro-generos/:idParam?'
-          element={<CadastroGenero />
-        /> */}
+          element={<CadastroGenero />}
+        />
         <Route
           path='/cadastro-idioma/:idParam?'
           element={<CadastroIdioma />}
@@ -56,15 +56,14 @@ function Rotas(props) {
           path='/cadastro-secao/:idParam?'
           element={<CadastroSecao />}
         />
-        {/* <Route
+        <Route
           path='/cadastro-autores/:idParam?'
           element={<CadastroAutor />}
         />
-        <Route
+        {/* <Route
           path='/cadastro-editoras/:idParam?'
           element={<CadastroEditora />}
         /> */}
-
         <Route path='/listagem-clientes' element={<ListagemClientes />} />
         <Route path='/listagem-obras' element={<ListagemObras />} />
         <Route path='/listagem-exemplares' element={<ListagemExemplares />} />
