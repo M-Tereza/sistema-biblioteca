@@ -22,11 +22,11 @@ function ListagemEditoras() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-editoras`);
+    navigate(`/cadastro-editora`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-editoras/${id}`);
+    navigate(`/cadastro-editora/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);

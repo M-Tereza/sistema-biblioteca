@@ -19,9 +19,9 @@ import "../custom.css";
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.editoras}/idiomas`;
+const baseURL = `${API_URLS.editoras}/editoras`;
 
-function CadastroIdioma() {
+function CadastroEditora() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
@@ -49,8 +49,8 @@ function CadastroIdioma() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Idioma ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-idiomas`);
+          mensagemSucesso(`Editora ${nome} cadastrada com sucesso!`);
+          navigate(`/listagem-editoras`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -61,8 +61,8 @@ function CadastroIdioma() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Idioma ${nome} alterado com sucesso!`);
-          navigate(`/listagem-idiomas`);
+          mensagemSucesso(`Editora ${nome} alterada com sucesso!`);
+          navigate(`/listagem-editoras`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -81,7 +81,7 @@ function CadastroIdioma() {
           setNome(dados.nome);
         })
         .catch(() => {
-          mensagemErro("Erro ao buscar dados do idioma.");
+          mensagemErro("Erro ao buscar dados da editora.");
         });
     }
   }
@@ -94,11 +94,11 @@ function CadastroIdioma() {
 
   return (
     <div className='container'>
-      <Card title='Cadastro de Idioma'>
+      <Card title='Cadastro de Editora'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='Nome do Idioma: *' htmlFor='inputNome'>
+              <FormGroup label='Nome da Editora: *' htmlFor='inputNome'>
                 <input
                   type='text'
                   maxLength='30'
@@ -133,4 +133,4 @@ function CadastroIdioma() {
   );
 }
 
-export default CadastroIdioma;
+export default CadastroEditora;

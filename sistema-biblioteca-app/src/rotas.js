@@ -19,7 +19,7 @@ import CadastroGenero from './views/cadastro-genero';
 import CadastroSecao from './views/cadastro-secao';
 import CadastroIdioma from './views/cadastro-idioma';
 import CadastroAutor from './views/cadastro-autor';
-// import CadastroEditora from './views/cadastro-editora';
+import CadastroEditora from './views/cadastro-editora';
 
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
@@ -60,10 +60,10 @@ function Rotas(props) {
           path='/cadastro-autores/:idParam?'
           element={<CadastroAutor />}
         />
-        {/* <Route
-          path='/cadastro-editoras/:idParam?'
+        <Route
+          path='/cadastro-editora/:idParam?'
           element={<CadastroEditora />}
-        /> */}
+        />
         <Route path='/listagem-clientes' element={<ListagemClientes />} />
         <Route path='/listagem-obras' element={<ListagemObras />} />
         <Route path='/listagem-exemplares' element={<ListagemExemplares />} />
