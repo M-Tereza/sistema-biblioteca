@@ -22,11 +22,11 @@ function ListagemClientes() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-clientes`);
+    navigate(`/cadastro-cliente`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-clientes/${id}`);
+    navigate(`/cadastro-cliente/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -34,7 +34,7 @@ function ListagemClientes() {
   async function excluir(id) {
   let url = `${baseURL}/${id}`;
   console.log(url);
-  await axios
+  await axios 
     .delete(url, {
       headers: { 'Content-Type': 'application/json' },
       data: { id },

@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
 import "dayjs/locale/pt-br";
-
 import Card from "../components/card";
 import FormGroup from "../components/form-group";
-
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
-
 import "../custom.css";
 
 import axios from 'axios';
