@@ -11,9 +11,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-
 import { API_URLS } from "../config/axios";
-
 const baseURL = `${API_URLS.clientes}/clientes`;
 
 function CadastroCliente() {
@@ -21,71 +19,119 @@ function CadastroCliente() {
   const navigate = useNavigate();
 
 
-  const [cliente, setCliente] = useState({
-    id: '',
-    nome: '',
-    cpf: '',
-    cep: '',
-    rua: '',
-    numero: '',
-    bairro: '',
-    complemento: '',
-    dataNascimento: '',
-    telefone: '',
-    cidade: '',
-    estado: ''
-  });
+  const [id, setId] = useState('');
+  const [nome, setNome] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [cep, setCep] = useState('');
+  const [rua, setRua] = useState('');
+  const [numero, setNumero] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [complemento, setComplemento] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [estado, setEstado] = useState('');
 
-  useEffect(() => {
-    if (idParam) {
-      axios
-        .get(`${baseURL}/${idParam}`)
-        .then((response) => {
-          setCliente(response.data);
-        })
-        .catch((error) => {
-          mensagemErro("Erro ao buscar cliente.");
-        });
+  const [dados, setDados] = useState([]);
+
+  function inicializar() {
+    if (idParam == null) {
+      setId('');
+      setNome('');
+      setCpf('');
+      setCep('');
+      setRua('');
+      setNumero('');
+      setBairro('');
+      setComplemento('');
+      setDataNascimento('');
+      setTelefone('');
+      setCidade('');
+      setEstado('');
+    } else {
+      setId(dados.id);
+      setNome(dados.nome);
+      setCpf(dados.cpf);
+      setCep(dados.cep);
+      setRua(dados.rua);
+      setNumero(dados.numero);
+      setBairro(dados.bairro);
+      setComplemento(dados.complemento);
+      setDataNascimento(dados.dataNascimento);
+      setTelefone(dados.telefone);
+      setCidade(dados.cidade);
+      setEstado(dados.estado);
     }
-  }, [idParam]);
+  }
 
   async function salvar() {
+    let data = {
+      id,
+      nome,
+      cpf,
+      cep,
+      rua,
+      numero,
+      bairro,
+      complemento,
+      dataNascimento,
+      telefone,
+      cidade,
+      estado
+    };
+
+    data = JSON.stringify(data);
+
     try {
-      if (!idParam) {
-        await axios.post(baseURL, cliente, {
-          headers: { "Content-Type": "application/json" },
+      if (idParam == null) {
+        await axios.post(baseURL, data, {
+          headers: { "Content-Type": "application/json" }
         });
-        mensagemSucesso(`Cliente ${cliente.nome} cadastrado com sucesso!`);
+        mensagemSucesso(`Cliente ${nome} cadastrado com sucesso!`);
       } else {
-        await axios.put(`${baseURL}/${idParam}`, cliente, {
-          headers: { "Content-Type": "application/json" },
+        await axios.put(`${baseURL}/${idParam}`, data, {
+          headers: { "Content-Type": "application/json" }
         });
-        mensagemSucesso(`Cliente ${cliente.nome} alterado com sucesso!`);
+        mensagemSucesso(`Cliente ${nome} alterado com sucesso!`);
       }
 
       navigate("/listagem-clientes");
 
     } catch (error) {
-      mensagemErro("Erro ao salvar cliente.");
+      mensagemErro(error.response?.data || "Erro ao salvar cliente.");
     }
   }
 
-  function inicializar() {
-    setCliente({
-      id: '',
-      nome: '',
-      cpf: '',
-      cep: '',
-      rua: '',
-      numero: '',
-      bairro: '',
-      complemento: '',
-      dataNascimento: '',
-      telefone: '',
-      cidade: '',
-      estado: ''
-    });
+  async function buscar() {
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar cliente.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
+    setCpf(dados.cpf);
+    setCep(dados.cep);
+    setRua(dados.rua);
+    setNumero(dados.numero);
+    setBairro(dados.bairro);
+    setComplemento(dados.complemento);
+    setDataNascimento(dados.dataNascimento);
+    setTelefone(dados.telefone);
+    setCidade(dados.cidade);
+    setEstado(dados.estado);
   }
+
+  useEffect(() => {
+    if (idParam) {
+      buscar();
+    } // eslint-disable-next-line
+  }, [id]);
+
+  if (!dados) return null;
 
   return (
     <div className="container">
@@ -94,24 +140,24 @@ function CadastroCliente() {
           <div className="col-lg-12">
             <div className="bs-component">
 
-              <FormGroup label="Nome:" htmlFor="inputNome">
+              <FormGroup label="Nome: *" htmlFor="inputNome">
                 <input
                   type="text"
                   id="inputNome"
+                  value={nome}
                   className="form-control"
-                  value={cliente.nome}
-                  onChange={(e) => setCliente({ ...cliente, nome: e.target.value })}
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
 
-              <FormGroup label="CPF:" htmlFor="inputCpf">
+              <FormGroup label="CPF: *" htmlFor="inputCpf">
                 <input
                   type="text"
                   maxLength="11"
                   id="inputCpf"
+                  value={cpf}
                   className="form-control"
-                  value={cliente.cpf}
-                  onChange={(e) => setCliente({ ...cliente, cpf: e.target.value })}
+                  onChange={(e) => setCpf(e.target.value)}
                 />
               </FormGroup>
 
@@ -119,9 +165,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputCep"
+                  value={cep}
                   className="form-control"
-                  value={cliente.cep}
-                  onChange={(e) => setCliente({ ...cliente, cep: e.target.value })}
+                  onChange={(e) => setCep(e.target.value)}
                 />
               </FormGroup>
 
@@ -129,9 +175,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputRua"
+                  value={rua}
                   className="form-control"
-                  value={cliente.rua}
-                  onChange={(e) => setCliente({ ...cliente, rua: e.target.value })}
+                  onChange={(e) => setRua(e.target.value)}
                 />
               </FormGroup>
 
@@ -139,9 +185,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputNumero"
+                  value={numero}
                   className="form-control"
-                  value={cliente.numero}
-                  onChange={(e) => setCliente({ ...cliente, numero: e.target.value })}
+                  onChange={(e) => setNumero(e.target.value)}
                 />
               </FormGroup>
 
@@ -149,9 +195,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputBairro"
+                  value={bairro}
                   className="form-control"
-                  value={cliente.bairro}
-                  onChange={(e) => setCliente({ ...cliente, bairro: e.target.value })}
+                  onChange={(e) => setBairro(e.target.value)}
                 />
               </FormGroup>
 
@@ -159,11 +205,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputComplemento"
+                  value={complemento}
                   className="form-control"
-                  value={cliente.complemento}
-                  onChange={(e) =>
-                    setCliente({ ...cliente, complemento: e.target.value })
-                  }
+                  onChange={(e) => setComplemento(e.target.value)}
                 />
               </FormGroup>
 
@@ -171,11 +215,9 @@ function CadastroCliente() {
                 <input
                   type="date"
                   id="inputDtNascimento"
+                  value={dataNascimento}
                   className="form-control"
-                  value={cliente.dataNascimento}
-                  onChange={(e) =>
-                    setCliente({ ...cliente, dataNascimento: e.target.value })
-                  }
+                  onChange={(e) => setDataNascimento(e.target.value)}
                 />
               </FormGroup>
 
@@ -183,11 +225,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputTelefone"
+                  value={telefone}
                   className="form-control"
-                  value={cliente.telefone}
-                  onChange={(e) =>
-                    setCliente({ ...cliente, telefone: e.target.value })
-                  }
+                  onChange={(e) => setTelefone(e.target.value)}
                 />
               </FormGroup>
 
@@ -195,9 +235,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputCidade"
+                  value={cidade}
                   className="form-control"
-                  value={cliente.cidade}
-                  onChange={(e) => setCliente({ ...cliente, cidade: e.target.value })}
+                  onChange={(e) => setCidade(e.target.value)}
                 />
               </FormGroup>
 
@@ -205,9 +245,9 @@ function CadastroCliente() {
                 <input
                   type="text"
                   id="inputEstado"
+                  value={estado}
                   className="form-control"
-                  value={cliente.estado}
-                  onChange={(e) => setCliente({ ...cliente, estado: e.target.value })}
+                  onChange={(e) => setEstado(e.target.value)}
                 />
               </FormGroup>
 
