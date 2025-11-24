@@ -22,11 +22,11 @@ function ListagemMultas() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-multas`);
+    navigate(`/cadastro-multa`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-multas/${id}`);
+    navigate(`/cadastro-multa/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -71,7 +71,7 @@ function ListagemMultas() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Multa
+                Nova Multa
               </button>
               <table className='table table-hover'>
                 <thead>

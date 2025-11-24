@@ -7,7 +7,7 @@ export const API_URLS = {
   obras: "https://my-json-server.typicode.com/GiovPereira/json-obras",
   generos: "https://my-json-server.typicode.com/GiovPereira/json-obras",
   editoras: "https://my-json-server.typicode.com/GiovPereira/json-obras",
-  editoras: "https://my-json-server.typicode.com/GiovPereira/json-geral",
+  idiomas: "https://my-json-server.typicode.com/GiovPereira/json-geral",
   secoes: "https://my-json-server.typicode.com/GiovPereira/json-geral",
   autores: "https://my-json-server.typicode.com/GiovPereira/json-geral",
 };
