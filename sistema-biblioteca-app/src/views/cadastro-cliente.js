@@ -18,46 +18,58 @@ function CadastroCliente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
+  // Campos
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
-  const [cep, setCep] = useState('');
-  const [rua, setRua] = useState('');
-  const [numero, setNumero] = useState('');
-  const [bairro, setBairro] = useState('');
-  const [complemento, setComplemento] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [cep, setCep] = useState('');
+  const [logradouro, setLogradouro] = useState('');
+  const [numero, setNumero] = useState('');
+  const [complemento, setComplemento] = useState('');
+  const [bairro, setBairro] = useState('');
   const [cidade, setCidade] = useState('');
   const [estado, setEstado] = useState('');
   const [obra, setObra] = useState('');
   const [pendencia, setPendencia] = useState('');
   const [listaObras, setListaObras] = useState([]);
   const [listaPendencias, setListaPendencias] = useState([]);
+
+
   const [dados, setDados] = useState([]);
 
-  async function buscar() {
-    try {
-      const response = await axios.get(`${baseURL}/${idParam}`);
-      setDados(response.data);
-
-      setId(response.data.id);
-      setNome(response.data.nome);
-      setCpf(response.data.cpf);
-      setCep(response.data.cep);
-      setRua(response.data.rua);
-      setNumero(response.data.numero);
-      setBairro(response.data.bairro);
-      setComplemento(response.data.complemento);
-      setDataNascimento(response.data.dataNascimento);
-      setTelefone(response.data.telefone);
-      setCidade(response.data.cidade);
-      setEstado(response.data.estado);
-      setObra(response.data.obras || "");
-      setPendencia(response.data.pendencias || "");
-
-    } catch (e) {
-      mensagemErro("Erro ao buscar cliente.");
+  function inicializar() {
+    if (idParam == null) {
+      setId('');
+      setNome('');
+      setCpf('');
+      setDataNascimento('');
+      setTelefone('');
+      setCep('');
+      setLogradouro('');
+      setNumero('');
+      setComplemento('');
+      setBairro('');
+      setCidade('');
+      setEstado('');
+      setObra('');
+      setPendencia('');
+    } else {
+      setId(dados.id);
+      setNome(dados.nome);
+      setCpf(dados.cpf);
+      setDataNascimento(dados.dataNascimento);
+      setTelefone(dados.telefone);
+      setCep(dados.cep);
+      setLogradouro(dados.logradouro);
+      setNumero(dados.numero);
+      setComplemento(dados.complemento);
+      setBairro(dados.bairro);
+      setCidade(dados.cidade);
+      setEstado(dados.estado);
+      setListaObras(dados.obras);
+      setListaPendencias(dados.pendencias);
     }
   }
 
@@ -83,35 +95,19 @@ function CadastroCliente() {
     }
   }, []);
 
-  function inicializar() {
-    setId('');
-    setNome('');
-    setCpf('');
-    setCep('');
-    setRua('');
-    setNumero('');
-    setBairro('');
-    setComplemento('');
-    setDataNascimento('');
-    setTelefone('');
-    setCidade('');
-    setEstado('');
-    setObra('');
-    setPendencia('');
-  }
 
   async function salvar() {
     let data = {
       id,
       nome,
       cpf,
-      cep,
-      rua,
-      numero,
-      bairro,
-      complemento,
       dataNascimento,
       telefone,
+      cep,
+      logradouro,
+      numero,
+      complemento,
+      bairro,
       cidade,
       estado,
       obras: obra,
@@ -138,6 +134,54 @@ function CadastroCliente() {
     }
   }
 
+
+  async function buscar() {
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar cliente.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
+    setCpf(dados.cpf);
+    setDataNascimento(dados.dataNascimento);
+    setTelefone(dados.telefone);
+    setCep(dados.cep);
+    setLogradouro(dados.logradouro);
+    setNumero(dados.numero);
+    setComplemento(dados.complemento);
+    setBairro(dados.bairro);
+    setCidade(dados.cidade);
+    setEstado(dados.estado);
+    setObra(dados.obras || "");
+    setPendencia(dados.pendencias || "");
+  }
+
+  async function carregarListas() {
+    try {
+      const response = await axios.get(baseURL);
+
+      const obrasExtraidas = response.data.map(c => c.obras);
+      const pendenciasExtraidas = response.data.map(c => c.pendencias);
+
+      setListaObras([...new Set(obrasExtraidas)]);
+      setListaPendencias([...new Set(pendenciasExtraidas)]);
+    } catch {
+      mensagemErro("Erro ao carregar obras e pendências.");
+    }
+  }
+
+  useEffect(() => {
+    carregarListas();
+
+    if (idParam) {
+      buscar();
+    }
+  }, []);
+
   if (!dados && idParam) return null;
 
   return (
@@ -160,61 +204,11 @@ function CadastroCliente() {
               <FormGroup label="CPF: *" htmlFor="inputCpf">
                 <input
                   type="text"
-                  maxLength="11"
+                  maxLength="14"
                   id="inputCpf"
                   value={cpf}
                   className="form-control"
                   onChange={(e) => setCpf(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="CEP:" htmlFor="inputCep">
-                <input
-                  type="text"
-                  id="inputCep"
-                  value={cep}
-                  className="form-control"
-                  onChange={(e) => setCep(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Rua:" htmlFor="inputRua">
-                <input
-                  type="text"
-                  id="inputRua"
-                  value={rua}
-                  className="form-control"
-                  onChange={(e) => setRua(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Número:" htmlFor="inputNumero">
-                <input
-                  type="text"
-                  id="inputNumero"
-                  value={numero}
-                  className="form-control"
-                  onChange={(e) => setNumero(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Bairro:" htmlFor="inputBairro">
-                <input
-                  type="text"
-                  id="inputBairro"
-                  value={bairro}
-                  className="form-control"
-                  onChange={(e) => setBairro(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Complemento:" htmlFor="inputComplemento">
-                <input
-                  type="text"
-                  id="inputComplemento"
-                  value={complemento}
-                  className="form-control"
-                  onChange={(e) => setComplemento(e.target.value)}
                 />
               </FormGroup>
 
@@ -238,6 +232,56 @@ function CadastroCliente() {
                 />
               </FormGroup>
 
+              <FormGroup label="CEP:" htmlFor="inputCep">
+                <input
+                  type="text"
+                  id="inputCep"
+                  value={cep}
+                  className="form-control"
+                  onChange={(e) => setCep(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Logradouro:" htmlFor="inputLogradouro">
+                <input
+                  type="text"
+                  id="inputLogradouro"
+                  value={logradouro}
+                  className="form-control"
+                  onChange={(e) => setLogradouro(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Número:" htmlFor="inputNumero">
+                <input
+                  type="text"
+                  id="inputNumero"
+                  value={numero}
+                  className="form-control"
+                  onChange={(e) => setNumero(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Complemento:" htmlFor="inputComplemento">
+                <input
+                  type="text"
+                  id="inputComplemento"
+                  value={complemento}
+                  className="form-control"
+                  onChange={(e) => setComplemento(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Bairro:" htmlFor="inputBairro">
+                <input
+                  type="text"
+                  id="inputBairro"
+                  value={bairro}
+                  className="form-control"
+                  onChange={(e) => setBairro(e.target.value)}
+                />
+              </FormGroup>
+
               <FormGroup label="Cidade:" htmlFor="inputCidade">
                 <input
                   type="text"
@@ -258,6 +302,7 @@ function CadastroCliente() {
                 />
               </FormGroup>
 
+              {/* COMBOBOX OBRAS */}
               <FormGroup label="Obra:" htmlFor="selectObra">
                 <select
                   id="selectObra"

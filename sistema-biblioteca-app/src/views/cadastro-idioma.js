@@ -42,53 +42,48 @@ function CadastroIdioma() {
 
   async function salvar() {
     let data = { id, nome };
+
     data = JSON.stringify(data);
-    if (idParam == null) {
-      await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Idioma ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-idiomas`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+
+    try {
+      if (idParam == null) {
+        await axios.post(baseURL, data, {
+          headers: { "Content-Type": "application/json" }
         });
-    } else {
-      await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Idioma ${nome} alterado com sucesso!`);
-          navigate(`/listagem-idiomas`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+        mensagemSucesso(`Idioma ${nome} cadastrado com sucesso!`);
+      } else {
+        await axios.put(`${baseURL}/${idParam}`, data, {
+          headers: { "Content-Type": "application/json" }
         });
+        mensagemSucesso(`Idioma ${nome} alterado com sucesso!`);
+      }
+
+      navigate("/listagem-idiomas");
+
+    } catch (error) {
+      mensagemErro(error.response?.data || "Erro ao salvar idioma.");
     }
   }
 
 
   async function buscar() {
-    if (idParam != null) {
-      await axios
-        .get(`${baseURL} / ${idParam}`)
-        .then((response) => {
-          setDados(response.data);
-          setId(dados.id);
-          setNome(dados.nome);
-        })
-        .catch(() => {
-          mensagemErro("Erro ao buscar dados do idioma.");
-        });
-    }
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar idioma.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+        if (idParam) {
+          buscar();
+        } // eslint-disable-next-line
+      }, [id]);
 
   if (!dados) return null;
 

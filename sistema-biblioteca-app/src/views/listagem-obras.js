@@ -76,28 +76,27 @@ function ListagemObras() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>Genero</th>
-                    <th scope='col'>Seção</th>
-                    <th scope='col'>Editora</th>
-                    <th scope='col'>Idioma</th>
                     <th scope='col'>Título</th>
                     <th scope='col'>ISBN</th>
                     <th scope='col'>Edição</th>
                     <th scope='col'>Autor</th>
+                    <th scope='col'>Editora</th>
+                    <th scope='col'>Genero</th>
+                    <th scope='col'>Idioma</th>
+                    <th scope='col'>Seção</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.genero}</td>
-                      <td>{dado.secao}</td>
-                      <td>{dado.login}</td>
-                      <td>{dado.editora}</td>
-                      <td>{dado.idioma}</td>
                       <td>{dado.titulo}</td>
                       <td>{dado.isbn}</td>
                       <td>{dado.edicao}</td>
-                      <td>{dado.autor}</td>
+                      <td>{dado.idAutor}</td>
+                      <td>{dado.idEditora}</td>
+                      <td>{dado.idGenero}</td>
+                      <td>{dado.idIdioma}</td>
+                      <td>{dado.idSecao}</td>
                       
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>

@@ -77,14 +77,12 @@ function ListagemEditoras() {
                 <thead>
                   <tr>
                     <th scope='col'>Nome</th>
-                    <th scope='col'>CNPJ</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
-                      <td>{dado.cnpj}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

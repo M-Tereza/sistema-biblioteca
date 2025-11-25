@@ -42,53 +42,48 @@ function CadastroSecao() {
 
   async function salvar() {
     let data = { id, nome };
+
     data = JSON.stringify(data);
-    if (idParam == null) {
-      await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Seção ${nome} cadastrada com sucesso!`);
-          navigate(`/listagem-secoes`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+
+    try {
+      if (idParam == null) {
+        await axios.post(baseURL, data, {
+          headers: { "Content-Type": "application/json" }
         });
-    } else {
-      await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Seção ${nome} alterada com sucesso!`);
-          navigate(`/listagem-secoes`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+        mensagemSucesso(`Seção ${nome} cadastrada com sucesso!`);
+      } else {
+        await axios.put(`${baseURL}/${idParam}`, data, {
+          headers: { "Content-Type": "application/json" }
         });
+        mensagemSucesso(`Seção ${nome} alterada com sucesso!`);
+      }
+
+      navigate("/listagem-secoes");
+
+    } catch (error) {
+      mensagemErro(error.response?.data || "Erro ao salvar seção.");
     }
   }
 
   async function buscar() {
-    if (idParam != null) {
-      await axios
-        .get(`${baseURL}/${idParam}`)
-        .then((response) => {
-          setDados(response.data);
-          setId(dados.id);
-          setNome(dados.nome);
-        })
-        .catch((error) => {
-          mensagemErro("Erro ao buscar dados da seção.");
-        });
-    }
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar seção.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
   }
 
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+      if (idParam) {
+        buscar();
+      } // eslint-disable-next-line
+    }, [id]);
 
   if (!dados) return null;
 
