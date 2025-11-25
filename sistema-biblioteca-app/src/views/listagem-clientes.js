@@ -32,20 +32,19 @@ function ListagemClientes() {
   const [dados, setDados] = React.useState(null);
 
   async function excluir(id) {
-  let url = `${baseURL}/${id}`;
-  console.log(url);
-  await axios 
-    .delete(url, {
-      headers: { 'Content-Type': 'application/json' },
-      data: { id },
-    })
-    .then(function (response) {
-      mensagemSucesso(`Cliente excluído com sucesso!`);
-      setDados(dados.filter((dado) => dado.id !== id));
-    })
-    .catch(function (error) {
-      mensagemErro(`Erro ao excluir o cliente`);
-    });
+    let url = `${baseURL}/${id}`;
+    await axios
+      .delete(url, {
+        headers: { 'Content-Type': 'application/json' },
+        data: { id },
+      })
+      .then(function () {
+        mensagemSucesso(`Cliente excluído com sucesso!`);
+        setDados(dados.filter((dado) => dado.id !== id));
+      })
+      .catch(function () {
+        mensagemErro(`Erro ao excluir o cliente`);
+      });
   }
 
   React.useEffect(() => {
@@ -69,7 +68,8 @@ function ListagemClientes() {
               >
                 Novo Cliente
               </button>
-              <table className="table table-hover">
+
+              <table className="table table-hover mt-3">
                 <thead>
                   <tr>
                     <th scope="col">Nome</th>
@@ -90,6 +90,7 @@ function ListagemClientes() {
                     <th scope="col">Ações</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
@@ -105,6 +106,7 @@ function ListagemClientes() {
                       <td>{dado.cidade}</td>
                       <td>{dado.estado}</td>
 
+<<<<<<< HEAD
                       <td>
                         {Array.isArray(dado.obras)
                           ? dado.obras.length
@@ -117,14 +119,29 @@ function ListagemClientes() {
                           : dado.pendencias || ""}
                       </td>
 
+=======
+>>>>>>> 7a015efca8ca25f29c1404346dea23d32851a018
                       <td>
-                        <Stack spacing={1} padding={0} direction="row">
+                        {Array.isArray(dado.obras)
+                          ? dado.obras.length
+                          : dado.obras || ""}
+                      </td>
+
+                      <td>
+                        {Array.isArray(dado.pendencias)
+                          ? dado.pendencias.length
+                          : dado.pendencias || ""}
+                      </td>
+
+                      <td>
+                        <Stack spacing={1} direction="row">
                           <IconButton
                             aria-label="edit"
                             onClick={() => editar(dado.id)}
                           >
                             <EditIcon />
                           </IconButton>
+
                           <IconButton
                             aria-label="delete"
                             onClick={() => excluir(dado.id)}
@@ -136,7 +153,8 @@ function ListagemClientes() {
                     </tr>
                   ))}
                 </tbody>
-              </table>{" "}
+
+              </table>
             </div>
           </div>
         </div>

@@ -18,7 +18,7 @@ function CadastroCliente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-
+  // Campos
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
@@ -35,6 +35,7 @@ function CadastroCliente() {
   const [pendencia, setPendencia] = useState('');
   const [listaObras, setListaObras] = useState([]);
   const [listaPendencias, setListaPendencias] = useState([]);
+<<<<<<< HEAD
 
   const [dados, setDados] = useState([]);
 
@@ -69,7 +70,73 @@ function CadastroCliente() {
       setEstado(dados.estado);
       setListaObras(dados.obras);
       setListaPendencias(dados.pendencias);
+=======
+  const [dados, setDados] = useState([]);
+
+  async function buscar() {
+    try {
+      const response = await axios.get(`${baseURL}/${idParam}`);
+      setDados(response.data);
+
+      setId(response.data.id);
+      setNome(response.data.nome);
+      setCpf(response.data.cpf);
+      setCep(response.data.cep);
+      setRua(response.data.rua);
+      setNumero(response.data.numero);
+      setBairro(response.data.bairro);
+      setComplemento(response.data.complemento);
+      setDataNascimento(response.data.dataNascimento);
+      setTelefone(response.data.telefone);
+      setCidade(response.data.cidade);
+      setEstado(response.data.estado);
+
+      setObra(response.data.obras || "");
+      setPendencia(response.data.pendencias || "");
+
+    } catch (e) {
+      mensagemErro("Erro ao buscar cliente.");
+>>>>>>> 7a015efca8ca25f29c1404346dea23d32851a018
     }
+  }
+
+  async function carregarListas() {
+    try {
+      const response = await axios.get(baseURL);
+
+      const obrasExtraidas = response.data.map(c => c.obras);
+      const pendenciasExtraidas = response.data.map(c => c.pendencias);
+
+      setListaObras([...new Set(obrasExtraidas)]);
+      setListaPendencias([...new Set(pendenciasExtraidas)]);
+    } catch {
+      mensagemErro("Erro ao carregar obras e pendências.");
+    }
+  }
+
+  useEffect(() => {
+    carregarListas();
+
+    if (idParam) {
+      buscar();
+    }
+  }, []);
+
+  function inicializar() {
+    setId('');
+    setNome('');
+    setCpf('');
+    setCep('');
+    setRua('');
+    setNumero('');
+    setBairro('');
+    setComplemento('');
+    setDataNascimento('');
+    setTelefone('');
+    setCidade('');
+    setEstado('');
+    setObra('');
+    setPendencia('');
   }
 
   async function salvar() {
@@ -90,8 +157,6 @@ function CadastroCliente() {
       pendencias: pendencia
     };
 
-    data = JSON.stringify(data);
-
     try {
       if (idParam == null) {
         await axios.post(baseURL, data, {
@@ -108,10 +173,11 @@ function CadastroCliente() {
       navigate("/listagem-clientes");
 
     } catch (error) {
-      mensagemErro(error.response?.data || "Erro ao salvar cliente.");
+      mensagemErro("Erro ao salvar cliente.");
     }
   }
 
+<<<<<<< HEAD
   async function buscar() {
     await axios.get(`${baseURL}/${idParam}`)
       .then(response => {
@@ -159,6 +225,8 @@ async function carregarListas() {
     }
   }, []);
   
+=======
+>>>>>>> 7a015efca8ca25f29c1404346dea23d32851a018
   if (!dados && idParam) return null;
 
   return (
