@@ -18,7 +18,6 @@ function CadastroCliente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  // Campos
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
@@ -54,7 +53,6 @@ function CadastroCliente() {
       setTelefone(response.data.telefone);
       setCidade(response.data.cidade);
       setEstado(response.data.estado);
-
       setObra(response.data.obras || "");
       setPendencia(response.data.pendencias || "");
 
@@ -260,7 +258,6 @@ function CadastroCliente() {
                 />
               </FormGroup>
 
-              {/* COMBOBOX OBRAS */}
               <FormGroup label="Obra:" htmlFor="selectObra">
                 <select
                   id="selectObra"

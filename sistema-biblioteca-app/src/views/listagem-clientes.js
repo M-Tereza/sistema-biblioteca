@@ -83,10 +83,8 @@ function ListagemClientes() {
                     <th scope="col">Telefone</th>
                     <th scope="col">Cidade</th>
                     <th scope="col">Estado</th>
-
                     <th scope="col">Obras</th>
                     <th scope="col">Pendências</th>
-
                     <th scope="col">Ações</th>
                   </tr>
                 </thead>
