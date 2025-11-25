@@ -106,27 +106,13 @@ function ListagemClientes() {
                       <td>{dado.cidade}</td>
                       <td>{dado.estado}</td>
 
-<<<<<<< HEAD
+
                       <td>
                         {Array.isArray(dado.obras)
                           ? dado.obras.length
                           : dado.obras || ""}
                       </td>
                       
-                      <td>
-                        {Array.isArray(dado.pendencias)
-                          ? dado.pendencias.length
-                          : dado.pendencias || ""}
-                      </td>
-
-=======
->>>>>>> 7a015efca8ca25f29c1404346dea23d32851a018
-                      <td>
-                        {Array.isArray(dado.obras)
-                          ? dado.obras.length
-                          : dado.obras || ""}
-                      </td>
-
                       <td>
                         {Array.isArray(dado.pendencias)
                           ? dado.pendencias.length
