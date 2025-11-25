@@ -42,53 +42,48 @@ function CadastroGenero() {
 
   async function salvar() {
     let data = { id, nome };
+
     data = JSON.stringify(data);
-    if (idParam == null) {
-      await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Gênero ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-generos`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+
+    try {
+      if (idParam == null) {
+        await axios.post(baseURL, data, {
+          headers: { "Content-Type": "application/json" }
         });
-    } else {
-      await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Genero ${nome} alterado com sucesso!`);
-          navigate(`/listagem-generos`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+        mensagemSucesso(`Gênero ${nome} cadastrado com sucesso!`);
+      } else {
+        await axios.put(`${baseURL}/${idParam}`, data, {
+          headers: { "Content-Type": "application/json" }
         });
+        mensagemSucesso(`Gênero ${nome} alterado com sucesso!`);
+      }
+
+      navigate("/listagem-generos");
+
+    } catch (error) {
+      mensagemErro(error.response?.data || "Erro ao salvar gênero.");
     }
   }
 
 
   async function buscar() {
-    if (idParam != null) {
-      await axios
-        .get(`${baseURL} / ${idParam}`)
-        .then((response) => {
-          setDados(response.data);
-          setId(dados.id);
-          setNome(dados.nome);
-        })
-        .catch(() => {
-          mensagemErro("Erro ao buscar dados do idioma.");
-        });
-    }
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar gênero.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+        if (idParam) {
+          buscar();
+        } // eslint-disable-next-line
+      }, [id]);
 
   if (!dados) return null;
 

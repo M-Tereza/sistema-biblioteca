@@ -22,15 +22,19 @@ function CadastroCliente() {
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
-  const [cep, setCep] = useState('');
-  const [rua, setRua] = useState('');
-  const [numero, setNumero] = useState('');
-  const [bairro, setBairro] = useState('');
-  const [complemento, setComplemento] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [cep, setCep] = useState('');
+  const [logradouro, setLogradouro] = useState('');
+  const [numero, setNumero] = useState('');
+  const [complemento, setComplemento] = useState('');
+  const [bairro, setBairro] = useState('');
   const [cidade, setCidade] = useState('');
   const [estado, setEstado] = useState('');
+  const [obra, setObra] = useState('');
+  const [pendencia, setPendencia] = useState('');
+  const [listaObras, setListaObras] = useState([]);
+  const [listaPendencias, setListaPendencias] = useState([]);
 
   const [dados, setDados] = useState([]);
 
@@ -39,28 +43,32 @@ function CadastroCliente() {
       setId('');
       setNome('');
       setCpf('');
-      setCep('');
-      setRua('');
-      setNumero('');
-      setBairro('');
-      setComplemento('');
       setDataNascimento('');
       setTelefone('');
+      setCep('');
+      setLogradouro('');
+      setNumero('');
+      setComplemento('');
+      setBairro('');
       setCidade('');
       setEstado('');
+      setObra('');
+      setPendencia('');
     } else {
       setId(dados.id);
       setNome(dados.nome);
       setCpf(dados.cpf);
-      setCep(dados.cep);
-      setRua(dados.rua);
-      setNumero(dados.numero);
-      setBairro(dados.bairro);
-      setComplemento(dados.complemento);
       setDataNascimento(dados.dataNascimento);
       setTelefone(dados.telefone);
+      setCep(dados.cep);
+      setLogradouro(dados.logradouro);
+      setNumero(dados.numero);
+      setComplemento(dados.complemento);
+      setBairro(dados.bairro);
       setCidade(dados.cidade);
       setEstado(dados.estado);
+      setListaObras(dados.obras);
+      setListaPendencias(dados.pendencias);
     }
   }
 
@@ -69,15 +77,17 @@ function CadastroCliente() {
       id,
       nome,
       cpf,
-      cep,
-      rua,
-      numero,
-      bairro,
-      complemento,
       dataNascimento,
       telefone,
+      cep,
+      logradouro,
+      numero,
+      complemento,
+      bairro,
       cidade,
-      estado
+      estado,
+      obras: obra,
+      pendencias: pendencia
     };
 
     data = JSON.stringify(data);
@@ -114,24 +124,42 @@ function CadastroCliente() {
     setId(dados.id);
     setNome(dados.nome);
     setCpf(dados.cpf);
-    setCep(dados.cep);
-    setRua(dados.rua);
-    setNumero(dados.numero);
-    setBairro(dados.bairro);
-    setComplemento(dados.complemento);
     setDataNascimento(dados.dataNascimento);
     setTelefone(dados.telefone);
+    setCep(dados.cep);
+    setLogradouro(dados.logradouro);
+    setNumero(dados.numero);
+    setComplemento(dados.complemento);
+    setBairro(dados.bairro);
     setCidade(dados.cidade);
     setEstado(dados.estado);
+    setObra(response.data.obras || "");
+    setPendencia(response.data.pendencias || "");
+  }
+
+async function carregarListas() {
+    try {
+      const response = await axios.get(baseURL);
+
+      const obrasExtraidas = response.data.map(c => c.obras);
+      const pendenciasExtraidas = response.data.map(c => c.pendencias);
+
+      setListaObras([...new Set(obrasExtraidas)]);
+      setListaPendencias([...new Set(pendenciasExtraidas)]);
+    } catch {
+      mensagemErro("Erro ao carregar obras e pendências.");
+    }
   }
 
   useEffect(() => {
+    carregarListas();
+
     if (idParam) {
       buscar();
-    } // eslint-disable-next-line
-  }, [id]);
-
-  if (!dados) return null;
+    }
+  }, []);
+  
+  if (!dados && idParam) return null;
 
   return (
     <div className="container">
@@ -153,61 +181,11 @@ function CadastroCliente() {
               <FormGroup label="CPF: *" htmlFor="inputCpf">
                 <input
                   type="text"
-                  maxLength="11"
+                  maxLength="14"
                   id="inputCpf"
                   value={cpf}
                   className="form-control"
                   onChange={(e) => setCpf(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="CEP:" htmlFor="inputCep">
-                <input
-                  type="text"
-                  id="inputCep"
-                  value={cep}
-                  className="form-control"
-                  onChange={(e) => setCep(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Rua:" htmlFor="inputRua">
-                <input
-                  type="text"
-                  id="inputRua"
-                  value={rua}
-                  className="form-control"
-                  onChange={(e) => setRua(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Número:" htmlFor="inputNumero">
-                <input
-                  type="text"
-                  id="inputNumero"
-                  value={numero}
-                  className="form-control"
-                  onChange={(e) => setNumero(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Bairro:" htmlFor="inputBairro">
-                <input
-                  type="text"
-                  id="inputBairro"
-                  value={bairro}
-                  className="form-control"
-                  onChange={(e) => setBairro(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Complemento:" htmlFor="inputComplemento">
-                <input
-                  type="text"
-                  id="inputComplemento"
-                  value={complemento}
-                  className="form-control"
-                  onChange={(e) => setComplemento(e.target.value)}
                 />
               </FormGroup>
 
@@ -231,6 +209,56 @@ function CadastroCliente() {
                 />
               </FormGroup>
 
+              <FormGroup label="CEP:" htmlFor="inputCep">
+                <input
+                  type="text"
+                  id="inputCep"
+                  value={cep}
+                  className="form-control"
+                  onChange={(e) => setCep(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Logradouro:" htmlFor="inputLogradouro">
+                <input
+                  type="text"
+                  id="inputLogradouro"
+                  value={logradouro}
+                  className="form-control"
+                  onChange={(e) => setLogradouro(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Número:" htmlFor="inputNumero">
+                <input
+                  type="text"
+                  id="inputNumero"
+                  value={numero}
+                  className="form-control"
+                  onChange={(e) => setNumero(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Complemento:" htmlFor="inputComplemento">
+                <input
+                  type="text"
+                  id="inputComplemento"
+                  value={complemento}
+                  className="form-control"
+                  onChange={(e) => setComplemento(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Bairro:" htmlFor="inputBairro">
+                <input
+                  type="text"
+                  id="inputBairro"
+                  value={bairro}
+                  className="form-control"
+                  onChange={(e) => setBairro(e.target.value)}
+                />
+              </FormGroup>
+
               <FormGroup label="Cidade:" htmlFor="inputCidade">
                 <input
                   type="text"
@@ -249,6 +277,35 @@ function CadastroCliente() {
                   className="form-control"
                   onChange={(e) => setEstado(e.target.value)}
                 />
+              </FormGroup>
+
+              {/* COMBOBOX OBRAS */}
+              <FormGroup label="Obra:" htmlFor="selectObra">
+                <select
+                  id="selectObra"
+                  className="form-control"
+                  value={obra}
+                  onChange={(e) => setObra(e.target.value)}
+                >
+                  <option value="">Selecione uma obra</option>
+                  {listaObras.map((o, index) => (
+                    <option key={index} value={o}>{o}</option>
+                  ))}
+                </select>
+              </FormGroup>
+
+              <FormGroup label="Pendências:" htmlFor="selectPendencia">
+                <select
+                  id="selectPendencia"
+                  className="form-control"
+                  value={pendencia}
+                  onChange={(e) => setPendencia(e.target.value)}
+                >
+                  <option value="">Selecione</option>
+                  {listaPendencias.map((p, index) => (
+                    <option key={index} value={p}>{p}</option>
+                  ))}
+                </select>
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction="row">

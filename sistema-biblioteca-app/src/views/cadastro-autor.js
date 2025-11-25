@@ -42,53 +42,49 @@ function CadastroAutor() {
 
   async function salvar() {
     let data = { id, nome };
+    
     data = JSON.stringify(data);
-    if (idParam == null) {
-      await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Autor ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-autores`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+
+    try {
+      if (idParam == null) {
+        await axios.post(baseURL, data, {
+          headers: { "Content-Type": "application/json" }
         });
-    } else {
-      await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Autor ${nome} alterado com sucesso!`);
-          navigate(`/listagem-autores`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+        mensagemSucesso(`Autor ${nome} cadastrado com sucesso!`);
+      } else {
+        await axios.put(`${baseURL}/${idParam}`, data, {
+          headers: { "Content-Type": "application/json" }
         });
+        mensagemSucesso(`Autor ${nome} alterado com sucesso!`);
+      }
+
+      navigate("/listagem-autores");
+
+    } catch (error) {
+      mensagemErro(error.response?.data || "Erro ao salvar autor.");
     }
   }
 
 
   async function buscar() {
-    if (idParam != null) {
-      await axios
-        .get(`${baseURL} / ${idParam}`)
-        .then((response) => {
-          setDados(response.data);
-          setId(dados.id);
-          setNome(dados.nome);
-        })
-        .catch(() => {
-          mensagemErro("Erro ao buscar dados do autor.");
-        });
-    }
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar autor.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
   }
 
+
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+      if (idParam) {
+        buscar();
+      } // eslint-disable-next-line
+    }, [id]);
 
   if (!dados) return null;
 

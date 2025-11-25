@@ -12,7 +12,7 @@ import ListagemEditoras from './views/listagem-editoras';
 
 
 import CadastroCliente from './views/cadastro-cliente';
-// import CadastroObra from './views/cadastro-obra';
+import CadastroObra from './views/cadastro-obra';
 // import CadastroExemplar from './views/cadastro-exemplar';
 import CadastroMulta from './views/cadastro-multa';
 import CadastroGenero from './views/cadastro-genero';
@@ -32,10 +32,10 @@ function Rotas(props) {
           path='/cadastro-cliente/:idParam?'
           element={<CadastroCliente />}
         />
-        {/* <Route
+        <Route
           path='/cadastro-obra/:idParam?'
           element={<CadastroObra />}
-        /> */}
+        />
         {/* <Route
           path='/cadastro-exemplar/:idParam?'
           element={<CadastroExemplar />}

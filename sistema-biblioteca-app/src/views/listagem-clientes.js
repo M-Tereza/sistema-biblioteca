@@ -74,15 +74,20 @@ function ListagemClientes() {
                   <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">CPF</th>
-                    <th scope="col">CEP</th>
-                    <th scope="col">Rua</th>
-                    <th scope="col">Número</th>
-                    <th scope="col">Bairro</th>
-                    <th scope="col">Complemento</th>
                     <th scope="col">Data de Nascimento</th>
                     <th scope="col">Telefone</th>
+                    <th scope="col">CEP</th>
+                    <th scope="col">Logradouro</th>
+                    <th scope="col">Número</th>
+                    <th scope="col">Complemento</th>
+                    <th scope="col">Bairro</th>
                     <th scope="col">Cidade</th>
                     <th scope="col">Estado</th>
+
+                    <th scope="col">Obras</th>
+                    <th scope="col">Pendências</th>
+
+                    <th scope="col">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -90,15 +95,28 @@ function ListagemClientes() {
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
                       <td>{dado.cpf}</td>
-                      <td>{dado.cep}</td>
-                      <td>{dado.rua}</td>
-                      <td>{dado.numero}</td>
-                      <td>{dado.bairro}</td>
-                      <td>{dado.complemento}</td>
                       <td>{dado.dataNascimento}</td>
                       <td>{dado.telefone}</td>
+                      <td>{dado.cep}</td>
+                      <td>{dado.logradouro}</td>
+                      <td>{dado.numero}</td>
+                      <td>{dado.complemento}</td>
+                      <td>{dado.bairro}</td>
                       <td>{dado.cidade}</td>
                       <td>{dado.estado}</td>
+
+                      <td>
+                        {Array.isArray(dado.obras)
+                          ? dado.obras.length
+                          : dado.obras || ""}
+                      </td>
+                      
+                      <td>
+                        {Array.isArray(dado.pendencias)
+                          ? dado.pendencias.length
+                          : dado.pendencias || ""}
+                      </td>
+
                       <td>
                         <Stack spacing={1} padding={0} direction="row">
                           <IconButton
