@@ -22,12 +22,19 @@ import CadastroAutor from './views/cadastro-autor';
 import CadastroEditora from './views/cadastro-editora';
 
 
+import PerfilCliente from './views/perfil-cliente';
+
+
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path='/perfil-cliente/:id'
+          element={<PerfilCliente />}
+        />
          <Route
           path='/cadastro-cliente/:idParam?'
           element={<CadastroCliente />}

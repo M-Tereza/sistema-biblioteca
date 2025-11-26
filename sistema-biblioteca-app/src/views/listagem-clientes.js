@@ -11,9 +11,9 @@ import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import axios from 'axios';
+import axios from "axios";
 import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS.clientes}/clientes`;
@@ -25,8 +25,8 @@ function ListagemClientes() {
     navigate(`/cadastro-cliente`);
   };
 
-  const editar = (id) => {
-    navigate(`/cadastro-cliente/${id}`);
+  const visualizar = (id) => {
+    navigate(`/perfil-cliente/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -35,7 +35,7 @@ function ListagemClientes() {
     let url = `${baseURL}/${id}`;
     await axios
       .delete(url, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         data: { id },
       })
       .then(function () {
@@ -74,20 +74,6 @@ function ListagemClientes() {
                   <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">CPF</th>
-                    <th scope="col">Data de Nascimento</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">CEP</th>
-                    <th scope="col">Logradouro</th>
-                    <th scope="col">Número</th>
-                    <th scope="col">Complemento</th>
-                    <th scope="col">Bairro</th>
-                    <th scope="col">Cidade</th>
-                    <th scope="col">Estado</th>
-
-                    <th scope="col">Obras</th>
-                    <th scope="col">Pendências</th>
-
-                    <th scope="col">Ações</th>
                   </tr>
                 </thead>
 
@@ -96,36 +82,14 @@ function ListagemClientes() {
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
                       <td>{dado.cpf}</td>
-                      <td>{dado.dataNascimento}</td>
-                      <td>{dado.telefone}</td>
-                      <td>{dado.cep}</td>
-                      <td>{dado.logradouro}</td>
-                      <td>{dado.numero}</td>
-                      <td>{dado.complemento}</td>
-                      <td>{dado.bairro}</td>
-                      <td>{dado.cidade}</td>
-                      <td>{dado.estado}</td>
-
-
-                      <td>
-                        {Array.isArray(dado.obras)
-                          ? dado.obras.length
-                          : dado.obras || ""}
-                      </td>
-                      
-                      <td>
-                        {Array.isArray(dado.pendencias)
-                          ? dado.pendencias.length
-                          : dado.pendencias || ""}
-                      </td>
 
                       <td>
                         <Stack spacing={1} direction="row">
                           <IconButton
-                            aria-label="edit"
-                            onClick={() => editar(dado.id)}
+                            aria-label="account"
+                            onClick={() => visualizar(dado.id)}
                           >
-                            <EditIcon />
+                            <AccountCircleIcon />
                           </IconButton>
 
                           <IconButton
@@ -139,7 +103,6 @@ function ListagemClientes() {
                     </tr>
                   ))}
                 </tbody>
-
               </table>
             </div>
           </div>

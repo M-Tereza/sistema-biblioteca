@@ -18,7 +18,8 @@ function CadastroCliente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  // Campos
+  const [dados, setDados] = useState(null);
+
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
@@ -33,43 +34,34 @@ function CadastroCliente() {
   const [estado, setEstado] = useState('');
   const [obra, setObra] = useState('');
   const [pendencia, setPendencia] = useState('');
+
   const [listaObras, setListaObras] = useState([]);
   const [listaPendencias, setListaPendencias] = useState([]);
 
+  async function buscar() {
+    try {
+      const response = await axios.get(`${baseURL}/${idParam}`);
+      const cliente = response.data;
 
-  const [dados, setDados] = useState([]);
+      setDados(cliente);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setNome('');
-      setCpf('');
-      setDataNascimento('');
-      setTelefone('');
-      setCep('');
-      setLogradouro('');
-      setNumero('');
-      setComplemento('');
-      setBairro('');
-      setCidade('');
-      setEstado('');
-      setObra('');
-      setPendencia('');
-    } else {
-      setId(dados.id);
-      setNome(dados.nome);
-      setCpf(dados.cpf);
-      setDataNascimento(dados.dataNascimento);
-      setTelefone(dados.telefone);
-      setCep(dados.cep);
-      setLogradouro(dados.logradouro);
-      setNumero(dados.numero);
-      setComplemento(dados.complemento);
-      setBairro(dados.bairro);
-      setCidade(dados.cidade);
-      setEstado(dados.estado);
-      setListaObras(dados.obras);
-      setListaPendencias(dados.pendencias);
+      setId(cliente.id || "");
+      setNome(cliente.nome || "");
+      setCpf(cliente.cpf || "");
+      setDataNascimento(cliente.dataNascimento || "");
+      setTelefone(cliente.telefone || "");
+      setCep(cliente.cep || "");
+      setLogradouro(cliente.logradouro || "");
+      setNumero(cliente.numero || "");
+      setComplemento(cliente.complemento || "");
+      setBairro(cliente.bairro || "");
+      setCidade(cliente.cidade || "");
+      setEstado(cliente.estado || "");
+      setObra(cliente.obras || "");
+      setPendencia(cliente.pendencias || "");
+
+    } catch {
+      mensagemErro("Erro ao buscar cliente.");
     }
   }
 
@@ -82,6 +74,7 @@ function CadastroCliente() {
 
       setListaObras([...new Set(obrasExtraidas)]);
       setListaPendencias([...new Set(pendenciasExtraidas)]);
+
     } catch {
       mensagemErro("Erro ao carregar obras e pendências.");
     }
@@ -93,8 +86,25 @@ function CadastroCliente() {
     if (idParam) {
       buscar();
     }
-  }, []);
 
+  }, [idParam]);
+
+  function inicializar() {
+    setId('');
+    setNome('');
+    setCpf('');
+    setDataNascimento('');
+    setTelefone('');
+    setCep('');
+    setLogradouro('');
+    setNumero('');
+    setComplemento('');
+    setBairro('');
+    setCidade('');
+    setEstado('');
+    setObra('');
+    setPendencia('');
+  }
 
   async function salvar() {
     let data = {
@@ -115,7 +125,7 @@ function CadastroCliente() {
     };
 
     try {
-      if (idParam == null) {
+      if (!idParam) {
         await axios.post(baseURL, data, {
           headers: { "Content-Type": "application/json" }
         });
@@ -129,60 +139,11 @@ function CadastroCliente() {
 
       navigate("/listagem-clientes");
 
-    } catch (error) {
+    } catch {
       mensagemErro("Erro ao salvar cliente.");
     }
   }
 
-
-  async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`)
-      .then(response => {
-        setDados(response.data);
-      })
-      .catch(() => {
-        mensagemErro("Erro ao buscar cliente.");
-      });
-
-    setId(dados.id);
-    setNome(dados.nome);
-    setCpf(dados.cpf);
-    setDataNascimento(dados.dataNascimento);
-    setTelefone(dados.telefone);
-    setCep(dados.cep);
-    setLogradouro(dados.logradouro);
-    setNumero(dados.numero);
-    setComplemento(dados.complemento);
-    setBairro(dados.bairro);
-    setCidade(dados.cidade);
-    setEstado(dados.estado);
-    setObra(dados.obras || "");
-    setPendencia(dados.pendencias || "");
-  }
-
-  async function carregarListas() {
-    try {
-      const response = await axios.get(baseURL);
-
-      const obrasExtraidas = response.data.map(c => c.obras);
-      const pendenciasExtraidas = response.data.map(c => c.pendencias);
-
-      setListaObras([...new Set(obrasExtraidas)]);
-      setListaPendencias([...new Set(pendenciasExtraidas)]);
-    } catch {
-      mensagemErro("Erro ao carregar obras e pendências.");
-    }
-  }
-
-  useEffect(() => {
-    carregarListas();
-
-    if (idParam) {
-      buscar();
-    }
-  }, []);
-
-  if (!dados && idParam) return null;
 
   return (
     <div className="container">
@@ -302,7 +263,6 @@ function CadastroCliente() {
                 />
               </FormGroup>
 
-              {/* COMBOBOX OBRAS */}
               <FormGroup label="Obra:" htmlFor="selectObra">
                 <select
                   id="selectObra"
