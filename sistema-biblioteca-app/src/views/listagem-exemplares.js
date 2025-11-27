@@ -76,28 +76,19 @@ function ListagemExemplares() {
               <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Genero</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Data de Aquisição</th>
                     <th scope="col">Seção</th>
-                    <th scope="col">Editora</th>
-                    <th scope="col">Idioma</th>
-                    <th scope="col">Título</th>
-                    <th scope="col">ISBN</th>
-                    <th scope="col">Edição</th>
-                    <th scope="col">Autor</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.genero}</td>
-                      <td>{dado.secao}</td>
-                      <td>{dado.login}</td>
-                      <td>{dado.editora}</td>
-                      <td>{dado.idioma}</td>
-                      <td>{dado.titulo}</td>
-                      <td>{dado.isbn}</td>
-                      <td>{dado.edicao}</td>
-                      <td>{dado.autor}</td>
+                      <tr key={dado.idObra}>
+                        <td>{dado.status}</td>
+                        <td>{dado.dataAquisicao}</td>
+                        <td>{dado.secao}</td>
+                      </tr>
 
                       <td>
                         <Stack spacing={1} padding={0} direction="row">
