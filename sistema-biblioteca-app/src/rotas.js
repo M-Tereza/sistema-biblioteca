@@ -13,7 +13,7 @@ import ListagemEditoras from './views/listagem-editoras';
 
 import CadastroCliente from './views/cadastro-cliente';
 import CadastroObra from './views/cadastro-obra';
-// import CadastroExemplar from './views/cadastro-exemplar';
+import CadastroExemplar from './views/cadastro-exemplar';
 import CadastroMulta from './views/cadastro-multa';
 import CadastroGenero from './views/cadastro-genero';
 import CadastroSecao from './views/cadastro-secao';
@@ -31,46 +31,17 @@ function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path='/perfil-cliente/:id'
-          element={<PerfilCliente />}
-        />
-         <Route
-          path='/cadastro-cliente/:idParam?'
-          element={<CadastroCliente />}
-        />
-        <Route
-          path='/cadastro-obra/:idParam?'
-          element={<CadastroObra />}
-        />
-        {/* <Route
-          path='/cadastro-exemplar/:idParam?'
-          element={<CadastroExemplar />}
-        /> */}
-        <Route
-          path='/cadastro-multa/:idParam?'
-          element={<CadastroMulta />}
-        />
-        <Route
-          path='/cadastro-genero/:idParam?'
-          element={<CadastroGenero />}
-        />
-        <Route
-          path='/cadastro-idioma/:idParam?'
-          element={<CadastroIdioma />}
-        />
-        <Route
-          path='/cadastro-secao/:idParam?'
-          element={<CadastroSecao />}
-        />
-        <Route
-          path='/cadastro-autor/:idParam?'
-          element={<CadastroAutor />}
-        />
-        <Route
-          path='/cadastro-editora/:idParam?'
-          element={<CadastroEditora />}
-        />
+        <Route path='/cadastro-cliente/:idParam?' element={<CadastroCliente />} />
+        <Route path='/cadastro-obra/:idParam?' element={<CadastroObra />} />
+        <Route path='/cadastro-exemplar/:idParam?' element={<CadastroExemplar />} />
+        <Route path='/cadastro-multa/:idParam?' element={<CadastroMulta />} />
+        <Route path='/cadastro-genero/:idParam?' element={<CadastroGenero />} />
+        <Route path='/cadastro-idioma/:idParam?' element={<CadastroIdioma />} />
+        <Route path='/cadastro-secao/:idParam?' element={<CadastroSecao />} />
+        <Route path='/cadastro-autor/:idParam?' element={<CadastroAutor />} />
+        <Route path='/cadastro-editora/:idParam?'element={<CadastroEditora />}/>
+
+
         <Route path='/listagem-clientes' element={<ListagemClientes />} />
         <Route path='/listagem-obras' element={<ListagemObras />} />
         <Route path='/listagem-exemplares' element={<ListagemExemplares />} />
@@ -80,6 +51,8 @@ function Rotas(props) {
         <Route path='/listagem-secoes' element={<ListagemSecoes />} />
         <Route path='/listagem-autores' element={<ListagemAutores />} />
         <Route path='/listagem-editoras' element={<ListagemEditoras />} />
+
+        <Route path='/perfil-cliente/:id' element={<PerfilCliente />} />
 
       </Routes>
     </BrowserRouter>

@@ -12,99 +12,68 @@ import '../custom.css';
 
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
+
 const baseURL = `${API_URLS.clientes}/clientes`;
 
 function CadastroCliente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const [dados, setDados] = useState(null);
+  const [dados, setDados] = useState([]);
 
-  const [id, setId] = useState('');
-  const [nome, setNome] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [cep, setCep] = useState('');
-  const [logradouro, setLogradouro] = useState('');
-  const [numero, setNumero] = useState('');
-  const [complemento, setComplemento] = useState('');
-  const [bairro, setBairro] = useState('');
-  const [cidade, setCidade] = useState('');
-  const [estado, setEstado] = useState('');
-  const [obra, setObra] = useState('');
-  const [pendencia, setPendencia] = useState('');
-
-  const [listaObras, setListaObras] = useState([]);
-  const [listaPendencias, setListaPendencias] = useState([]);
-
-  async function buscar() {
-    try {
-      const response = await axios.get(`${baseURL}/${idParam}`);
-      const cliente = response.data;
-
-      setDados(cliente);
-
-      setId(cliente.id || "");
-      setNome(cliente.nome || "");
-      setCpf(cliente.cpf || "");
-      setDataNascimento(cliente.dataNascimento || "");
-      setTelefone(cliente.telefone || "");
-      setCep(cliente.cep || "");
-      setLogradouro(cliente.logradouro || "");
-      setNumero(cliente.numero || "");
-      setComplemento(cliente.complemento || "");
-      setBairro(cliente.bairro || "");
-      setCidade(cliente.cidade || "");
-      setEstado(cliente.estado || "");
-      setObra(cliente.obras || "");
-      setPendencia(cliente.pendencias || "");
-
-    } catch {
-      mensagemErro("Erro ao buscar cliente.");
-    }
-  }
-
-  async function carregarListas() {
-    try {
-      const response = await axios.get(baseURL);
-
-      const obrasExtraidas = response.data.map(c => c.obras);
-      const pendenciasExtraidas = response.data.map(c => c.pendencias);
-
-      setListaObras([...new Set(obrasExtraidas)]);
-      setListaPendencias([...new Set(pendenciasExtraidas)]);
-
-    } catch {
-      mensagemErro("Erro ao carregar obras e pendências.");
-    }
-  }
-
-  useEffect(() => {
-    carregarListas();
-
-    if (idParam) {
-      buscar();
-    }
-
-  }, [idParam]);
+  const [id, setId] = useState(null);
+  const [nome, setNome] = useState(null);
+  const [cpf, setCpf] = useState(null);
+  const [dataNascimento, setDataNascimento] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [telefone, setTelefone] = useState(null);
+  const [cep, setCep] = useState(null);
+  const [logradouro, setLogradouro] = useState(null);
+  const [numero, setNumero] = useState(null);
+  const [complemento, setComplemento] = useState(null);
+  const [bairro, setBairro] = useState(null);
+  const [cidade, setCidade] = useState(null);
+  const [estado, setEstado] = useState(null);
 
   function inicializar() {
-    setId('');
-    setNome('');
-    setCpf('');
-    setDataNascimento('');
-    setTelefone('');
-    setCep('');
-    setLogradouro('');
-    setNumero('');
-    setComplemento('');
-    setBairro('');
-    setCidade('');
-    setEstado('');
-    setObra('');
-    setPendencia('');
+    if (idParam == null) {
+      setId('');
+      setNome('');
+      setCpf('');
+      setDataNascimento('');
+      setEmail('');
+      setTelefone('');
+      setCep('');
+      setLogradouro('');
+      setNumero('');
+      setComplemento('');
+      setBairro('');
+      setCidade('');
+      setEstado('');
+    } else {
+      setId(dados.id);
+      setNome(dados.nome);
+      setCpf(dados.cpf);
+      setDataNascimento(dados.dataNascimento);
+      setEmail(dados.email);
+      setTelefone(dados.telefone);
+      setCep(dados.cep);
+      setLogradouro(dados.logradouro);
+      setNumero(dados.numero);
+      setComplemento(dados.complemento);
+      setBairro(dados.bairro);
+      setCidade(dados.cidade);
+      setEstado(dados.estado);
+    }
   }
+
+  const voltar = () => {
+    if (idParam == null) {
+      navigate(`/listagem-clientes`);
+    } else {
+      navigate(`/perfil-cliente/${dados.id}`);
+    }
+  };
 
   async function salvar() {
     let data = {
@@ -112,6 +81,7 @@ function CadastroCliente() {
       nome,
       cpf,
       dataNascimento,
+      email,
       telefone,
       cep,
       logradouro,
@@ -120,8 +90,6 @@ function CadastroCliente() {
       bairro,
       cidade,
       estado,
-      obras: obra,
-      pendencias: pendencia
     };
 
     try {
@@ -144,6 +112,35 @@ function CadastroCliente() {
     }
   }
 
+  async function buscar() {
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar cliente.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
+    setCpf(dados.cpf);
+    setDataNascimento(dados.dataNascimento);
+    setEmail(dados.email);
+    setTelefone(dados.telefone);
+    setCep(dados.cep);
+    setLogradouro(dados.logradouro);
+    setNumero(dados.numero);
+    setComplemento(dados.complemento);
+    setBairro(dados.bairro);
+    setCidade(dados.cidade);
+    setEstado(dados.estado);
+  }
+
+  useEffect(() => {
+    if (idParam) {
+      buscar();
+    } // eslint-disable-next-line
+  }, [id]);
 
   return (
     <div className="container">
@@ -180,6 +177,16 @@ function CadastroCliente() {
                   value={dataNascimento}
                   className="form-control"
                   onChange={(e) => setDataNascimento(e.target.value)}
+                />
+              </FormGroup>
+
+              <FormGroup label="Email:" htmlFor="inputEmail">
+                <input
+                  type="email"
+                  id="inputEmail"
+                  value={email}
+                  className="form-control"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </FormGroup>
 
@@ -263,39 +270,12 @@ function CadastroCliente() {
                 />
               </FormGroup>
 
-              <FormGroup label="Obra:" htmlFor="selectObra">
-                <select
-                  id="selectObra"
-                  className="form-control"
-                  value={obra}
-                  onChange={(e) => setObra(e.target.value)}
-                >
-                  <option value="">Selecione uma obra</option>
-                  {listaObras.map((o, index) => (
-                    <option key={index} value={o}>{o}</option>
-                  ))}
-                </select>
-              </FormGroup>
-
-              <FormGroup label="Pendências:" htmlFor="selectPendencia">
-                <select
-                  id="selectPendencia"
-                  className="form-control"
-                  value={pendencia}
-                  onChange={(e) => setPendencia(e.target.value)}
-                >
-                  <option value="">Selecione</option>
-                  {listaPendencias.map((p, index) => (
-                    <option key={index} value={p}>{p}</option>
-                  ))}
-                </select>
-              </FormGroup>
 
               <Stack spacing={1} padding={1} direction="row">
                 <button onClick={salvar} type="button" className="btn btn-success">
                   Salvar
                 </button>
-                <button onClick={inicializar} type="button" className="btn btn-danger">
+                <button onClick={voltar} type="button" className="btn btn-danger">
                   Cancelar
                 </button>
               </Stack>

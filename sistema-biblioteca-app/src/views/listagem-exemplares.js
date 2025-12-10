@@ -22,11 +22,11 @@ function ListagemExemplares() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-exemplares`);
+    navigate(`/cadastro-exemplar`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-exemplares/${id}`);
+    navigate(`/cadastro-exemplar/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -76,30 +76,30 @@ function ListagemExemplares() {
               <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Status</th>
+                    <th scope="col">Código</th>
                     <th scope="col">Data de Aquisição</th>
                     <th scope="col">Seção</th>
+                    <th scope="col">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <tr key={dado.idObra}>
-                        <td>{dado.status}</td>
-                        <td>{dado.dataAquisicao}</td>
-                        <td>{dado.secao}</td>
-                      </tr>
-
+                      <td>{dado.id}</td>
+                      <td>{dado.dataAquisicao}</td>
+                      <td>{dado.idSecao}</td>
+                      <td>{dado.status}</td>
+                      
                       <td>
-                        <Stack spacing={1} padding={0} direction="row">
+                        <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
-                            aria-label="edit"
+                            aria-label='edit'
                             onClick={() => editar(dado.id)}
                           >
                             <EditIcon />
                           </IconButton>
                           <IconButton
-                            aria-label="delete"
+                            aria-label='delete'
                             onClick={() => excluir(dado.id)}
                           >
                             <DeleteIcon />

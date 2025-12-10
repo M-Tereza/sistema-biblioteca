@@ -40,6 +40,10 @@ function CadastroEditora() {
     }
   }
 
+  const voltar = () => {
+    navigate(`/listagem-editoras`);
+  };
+
   async function salvar() {
     let data = { id, nome };
     data = JSON.stringify(data);
@@ -70,25 +74,24 @@ function CadastroEditora() {
     }
   }
 
-
   async function buscar() {
-    if (idParam != null) {
-      await axios
-        .get(`${baseURL} / ${idParam}`)
-        .then((response) => {
-          setDados(response.data);
-          setId(dados.id);
-          setNome(dados.nome);
-        })
-        .catch(() => {
-          mensagemErro("Erro ao buscar dados da editora.");
-        });
-    }
+    await axios.get(`${baseURL}/${idParam}`)
+      .then(response => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar editora.");
+      });
+
+    setId(dados.id);
+    setNome(dados.nome);
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+      if (idParam) {
+        buscar();
+      } // eslint-disable-next-line
+    }, [id]);
 
   if (!dados) return null;
 
@@ -98,6 +101,7 @@ function CadastroEditora() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
+              
               <FormGroup label='Nome da Editora: *' htmlFor='inputNome'>
                 <input
                   type='text'
@@ -109,22 +113,16 @@ function CadastroEditora() {
                   onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
-              <Stack spacing={1} padding={1} direction='row'>
-                <button
-                  onClick={salvar}
-                  type='button'
-                  className='btn btn-success'
-                >
+
+              <Stack spacing={1} padding={1} direction="row">
+                <button onClick={salvar} type="button" className="btn btn-success">
                   Salvar
                 </button>
-                <button
-                  onClick={inicializar}
-                  type='button'
-                  className='btn btn-danger'
-                >
+                <button onClick={voltar} type="button" className="btn btn-danger">
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>

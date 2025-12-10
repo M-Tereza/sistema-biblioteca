@@ -37,46 +37,57 @@ function Navbar(props) {
             />
           </ul>
           <ul className="navbar-nav">
-            <NavbarItem 
-             render="true" 
-             href="/listagem-multas" 
-             label="Multas" />
+            <NavbarItem
+              render="true"
+              href="/listagem-multas"
+              label="Multas" />
           </ul>
           <ul className="navbar-nav">
-            <NavbarItem 
-             render="true" 
-             href="/listagem-autores" 
-             label="Autores" />
+            <NavbarItem
+              render="true"
+              href="/listagem-autores"
+              label="Autores" />
           </ul>
           <ul className="navbar-nav">
-            <NavbarItem 
-             render="true" 
-             href="/listagem-idiomas" 
-             label="Idiomas" />
+            <NavbarItem
+              render="true"
+              href="/listagem-idiomas"
+              label="Idiomas" />
           </ul>
           <ul className="navbar-nav">
-            <NavbarItem 
-             render="true" 
-             href="/listagem-secoes" 
-             label="Seções" />
+            <NavbarItem
+              render="true"
+              href="/listagem-secoes"
+              label="Seções" />
           </ul>
           <ul className="navbar-nav">
-            <NavbarItem 
-             render="true" 
-             href="/listagem-editoras" 
-             label="Editoras" />
+            <NavbarItem
+              render="true"
+              href="/listagem-editoras"
+              label="Editoras" />
           </ul>
           <ul className="navbar-nav">
-            <NavbarItem 
-             render="true" 
-             href="/listagem-generos" 
-             label="Gêneros" />
+            <NavbarItem
+              render="true"
+              href="/listagem-generos"
+              label="Gêneros" />
           </ul>
           <ul className="navbar-nav">
-            <NavbarItem 
-             render="true" 
-             href="/listagem-obras" 
-             label="Obras" />
+            <NavbarItem
+              render="true"
+              href="/listagem-obras"
+              label="Obras" />
+          </ul>
+          <ul className="navbar-nav">
+            <NavbarItem
+              render="true"
+              dropdown
+              label="Relatórios"
+              items={[
+                { label: "item1", href: "" },
+                { label: "item2", href: "" }
+              ]}
+            />
           </ul>
         </div>
       </div>

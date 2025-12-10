@@ -29,18 +29,16 @@ function CadastroObra() {
   const [titulo, setTitulo] = useState('');
   const [isbn, setIsbn] = useState('');
   const [edicao, setEdicao] = useState('');
-  const [idAutor, setIdAutor] = useState(0);
-  const [idEditora, setIdEditora] = useState(0);
-  const [idGenero, setIdGenero] = useState(0);
-  const [idIdioma, setIdIdioma] = useState(0);
-  const [idSecao, setIdSecao] = useState(0);
+  const [idAutor, setIdAutor] = useState('');
+  const [idEditora, setIdEditora] = useState('');
+  const [idGenero, setIdGenero] = useState('');
+  const [idIdioma, setIdIdioma] = useState('');
 
   const [dados, setDados] = React.useState([]);
   const [dadosAutores, setDadosAutores] = React.useState(null);
   const [dadosEditoras, setDadosEditoras] = React.useState(null);
   const [dadosGeneros, setDadosGeneros] = React.useState(null);
   const [dadosIdiomas, setDadosIdiomas] = React.useState(null);
-  const [dadosSecoes, setDadosSecoes] = React.useState(null);
 
   function inicializar() {
     if (idParam == null) {
@@ -48,11 +46,10 @@ function CadastroObra() {
       setTitulo('');
       setIsbn('');
       setEdicao('');
-      setIdAutor(0);
-      setIdEditora(0);
-      setIdGenero(0);
-      setIdIdioma(0);
-      setIdSecao(0);
+      setIdAutor('');
+      setIdEditora('');
+      setIdGenero('');
+      setIdIdioma('');
     } else {
       setId(dados.id);
       setTitulo(dados.titulo);
@@ -62,12 +59,16 @@ function CadastroObra() {
       setIdEditora(dados.idEditora);
       setIdGenero(dados.idGenero);
       setIdIdioma(dados.idIdioma);
-      setIdSecao(dados.idSecao);
     }
   }
 
+  const voltar = () => {
+    navigate(`/listagem-obras`);
+  };
+
   async function salvar() {
-    let data = { id, titulo, isbn, edicao, idAutor, idEditora, idGenero, idIdioma, idSecao };
+    let data = { id, titulo, isbn, edicao, idAutor, idEditora, idGenero, idIdioma };
+
     data = JSON.stringify(data);
 
     try {
@@ -108,7 +109,6 @@ function CadastroObra() {
     setIdEditora(dados.idEditora);
     setIdGenero(dados.idGenero);
     setIdIdioma(dados.idIdioma);
-    setIdSecao(dados.idSecao);
   }
 
   useEffect(() => {
@@ -135,11 +135,6 @@ function CadastroObra() {
     });
   }, []);
 
-  useEffect(() => {
-    axios.get(`${API_URLS.secoes}/secoes`).then((response) => {
-      setDadosSecoes(response.data);
-    });
-  }, []);
 
   useEffect(() => {
       if (idParam) {
@@ -152,7 +147,6 @@ function CadastroObra() {
   if (!dadosEditoras) return null;
   if (!dadosGeneros) return null;
   if (!dadosIdiomas) return null;
-  if (!dadosSecoes) return null;
 
   return (
     <div className='container'>
@@ -160,6 +154,7 @@ function CadastroObra() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
+             
               <FormGroup label='Título: *' htmlFor='inputTitulo'>
                 <input
                   type='text'
@@ -170,6 +165,7 @@ function CadastroObra() {
                   onChange={(e) => setTitulo(e.target.value)}
                 />
               </FormGroup>
+              
               <FormGroup label='ISBN: *' htmlFor='inputIsbn'>
                 <input
                   type='text'
@@ -181,6 +177,7 @@ function CadastroObra() {
                   onChange={(e) => setIsbn(e.target.value)}
                 />
               </FormGroup>
+              
               <FormGroup label='Edição: *' htmlFor='inputEdicao'>
                 <input
                   type='text'
@@ -191,6 +188,7 @@ function CadastroObra() {
                   onChange={(e) => setEdicao(e.target.value)}
                 />
               </FormGroup>
+              
               <FormGroup label='Editora: *' htmlFor='selectEditora'>
                 <select
                   className='form-select'
@@ -209,6 +207,7 @@ function CadastroObra() {
                   ))}
                 </select>
               </FormGroup>
+              
               <FormGroup label='Genero: *' htmlFor='selectGenero'>
                 <select
                   className='form-select'
@@ -227,6 +226,7 @@ function CadastroObra() {
                   ))}
                 </select>
               </FormGroup>
+              
               <FormGroup label='Idioma: *' htmlFor='selectIdioma'>
                 <select
                   className='form-select'
@@ -245,40 +245,16 @@ function CadastroObra() {
                   ))}
                 </select>
               </FormGroup>
-              <FormGroup label='Seção: *' htmlFor='selectSecao'>
-                <select
-                  className='form-select'
-                  id='selectSecao'
-                  name='idSecao'
-                  value={idSecao}
-                  onChange={(e) => setIdSecao(e.target.value)}
-                >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosSecoes.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
-              </FormGroup>
-              <Stack spacing={1} padding={1} direction='row'>
-                <button
-                  onClick={salvar}
-                  type='button'
-                  className='btn btn-success'
-                >
+
+              <Stack spacing={1} padding={1} direction="row">
+                <button onClick={salvar} type="button" className="btn btn-success">
                   Salvar
                 </button>
-                <button
-                  onClick={inicializar}
-                  type='button'
-                  className='btn btn-danger'
-                >
+                <button onClick={voltar} type="button" className="btn btn-danger">
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>

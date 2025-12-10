@@ -22,11 +22,11 @@ function ListagemGeneros() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-generos`);
+    navigate(`/cadastro-genero`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-generos/${id}`);
+    navigate(`/cadastro-genero/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -79,6 +79,7 @@ function ListagemGeneros() {
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
+                      
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

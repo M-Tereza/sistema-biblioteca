@@ -19,9 +19,9 @@ import "../custom.css";
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.multas}/multas`;
+const baseURL = `${API_URLS.exemplares}/exemplares`;
 
-function CadastroMulta() {
+function CadastroExemplar() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ function CadastroMulta() {
   }
 
   const voltar = () => {
-    navigate(`/listagem-multas`);
+    navigate(`/listagem-exemplares`);
   };
 
   async function salvar() {
@@ -54,18 +54,18 @@ function CadastroMulta() {
         await axios.post(baseURL, data, {
           headers: { "Content-Type": "application/json" }
         });
-        mensagemSucesso(`Multa ${nome} cadastrada com sucesso!`);
+        mensagemSucesso(`Exemplar ${nome} cadastrado com sucesso!`);
       } else {
         await axios.put(`${baseURL}/${idParam}`, data, {
           headers: { "Content-Type": "application/json" }
         });
-        mensagemSucesso(`Multa ${nome} alterada com sucesso!`);
+        mensagemSucesso(`Exemplar ${nome} alterado com sucesso!`);
       }
 
-      navigate("/listagem-multas");
+      navigate("/listagem-exemplares");
 
     } catch (error) {
-      mensagemErro(error.response?.data || "Erro ao salvar multa.");
+      mensagemErro(error.response?.data || "Erro ao salvar exemplar.");
     }
   }
 
@@ -76,7 +76,7 @@ function CadastroMulta() {
         setDados(response.data);
       })
       .catch(() => {
-        mensagemErro("Erro ao buscar multa.");
+        mensagemErro("Erro ao buscar exemplar.");
       });
 
     setId(dados.id);
@@ -93,23 +93,23 @@ function CadastroMulta() {
 
   return (
     <div className='container'>
-      <Card title='Cadastro de Multa'>
+      <Card title='Cadastro de Exemplar'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
               
-              <FormGroup label='Valor da Multa *' htmlFor='inputValor'>
+              <FormGroup label='Nome do Exemplar: *' htmlFor='inputNome'>
                 <input
                   type='text'
                   maxLength='30'
-                  id='inputValor'
+                  id='inputNome'
                   value={nome}
                   className='form-control'
                   name='nome'
                   onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
-              
+
               <Stack spacing={1} padding={1} direction="row">
                 <button onClick={salvar} type="button" className="btn btn-success">
                   Salvar
@@ -127,4 +127,4 @@ function CadastroMulta() {
   );
 }
 
-export default CadastroMulta;
+export default CadastroExemplar;

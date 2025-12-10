@@ -40,6 +40,10 @@ function CadastroIdioma() {
     }
   }
 
+  const voltar = () => {
+    navigate(`/listagem-idiomas`);
+  };
+
   async function salvar() {
     let data = { id, nome };
 
@@ -93,6 +97,7 @@ function CadastroIdioma() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
+              
               <FormGroup label='Nome do Idioma: *' htmlFor='inputNome'>
                 <input
                   type='text'
@@ -104,22 +109,16 @@ function CadastroIdioma() {
                   onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
-              <Stack spacing={1} padding={1} direction='row'>
-                <button
-                  onClick={salvar}
-                  type='button'
-                  className='btn btn-success'
-                >
+
+              <Stack spacing={1} padding={1} direction="row">
+                <button onClick={salvar} type="button" className="btn btn-success">
                   Salvar
                 </button>
-                <button
-                  onClick={inicializar}
-                  type='button'
-                  className='btn btn-danger'
-                >
+                <button onClick={voltar} type="button" className="btn btn-danger">
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>

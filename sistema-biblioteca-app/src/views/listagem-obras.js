@@ -83,7 +83,6 @@ function ListagemObras() {
                     <th scope='col'>Editora</th>
                     <th scope='col'>Genero</th>
                     <th scope='col'>Idioma</th>
-                    <th scope='col'>Seção</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -96,7 +95,6 @@ function ListagemObras() {
                       <td>{dado.idEditora}</td>
                       <td>{dado.idGenero}</td>
                       <td>{dado.idIdioma}</td>
-                      <td>{dado.idSecao}</td>
                       
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>

@@ -22,11 +22,11 @@ function ListagemAutores() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-autores`);
+    navigate(`/cadastro-autor`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-autores/${id}`);
+    navigate(`/cadastro-autor/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);

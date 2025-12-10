@@ -1,7 +1,9 @@
 import React from "react";
 
 import Card from "../components/card";
+
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
+
 import "../custom.css";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,6 +13,7 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBack';
 
 import axios from "axios";
 import { API_URLS } from "../config/axios";
@@ -23,12 +26,8 @@ function PerfilCliente() {
 
   const [dado, setDado] = React.useState(null);
 
-  const editar = () => {
+  const editar = (id) => {
     navigate(`/cadastro-cliente/${id}`);
-  };
-
-  const voltar = () => {
-    navigate(`/listagem-clientes`);
   };
 
   async function excluir() {
@@ -44,6 +43,10 @@ function PerfilCliente() {
       });
   }
 
+  const voltar = () => {
+    navigate(`/listagem-clientes`);
+  };
+
   React.useEffect(() => {
     axios.get(`${baseURL}/${id}`).then((response) => {
       setDado(response.data);
@@ -54,18 +57,22 @@ function PerfilCliente() {
 
   return (
     <div className="container">
-      <Card title="Perfil do Cliente">
+
+      <Card title={
+        <Stack direction="row" spacing={1} alignItems="left">
+          <IconButton
+            aria-label="voltar"
+            onClick={voltar}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          <span>Perfil do Cliente</span>
+        </Stack>
+      }>
+
         <div className="row">
           <div className="col-lg-12">
             <div className="bs-component">
-              <button
-                type="button"
-                className="btn btn-secondary mb-3 text-white"
-                style={{ backgroundColor: "blue" }}
-                onClick={voltar}
-              >
-                Voltar
-              </button>
 
               <table className="table table-bordered">
                 <tbody>
@@ -82,6 +89,11 @@ function PerfilCliente() {
                   <tr>
                     <th>Data de Nascimento</th>
                     <td>{dado.dataNascimento}</td>
+                  </tr>
+
+                  <tr>
+                    <th>Email</th>
+                    <td>{dado.email}</td>
                   </tr>
 
                   <tr>
@@ -123,33 +135,24 @@ function PerfilCliente() {
                     <th>Estado</th>
                     <td>{dado.estado}</td>
                   </tr>
-
-                  <tr>
-                    <th>Obras</th>
-                    <td>{dado.obras}</td>
-                  </tr>
-
-                  <tr>
-                    <th>Pendências</th>
-                    <td>{dado.pendencias}</td>
-                  </tr>
-
-                  <tr>
-                    <th>Ações</th>
-                    <td>
-                      <Stack spacing={1} direction="row">
-                        <IconButton aria-label="edit" onClick={editar}>
-                          <EditIcon />
-                        </IconButton>
-
-                        <IconButton aria-label="delete" onClick={excluir}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </Stack>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
+
+              <Stack spacing={1} padding={0} direction='row' justifyContent="flex-end">
+                <IconButton
+                  aria-label='edit'
+                  onClick={() => editar(dado.id)}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  aria-label='delete'
+                  onClick={() => excluir(dado.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Stack>
+
             </div>
           </div>
         </div>

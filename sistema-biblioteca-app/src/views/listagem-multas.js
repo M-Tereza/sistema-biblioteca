@@ -71,38 +71,19 @@ function ListagemMultas() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Nova Multa
+                Alterar Valor da Multa
               </button>
               <table className='table table-hover'>
                 <thead>
                   <tr>
                     <th scope='col'>Valor</th>
-                    <th scope='col'>Nome do Cliente</th>
-                    <th scope='col'>Status</th>
+                    <th scope='col'>Data da Alteração</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.valor}</td>
-                      <td>{dado.nomeCliente}</td>
-                      <td>{dado.status}</td>
-                      <td>
-                        <Stack spacing={1} padding={0} direction='row'>
-                          <IconButton
-                            aria-label='edit'
-                            onClick={() => editar(dado.id)}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton
-                            aria-label='delete'
-                            onClick={() => excluir(dado.id)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Stack>
-                      </td>
                     </tr>
                   ))}
                 </tbody>

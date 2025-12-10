@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootswatch/dist/flatly/bootstrap.css';
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import 'toastr/build/toastr.min.css';
 import Navbar from './components/navbar';
 import Rotas from './rotas';

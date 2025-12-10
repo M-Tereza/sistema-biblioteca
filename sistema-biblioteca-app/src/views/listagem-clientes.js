@@ -8,7 +8,7 @@ import "../custom.css";
 
 import { useNavigate } from "react-router-dom";
 
-import Stack from "@mui/material/Stack"; 
+import Stack from "@mui/material/Stack";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -74,6 +74,8 @@ function ListagemClientes() {
                   <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">CPF</th>
+                    <th scope="col">email</th>
+                    <th scope="col">telefone</th>
                   </tr>
                 </thead>
 
@@ -82,7 +84,8 @@ function ListagemClientes() {
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
                       <td>{dado.cpf}</td>
-
+                      <td>{dado.email}</td>
+                      <td>{dado.telefone}</td>
                       <td>
                         <Stack spacing={1} direction="row">
                           <IconButton
