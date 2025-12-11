@@ -88,7 +88,7 @@ function ListagemExemplares() {
                       <td>{dado.id}</td>
                       <td>{dado.dataAquisicao}</td>
                       <td>{dado.idSecao}</td>
-                      <td>{dado.status}</td>
+                      <td>{dado.idStatus}</td>
                       
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
