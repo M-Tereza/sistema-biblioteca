@@ -10,6 +10,7 @@ export const API_URLS = {
   idiomas: "https://my-json-server.typicode.com/GiovPereira/json-geral",
   secoes: "https://my-json-server.typicode.com/GiovPereira/json-geral",
   autores: "https://my-json-server.typicode.com/GiovPereira/json-geral",
+  emprestimos: "https://my-json-server.typicode.com/GiovPereira/json-emprestimos",
 };
 
 export default axios;
