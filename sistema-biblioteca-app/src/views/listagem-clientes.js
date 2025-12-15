@@ -18,8 +18,11 @@ import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS.clientes}/clientes`;
 
+
 function ListagemClientes() {
   const navigate = useNavigate();
+  
+  const [dados, setDados] = React.useState(null);
 
   const cadastrar = () => {
     navigate(`/cadastro-cliente`);
@@ -29,7 +32,6 @@ function ListagemClientes() {
     navigate(`/perfil-cliente/${id}`);
   };
 
-  const [dados, setDados] = React.useState(null);
 
   async function excluir(id) {
     let url = `${baseURL}/${id}`;
