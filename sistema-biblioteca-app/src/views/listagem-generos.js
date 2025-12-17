@@ -1,17 +1,21 @@
-import React from 'react';
+import React from "react";
 
-import Card from '../components/card';
+import Card from "../components/card";
+import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
-import { mensagemSucesso, mensagemErro } from '../components/toastr';
+import "../custom.css";
+import { useNavigate } from "react-router-dom";
 
-import '../custom.css';
+import Stack from "@mui/material/Stack";
+import { IconButton, Button } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
-import { useNavigate } from 'react-router-dom';
-
-import Stack from '@mui/material/Stack';
-import { IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
@@ -21,31 +25,50 @@ const baseURL = `${API_URLS.generos}/generos`;
 function ListagemGeneros() {
   const navigate = useNavigate();
 
+  const [dados, setDados] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [generoSelecionado, setGeneroSelecionado] = React.useState(null);
+
   const cadastrar = () => {
-    navigate(`/cadastro-genero`);
+    navigate("/cadastro-genero");
   };
 
   const editar = (id) => {
     navigate(`/cadastro-genero/${id}`);
   };
 
-  const [dados, setDados] = React.useState(null);
+  const abrirConfirmacao = (genero) => {
+    setGeneroSelecionado(genero);
+    setOpen(true);
+  };
 
-  async function excluir(id) {
-  let url = `${baseURL}/${id}`;
-  console.log(url);
-  await axios
-    .delete(url, {
-      headers: { 'Content-Type': 'application/json' },
-      data: { id },
-    })
-    .then(function (response) {
-      mensagemSucesso(`Gênero excluído com sucesso!`);
-      setDados(dados.filter((dado) => dado.id !== id));
-    })
-    .catch(function (error) {
-      mensagemErro(`Erro ao excluir o gênero`);
-    });
+  const fecharConfirmacao = () => {
+    setOpen(false);
+    setGeneroSelecionado(null);
+  };
+
+  async function excluir() {
+    if (!generoSelecionado) return;
+
+    let url = `${baseURL}/${generoSelecionado.id}`;
+
+    await axios
+      .delete(url, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then(() => {
+        mensagemSucesso("Gênero excluído com sucesso!");
+        setDados(
+          dados.filter(
+            (dado) => dado.id !== generoSelecionado.id
+          )
+        );
+        fecharConfirmacao();
+      })
+      .catch(() => {
+        mensagemErro("Erro ao excluir o gênero");
+        fecharConfirmacao();
+      });
   }
 
   React.useEffect(() => {
@@ -57,40 +80,43 @@ function ListagemGeneros() {
   if (!dados) return null;
 
   return (
-    <div className='container'>
-      <Card title='Listagem de Gêneros'>
-        <div className='row'>
-          <div className='col-lg-12'>
-            <div className='bs-component'>
+    <div className="container">
+      <Card title="Listagem de Gêneros">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="bs-component">
               <button
-                type='button'
-                className='btn btn-warning'
-                onClick={() => cadastrar()}
+                type="button"
+                className="btn btn-warning"
+                onClick={cadastrar}
               >
                 Novo Gênero
               </button>
-              <table className='table table-hover'>
+
+              <table className="table table-hover mt-3">
                 <thead>
                   <tr>
-                    <th scope='col'>Nome</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Ações</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
-                      
                       <td>
-                        <Stack spacing={1} padding={0} direction='row'>
+                        <Stack spacing={1} direction="row">
                           <IconButton
-                            aria-label='edit'
+                            aria-label="edit"
                             onClick={() => editar(dado.id)}
                           >
                             <EditIcon />
                           </IconButton>
+
                           <IconButton
-                            aria-label='delete'
-                            onClick={() => excluir(dado.id)}
+                            aria-label="delete"
+                            onClick={() => abrirConfirmacao(dado)}
                           >
                             <DeleteIcon />
                           </IconButton>
@@ -99,10 +125,34 @@ function ListagemGeneros() {
                     </tr>
                   ))}
                 </tbody>
-              </table>{' '}
+              </table>
             </div>
           </div>
         </div>
+
+        <Dialog open={open} onClose={fecharConfirmacao}>
+          <DialogTitle>Confirmar exclusão</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Tem certeza que deseja excluir o gênero{" "}
+              <strong>{generoSelecionado?.nome}</strong>?
+              <br />
+              Essa ação não poderá ser desfeita.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={fecharConfirmacao} color="inherit">
+              Cancelar
+            </Button>
+            <Button
+              onClick={excluir}
+              color="error"
+              variant="contained"
+            >
+              Excluir
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Card>
     </div>
   );

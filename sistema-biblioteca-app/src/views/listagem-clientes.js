@@ -1,51 +1,71 @@
 import React from "react";
 
 import Card from "../components/card";
-
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 import "../custom.css";
-
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import axios from "axios";
 import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS.clientes}/clientes`;
 
-
 function ListagemClientes() {
   const navigate = useNavigate();
-  
+
   const [dados, setDados] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [clienteSelecionado, setClienteSelecionado] = React.useState(null);
 
   const cadastrar = () => {
-    navigate(`/cadastro-cliente`);
+    navigate("/cadastro-cliente");
   };
 
   const visualizar = (id) => {
     navigate(`/perfil-cliente/${id}`);
   };
 
+  const abrirConfirmacao = (cliente) => {
+    setClienteSelecionado(cliente);
+    setOpen(true);
+  };
 
-  async function excluir(id) {
-    let url = `${baseURL}/${id}`;
+  const fecharConfirmacao = () => {
+    setOpen(false);
+    setClienteSelecionado(null);
+  };
+
+  async function excluir() {
+    if (!clienteSelecionado) return;
+
+    let url = `${baseURL}/${clienteSelecionado.id}`;
+
     await axios
       .delete(url, {
         headers: { "Content-Type": "application/json" },
-        data: { id },
       })
-      .then(function () {
-        mensagemSucesso(`Cliente excluído com sucesso!`);
-        setDados(dados.filter((dado) => dado.id !== id));
+      .then(() => {
+        mensagemSucesso("Cliente excluído com sucesso!");
+        setDados(
+          dados.filter((dado) => dado.id !== clienteSelecionado.id)
+        );
+        fecharConfirmacao();
       })
-      .catch(function () {
-        mensagemErro(`Erro ao excluir o cliente`);
+      .catch(() => {
+        mensagemErro("Erro ao excluir o cliente");
+        fecharConfirmacao();
       });
   }
 
@@ -66,7 +86,7 @@ function ListagemClientes() {
               <button
                 type="button"
                 className="btn btn-warning"
-                onClick={() => cadastrar()}
+                onClick={cadastrar}
               >
                 Novo Cliente
               </button>
@@ -76,8 +96,9 @@ function ListagemClientes() {
                   <tr>
                     <th scope="col">Nome</th>
                     <th scope="col">CPF</th>
-                    <th scope="col">email</th>
-                    <th scope="col">telefone</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Telefone</th>
+                    <th scope="col">Ações</th>
                   </tr>
                 </thead>
 
@@ -99,7 +120,7 @@ function ListagemClientes() {
 
                           <IconButton
                             aria-label="delete"
-                            onClick={() => excluir(dado.id)}
+                            onClick={() => abrirConfirmacao(dado)}
                           >
                             <DeleteIcon />
                           </IconButton>
@@ -112,6 +133,30 @@ function ListagemClientes() {
             </div>
           </div>
         </div>
+
+        <Dialog open={open} onClose={fecharConfirmacao}>
+          <DialogTitle>Confirmar exclusão</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Tem certeza que deseja excluir o cliente{" "}
+              <strong>{clienteSelecionado?.nome}</strong>?
+              <br />
+              Essa ação não poderá ser desfeita.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={fecharConfirmacao} color="inherit">
+              Cancelar
+            </Button>
+            <Button
+              onClick={excluir}
+              color="error"
+              variant="contained"
+            >
+              Excluir
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Card>
     </div>
   );
