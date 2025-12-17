@@ -7,7 +7,7 @@ import "../custom.css";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -26,6 +26,7 @@ function ListagemObras() {
   const navigate = useNavigate();
 
   const [dados, setDados] = React.useState(null);
+  const [termoBusca, setTermoBusca] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [obraSelecionada, setObraSelecionada] = React.useState(null);
 
@@ -79,63 +80,87 @@ function ListagemObras() {
 
   if (!dados) return null;
 
+  const dadosFiltrados = dados.filter((obra) =>
+  obra.titulo?.toLowerCase().includes(termoBusca.toLowerCase()) ||
+  String(obra.isbn).includes(termoBusca) ||
+  String(obra.edicao).includes(termoBusca)
+);
+
   return (
     <div className="container">
       <Card title="Listagem de Obras">
         <div className="row">
           <div className="col-lg-12">
             <div className="bs-component">
-              <button
-                type="button"
-                className="btn btn-warning"
-                onClick={cadastrar}
-              >
-                Nova Obra
-              </button>
+              <div className="d-flex gap-3 align-items-center mb-3">
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={cadastrar}
+                >
+                  Nova Obra
+                </button>
 
-              <table className="table table-hover mt-3">
+                <TextField
+                  label="Pesquisar obra"
+                  variant="outlined"
+                  size="small"
+                  value={termoBusca}
+                  onChange={(e) => setTermoBusca(e.target.value)}
+                />
+              </div>
+
+              <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Título</th>
-                    <th scope="col">ISBN</th>
-                    <th scope="col">Edição</th>
-                    <th scope="col">Autor</th>
-                    <th scope="col">Editora</th>
-                    <th scope="col">Gênero</th>
-                    <th scope="col">Idioma</th>
-                    <th scope="col">Ações</th>
+                    <th>Título</th>
+                    <th>ISBN</th>
+                    <th>Edição</th>
+                    <th>Autor</th>
+                    <th>Editora</th>
+                    <th>Gênero</th>
+                    <th>Idioma</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {dados.map((dado) => (
-                    <tr key={dado.id}>
-                      <td>{dado.titulo}</td>
-                      <td>{dado.isbn}</td>
-                      <td>{dado.edicao}</td>
-                      <td>{dado.idAutor}</td>
-                      <td>{dado.idEditora}</td>
-                      <td>{dado.idGenero}</td>
-                      <td>{dado.idIdioma}</td>
-                      <td>
-                        <Stack spacing={1} direction="row">
-                          <IconButton
-                            aria-label="edit"
-                            onClick={() => editar(dado.id)}
-                          >
-                            <EditIcon />
-                          </IconButton>
+                  {dadosFiltrados.length > 0 ? (
+                    dadosFiltrados.map((dado) => (
+                      <tr key={dado.id}>
+                        <td>{dado.titulo}</td>
+                        <td>{dado.isbn}</td>
+                        <td>{dado.edicao}</td>
+                        <td>{dado.idAutor}</td>
+                        <td>{dado.idEditora}</td>
+                        <td>{dado.idGenero}</td>
+                        <td>{dado.idIdioma}</td>
+                        <td>
+                          <Stack spacing={1} direction="row">
+                            <IconButton
+                              aria-label="edit"
+                              onClick={() => editar(dado.id)}
+                            >
+                              <EditIcon />
+                            </IconButton>
 
-                          <IconButton
-                            aria-label="delete"
-                            onClick={() => abrirConfirmacao(dado)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Stack>
+                            <IconButton
+                              aria-label="delete"
+                              onClick={() => abrirConfirmacao(dado)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Stack>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="text-center">
+                        Nenhuma obra encontrada
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

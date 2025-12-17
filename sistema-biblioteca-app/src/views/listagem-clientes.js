@@ -7,7 +7,7 @@ import "../custom.css";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
@@ -26,6 +26,8 @@ function ListagemClientes() {
   const navigate = useNavigate();
 
   const [dados, setDados] = React.useState(null);
+  const [termoBusca, setTermoBusca] = React.useState("");
+  const [termoDebounce, setTermoDebounce] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [clienteSelecionado, setClienteSelecionado] = React.useState(null);
 
@@ -59,7 +61,9 @@ function ListagemClientes() {
       .then(() => {
         mensagemSucesso("Cliente excluído com sucesso!");
         setDados(
-          dados.filter((dado) => dado.id !== clienteSelecionado.id)
+          dados.filter(
+            (dado) => dado.id !== clienteSelecionado.id
+          )
         );
         fecharConfirmacao();
       })
@@ -75,7 +79,30 @@ function ListagemClientes() {
     });
   }, []);
 
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      setTermoDebounce(termoBusca);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [termoBusca]);
+
   if (!dados) return null;
+
+  const dadosFiltrados = dados.filter((cliente) => {
+    const termo = termoDebounce.toLowerCase();
+
+    return (
+      String(cliente.nome || "")
+        .toLowerCase()
+        .includes(termo) ||
+      String(cliente.cpf || "").includes(termo) ||
+      String(cliente.email || "")
+        .toLowerCase()
+        .includes(termo) ||
+      String(cliente.telefone || "").includes(termo)
+    );
+  });
 
   return (
     <div className="container">
@@ -83,51 +110,75 @@ function ListagemClientes() {
         <div className="row">
           <div className="col-lg-12">
             <div className="bs-component">
-              <button
-                type="button"
-                className="btn btn-warning"
-                onClick={cadastrar}
-              >
-                Novo Cliente
-              </button>
+              <div className="d-flex gap-3 mb-3">
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={cadastrar}
+                >
+                  Novo Cliente
+                </button>
 
-              <table className="table table-hover mt-3">
+                <TextField
+                  label="Pesquisar cliente"
+                  variant="outlined"
+                  size="small"
+                  value={termoBusca}
+                  onChange={(e) =>
+                    setTermoBusca(e.target.value)
+                  }
+                />
+              </div>
+
+              <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">CPF</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">Ações</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {dados.map((dado) => (
-                    <tr key={dado.id}>
-                      <td>{dado.nome}</td>
-                      <td>{dado.cpf}</td>
-                      <td>{dado.email}</td>
-                      <td>{dado.telefone}</td>
-                      <td>
-                        <Stack spacing={1} direction="row">
-                          <IconButton
-                            aria-label="account"
-                            onClick={() => visualizar(dado.id)}
-                          >
-                            <AccountCircleIcon />
-                          </IconButton>
+                  {dadosFiltrados.length > 0 ? (
+                    dadosFiltrados.map((dado) => (
+                      <tr key={dado.id}>
+                        <td>{dado.nome}</td>
+                        <td>{dado.cpf}</td>
+                        <td>{dado.email}</td>
+                        <td>{dado.telefone}</td>
+                        <td>
+                          <Stack spacing={1} direction="row">
+                            <IconButton
+                              aria-label="account"
+                              onClick={() =>
+                                visualizar(dado.id)
+                              }
+                            >
+                              <AccountCircleIcon />
+                            </IconButton>
 
-                          <IconButton
-                            aria-label="delete"
-                            onClick={() => abrirConfirmacao(dado)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Stack>
+                            <IconButton
+                              aria-label="delete"
+                              onClick={() =>
+                                abrirConfirmacao(dado)
+                              }
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Stack>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        Nenhum cliente encontrado
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
