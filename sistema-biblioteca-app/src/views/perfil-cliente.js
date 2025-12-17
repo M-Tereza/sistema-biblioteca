@@ -17,7 +17,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBack';
 
 import axios from "axios";
 import { API_URLS } from "../config/axios";
-import {formatarData} from "../utils/formatadores.js"
+import { formatarData } from "../utils/formatadores"
 
 const baseURL = `${API_URLS.clientes}/clientes`;
 const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
@@ -103,17 +103,7 @@ function PerfilCliente() {
         </Stack>
       }>
 
-        <div className="d-flex justify-content-end mb-3">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={adicionarEmprestimo}
-          >
-            Adicionar Empréstimo
-          </Button>
-        </div>
-
-        <table className="table table-bordered mb-5">
+        <table className="table table-bordered mb-2">
           <tbody>
             <tr><th>Nome</th><td>{dados.nome}</td></tr>
             <tr><th>CPF</th><td>{dados.cpf}</td></tr>
@@ -130,14 +120,24 @@ function PerfilCliente() {
           </tbody>
         </table>
 
-        <Stack spacing={1} padding={0} direction='row' justifyContent="flex-end">
+        <Stack spacing={1} padding={0} direction='row' justifyContent="flex-end" className="mb-4">
           <IconButton aria-label='edit' onClick={() => editar(dados.id)}>
-            <EditIcon />
+            <EditIcon sx={{ fontSize: 28 }}/>
           </IconButton>
           <IconButton aria-label='delete' onClick={() => excluir(dados.id)}>
-            <DeleteIcon />
+            <DeleteIcon sx={{ fontSize: 28 }}/>
           </IconButton>
         </Stack>
+
+        {/* <div className="d-flex justify-content-center mb-4">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={adicionarEmprestimo}
+          >
+            Adicionar Empréstimo
+          </Button>
+        </div> */}
 
         <h4>Empréstimos Ativos</h4>
         {emprestimosAtivos.length === 0 ? (
