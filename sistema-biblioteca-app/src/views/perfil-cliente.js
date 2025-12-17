@@ -129,7 +129,7 @@ function PerfilCliente() {
           </IconButton>
         </Stack>
 
-        {/* <div className="d-flex justify-content-center mb-4">
+        <div className="d-flex justify-content-center mb-4">
           <Button
             variant="contained"
             color="primary"
@@ -137,7 +137,7 @@ function PerfilCliente() {
           >
             Adicionar Empréstimo
           </Button>
-        </div> */}
+        </div>
 
         <h4>Empréstimos Ativos</h4>
         {emprestimosAtivos.length === 0 ? (
