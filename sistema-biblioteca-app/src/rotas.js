@@ -22,6 +22,7 @@ import CadastroAutor from './views/cadastro-autor';
 import CadastroEditora from './views/cadastro-editora';
 
 import PerfilCliente from './views/perfil-cliente';
+import PerfilObra from './views/perfil-obra';
 
 import SelecionarExemplar from './views/selecionar-exemplar';
 import SelecionarObra from './views/selecionar-obra';
@@ -57,6 +58,8 @@ function Rotas(props) {
         <Route path='/listagem-emprestimos' element={<ListagemEmprestimos />} />
 
         <Route path='/perfil-cliente/:id' element={<PerfilCliente />} />
+        <Route path="/perfil-obra/:id" element={<PerfilObra />} />
+
 
         <Route path="/selecionar-exemplar/:idCliente/:idObra" element={<SelecionarExemplar />} />
         <Route path='/selecionar-obra/:idCliente' element={<SelecionarObra />} />

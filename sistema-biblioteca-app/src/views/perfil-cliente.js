@@ -4,7 +4,7 @@ import Card from "../components/card";
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 import "../custom.css";
-import 'toastr/build/toastr.min.css';
+import 'toastr/build/toastr.min.css'; 
 
 import { useNavigate, useParams } from "react-router-dom";
 

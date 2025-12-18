@@ -1,90 +1,69 @@
 import React from "react";
 
 import Card from "../components/card";
-import { mensagemSucesso, mensagemErro } from "../components/toastr";
-
 import "../custom.css";
+
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
-import { IconButton, Button, TextField } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { IconButton, TextField } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.obras}/obras`;
+const obrasURL = `${API_URLS.obras}/obras`;
+const editorasURL = `${API_URLS.editoras}/editoras`;
 
 function ListagemObras() {
   const navigate = useNavigate();
 
-  const [dados, setDados] = React.useState(null);
+  const [obras, setObras] = React.useState([]);
+  const [editoras, setEditoras] = React.useState({});
   const [termoBusca, setTermoBusca] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [obraSelecionada, setObraSelecionada] = React.useState(null);
+  const [termoDebounce, setTermoDebounce] = React.useState("");
 
   const cadastrar = () => {
     navigate("/cadastro-obra");
   };
 
-  const editar = (id) => {
-    navigate(`/cadastro-obra/${id}`);
+  const visualizar = (id) => {
+    navigate(`/perfil-obra/${id}`);
   };
-
-  const abrirConfirmacao = (obra) => {
-    setObraSelecionada(obra);
-    setOpen(true);
-  };
-
-  const fecharConfirmacao = () => {
-    setOpen(false);
-    setObraSelecionada(null);
-  };
-
-  async function excluir() {
-    if (!obraSelecionada) return;
-
-    let url = `${baseURL}/${obraSelecionada.id}`;
-
-    await axios
-      .delete(url, {
-        headers: { "Content-Type": "application/json" },
-      })
-      .then(() => {
-        mensagemSucesso("Obra excluída com sucesso!");
-        setDados(
-          dados.filter(
-            (dado) => dado.id !== obraSelecionada.id
-          )
-        );
-        fecharConfirmacao();
-      })
-      .catch(() => {
-        mensagemErro("Erro ao excluir a obra");
-        fecharConfirmacao();
-      });
-  }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
-      setDados(response.data);
+    axios.get(obrasURL).then((response) => {
+      setObras(response.data || []);
+    });
+
+    axios.get(editorasURL).then((response) => {
+      const mapa = {};
+      response.data.forEach((e) => {
+        mapa[e.id] = e.nome;
+      });
+      setEditoras(mapa);
     });
   }, []);
 
-  if (!dados) return null;
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      setTermoDebounce(termoBusca);
+    }, 300);
 
-  const dadosFiltrados = dados.filter((obra) =>
-  obra.titulo?.toLowerCase().includes(termoBusca.toLowerCase()) ||
-  String(obra.isbn).includes(termoBusca) ||
-  String(obra.edicao).includes(termoBusca)
-);
+    return () => clearTimeout(timeout);
+  }, [termoBusca]);
+
+  const obrasFiltradas = obras.filter((obra) => {
+    const termo = termoDebounce.toLowerCase();
+
+    return (
+      String(obra.titulo || "")
+        .toLowerCase()
+        .includes(termo) ||
+      String(obra.isbn || "").includes(termo) ||
+      String(obra.edicao || "").includes(termo)
+    );
+  });
 
   return (
     <div className="container">
@@ -92,7 +71,7 @@ function ListagemObras() {
         <div className="row">
           <div className="col-lg-12">
             <div className="bs-component">
-              <div className="d-flex gap-3 align-items-center mb-3">
+              <div className="d-flex gap-3 mb-3">
                 <button
                   type="button"
                   className="btn btn-warning"
@@ -103,7 +82,6 @@ function ListagemObras() {
 
                 <TextField
                   label="Pesquisar obra"
-                  variant="outlined"
                   size="small"
                   value={termoBusca}
                   onChange={(e) => setTermoBusca(e.target.value)}
@@ -116,39 +94,28 @@ function ListagemObras() {
                     <th>Título</th>
                     <th>ISBN</th>
                     <th>Edição</th>
-                    <th>Autor</th>
                     <th>Editora</th>
-                    <th>Gênero</th>
-                    <th>Idioma</th>
-                    <th>Ações</th>
+                    <th>Ver Obra</th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {dadosFiltrados.length > 0 ? (
-                    dadosFiltrados.map((dado) => (
-                      <tr key={dado.id}>
-                        <td>{dado.titulo}</td>
-                        <td>{dado.isbn}</td>
-                        <td>{dado.edicao}</td>
-                        <td>{dado.idAutor}</td>
-                        <td>{dado.idEditora}</td>
-                        <td>{dado.idGenero}</td>
-                        <td>{dado.idIdioma}</td>
+                  {obrasFiltradas.length > 0 ? (
+                    obrasFiltradas.map((obra) => (
+                      <tr key={obra.id}>
+                        <td>{obra.titulo}</td>
+                        <td>{obra.isbn}</td>
+                        <td>{obra.edicao}</td>
                         <td>
-                          <Stack spacing={1} direction="row">
+                          {editoras[obra.idEditora] || "Editora não cadastrada"}
+                        </td>
+                        <td>
+                          <Stack direction="row" spacing={1}>
                             <IconButton
-                              aria-label="edit"
-                              onClick={() => editar(dado.id)}
+                              aria-label="visualizar"
+                              onClick={() => visualizar(obra.id)}
                             >
-                              <EditIcon />
-                            </IconButton>
-
-                            <IconButton
-                              aria-label="delete"
-                              onClick={() => abrirConfirmacao(dado)}
-                            >
-                              <DeleteIcon />
+                              <VisibilityIcon />
                             </IconButton>
                           </Stack>
                         </td>
@@ -156,7 +123,7 @@ function ListagemObras() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="8" className="text-center">
+                      <td colSpan="5" className="text-center">
                         Nenhuma obra encontrada
                       </td>
                     </tr>
@@ -166,30 +133,6 @@ function ListagemObras() {
             </div>
           </div>
         </div>
-
-        <Dialog open={open} onClose={fecharConfirmacao}>
-          <DialogTitle>Confirmar exclusão</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Tem certeza que deseja excluir a obra{" "}
-              <strong>{obraSelecionada?.titulo}</strong>?
-              <br />
-              Essa ação não poderá ser desfeita.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={fecharConfirmacao} color="inherit">
-              Cancelar
-            </Button>
-            <Button
-              onClick={excluir}
-              color="error"
-              variant="contained"
-            >
-              Excluir
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Card>
     </div>
   );
