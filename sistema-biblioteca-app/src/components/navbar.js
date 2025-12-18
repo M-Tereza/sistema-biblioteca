@@ -84,8 +84,8 @@ function Navbar(props) {
               dropdown
               label="Relatórios"
               items={[
-                { label: "item1", href: "" },
-                { label: "item2", href: "" }
+                { label: "item1", href: "/relatorios" },
+                { label: "item2", href: "/relatorios" }
               ]}
             />
           </ul>

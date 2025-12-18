@@ -20,6 +20,7 @@ import CadastroSecao from './views/cadastro-secao';
 import CadastroIdioma from './views/cadastro-idioma';
 import CadastroAutor from './views/cadastro-autor';
 import CadastroEditora from './views/cadastro-editora';
+import Relatorios from './views/relatorios';
 
 import PerfilCliente from './views/perfil-cliente';
 import PerfilObra from './views/perfil-obra';
@@ -28,7 +29,8 @@ import PerfilExemplar from './views/perfil-exemplar';
 
 import SelecionarExemplar from './views/selecionar-exemplar';
 import SelecionarObra from './views/selecionar-obra';
-import ConfirmarEmprestimo from "./views/confirmar-emprestimo";
+import ConfirmarEmprestimo from './views/confirmar-emprestimo';
+
 
 import EdicaoCliente from './views/edicao-cliente';
 import EdicaoExemplar from './views/edicao-exemplar';
@@ -61,18 +63,20 @@ function Rotas(props) {
         <Route path='/listagem-autores' element={<ListagemAutores />} />
         <Route path='/listagem-editoras' element={<ListagemEditoras />} />
         <Route path='/listagem-emprestimos' element={<ListagemEmprestimos />} />
+        <Route path='/relatorios' element={<Relatorios />} />
 
         <Route path='/perfil-cliente/:id' element={<PerfilCliente />} />
-        <Route path="/perfil-obra/:id" element={<PerfilObra />} />
-        <Route path="/perfil-exemplar/:id" element={<PerfilExemplar />} />
+        <Route path='/perfil-obra/:id' element={<PerfilObra />} />
+        <Route path='/perfil-exemplar/:id' element={<PerfilExemplar />} />
 
 
-        <Route path="/selecionar-exemplar/:idCliente/:idObra" element={<SelecionarExemplar />} />
+        <Route path='/selecionar-exemplar/:idCliente/:idObra' element={<SelecionarExemplar />} />
         <Route path='/selecionar-obra/:idCliente' element={<SelecionarObra />} />
-        <Route path="/confirmar-emprestimo/:idCliente/:idObra/:idExemplar" element={<ConfirmarEmprestimo />} />
+        <Route path='/confirmar-emprestimo/:idCliente/:idObra/:idExemplar' element={<ConfirmarEmprestimo />} />
+        
 
-        <Route path="/edicao-cliente/:id" element={<EdicaoCliente />} />
-        <Route path="/edicao-exemplar/:id" element={<EdicaoExemplar />} />
+        <Route path='/edicao-cliente/:id' element={<EdicaoCliente />} />
+        <Route path='/edicao-exemplar/:id' element={<EdicaoExemplar />} />
 
       </Routes>
     </BrowserRouter>
