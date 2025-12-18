@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ListagemClientes from './views/listagem-clientes';
-import ListagemExemplares from './views/listagem-exemplares';
+//import ListagemExemplares from './views/listagem-exemplares';
 import ListagemMultas from './views/listagem-multas';
 import ListagemObras from './views/listagem-obras';
 import ListagemGeneros from './views/listagem-generos';
@@ -55,7 +55,7 @@ function Rotas(props) {
 
         <Route path='/listagem-clientes' element={<ListagemClientes />} />
         <Route path='/listagem-obras' element={<ListagemObras />} />
-        <Route path='/listagem-exemplares' element={<ListagemExemplares />} />
+        {/* <Route path='/listagem-exemplares' element={<ListagemExemplares />} /> */}
         <Route path='/listagem-multas' element={<ListagemMultas />} />
         <Route path='/listagem-generos' element={<ListagemGeneros />} />
         <Route path='/listagem-idiomas' element={<ListagemIdiomas />} />
