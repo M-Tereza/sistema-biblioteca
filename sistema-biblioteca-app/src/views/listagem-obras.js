@@ -6,8 +6,21 @@ import "../custom.css";
 import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
-import { IconButton, TextField } from "@mui/material";
+import {
+  IconButton,
+  TextField,
+  Button,
+} from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
+import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
@@ -23,12 +36,43 @@ function ListagemObras() {
   const [termoBusca, setTermoBusca] = React.useState("");
   const [termoDebounce, setTermoDebounce] = React.useState("");
 
+  const [open, setOpen] = React.useState(false);
+  const [obraSelecionada, setObraSelecionada] = React.useState(null);
+
   const cadastrar = () => {
     navigate("/cadastro-obra");
   };
 
   const visualizar = (id) => {
     navigate(`/perfil-obra/${id}`);
+  };
+
+  const abrirConfirmacao = (obra) => {
+    setObraSelecionada(obra);
+    setOpen(true);
+  };
+
+  const fecharConfirmacao = () => {
+    setOpen(false);
+    setObraSelecionada(null);
+  };
+
+  const excluir = async () => {
+    if (!obraSelecionada) return;
+
+    await axios
+      .delete(`${obrasURL}/${obraSelecionada.id}`)
+      .then(() => {
+        mensagemSucesso("Obra excluída com sucesso!");
+        setObras(
+          obras.filter((o) => o.id !== obraSelecionada.id)
+        );
+        fecharConfirmacao();
+      })
+      .catch(() => {
+        mensagemErro("Erro ao excluir a obra");
+        fecharConfirmacao();
+      });
   };
 
   React.useEffect(() => {
@@ -84,7 +128,9 @@ function ListagemObras() {
                   label="Pesquisar obra"
                   size="small"
                   value={termoBusca}
-                  onChange={(e) => setTermoBusca(e.target.value)}
+                  onChange={(e) =>
+                    setTermoBusca(e.target.value)
+                  }
                 />
               </div>
 
@@ -95,7 +141,7 @@ function ListagemObras() {
                     <th>ISBN</th>
                     <th>Edição</th>
                     <th>Editora</th>
-                    <th>Ver Obra</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
 
@@ -107,15 +153,27 @@ function ListagemObras() {
                         <td>{obra.isbn}</td>
                         <td>{obra.edicao}</td>
                         <td>
-                          {editoras[obra.idEditora] || "Editora não cadastrada"}
+                          {editoras[obra.idEditora] ||
+                            "Editora não cadastrada"}
                         </td>
                         <td>
                           <Stack direction="row" spacing={1}>
                             <IconButton
                               aria-label="visualizar"
-                              onClick={() => visualizar(obra.id)}
+                              onClick={() =>
+                                visualizar(obra.id)
+                              }
                             >
                               <VisibilityIcon />
+                            </IconButton>
+
+                            <IconButton
+                              aria-label="excluir"
+                              onClick={() =>
+                                abrirConfirmacao(obra)
+                              }
+                            >
+                              <DeleteIcon />
                             </IconButton>
                           </Stack>
                         </td>
@@ -133,6 +191,30 @@ function ListagemObras() {
             </div>
           </div>
         </div>
+
+        <Dialog open={open} onClose={fecharConfirmacao}>
+          <DialogTitle>Confirmar exclusão</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Tem certeza que deseja excluir a obra{" "}
+              <strong>{obraSelecionada?.titulo}</strong>?
+              <br />
+              Essa ação não poderá ser desfeita.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={fecharConfirmacao} color="inherit">
+              Cancelar
+            </Button>
+            <Button
+              onClick={excluir}
+              variant="contained"
+              color="error"
+            >
+              Excluir
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Card>
     </div>
   );

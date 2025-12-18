@@ -34,7 +34,7 @@ function PerfilCliente() {
   const [dadosObras, setDadosObras] = React.useState([]);
 
   const editar = () => {
-    navigate(`/cadastro-cliente/${id}`);
+    navigate(`/edicao-cliente/${id}`);
   };
 
   async function excluir() {
