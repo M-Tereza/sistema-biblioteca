@@ -4,7 +4,7 @@ import Card from "../components/card";
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 import "../custom.css";
-import 'toastr/build/toastr.min.css'; 
+import 'toastr/build/toastr.min.css';
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -15,12 +15,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBack';
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import axios from "axios";
 import { API_URLS } from "../config/axios";
 import { formatarData } from "../utils/formatadores"
 
 const baseURL = `${API_URLS.clientes}/clientes`;
 const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
+const reservasURL = `${API_URLS.reservas}/reservas`;
+const statusReservasURL = `${API_URLS.statusReservas}/statusReservas`;
 const exemplaresURL = `${API_URLS.clientes}/exemplares`;
 const obrasURL = `${API_URLS.obras}/obras`;
 
@@ -28,24 +36,18 @@ function PerfilCliente() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [dados, setDado] = React.useState(null);
+  const [dados, setDados] = React.useState(null);
   const [dadosEmprestimos, setDadosEmprestimos] = React.useState([]);
+  const [dadosReservas, setDadosReservas] = React.useState([]);
+  const [dadosStatusReservas, setDadosStatusReservas] = React.useState([]);
   const [dadosExemplares, setDadosExemplares] = React.useState([]);
   const [dadosObras, setDadosObras] = React.useState([]);
+
+  const [open, setOpen] = React.useState(false);
 
   const editar = () => {
     navigate(`/edicao-cliente/${id}`);
   };
-
-  async function excluir() {
-    try {
-      await axios.delete(`${baseURL}/${id}`);
-      mensagemSucesso("Cliente excluído com sucesso!");
-      navigate("/listagem-clientes");
-    } catch (error) {
-      mensagemErro("Erro ao excluir o cliente");
-    }
-  }
 
   const voltar = () => {
     navigate("/listagem-clientes");
@@ -55,17 +57,56 @@ function PerfilCliente() {
     navigate(`/selecionar-obra/${id}`);
   };
 
+  const abrirConfirmacao = () => setOpen(true);
+  const fecharConfirmacao = () => setOpen(false);
+
+  const excluir = async () => {
+    await axios
+      .delete(`${baseURL}/${id}`)
+      .then(() => {
+        mensagemSucesso("Cliente excluído com sucesso!");
+        navigate("/listagem-clientes");
+      })
+      .catch(() => {
+        mensagemErro("Erro ao excluir cliente");
+      })
+      .finally(fecharConfirmacao);
+  };
+
+  const excluirReserva = async (reserva) => {
+
+    let url = `${baseURL}/${reserva.id}`;
+
+    await axios
+      .delete(url)
+      .then(() => {
+        mensagemSucesso("Reserva excluída com sucesso!");
+      })
+      .catch(() => {
+        mensagemErro("Erro ao excluir reserva");
+      })
+      .finally(fecharConfirmacao);
+  };
+
 
   React.useEffect(() => {
     async function carregar() {
       try {
         const responseCliente = await axios.get(`${baseURL}/${id}`);
-        setDado(responseCliente.data);
+        setDados(responseCliente.data);
 
         const responseEmprestimos = await axios.get(emprestimosURL);
         setDadosEmprestimos(
           responseEmprestimos.data.filter((e) => e.idCliente === Number(id))
         );
+
+        const responseReservas = await axios.get(reservasURL);
+        setDadosReservas(
+          responseReservas.data.filter((e) => e.idCliente === Number(id))
+        );
+
+        const responseStatusReservas = await axios.get(statusReservasURL);
+        setDadosStatusReservas(responseStatusReservas.data);
 
         const responseExemplares = await axios.get(exemplaresURL);
         setDadosExemplares(responseExemplares.data);
@@ -84,11 +125,17 @@ function PerfilCliente() {
 
   const emprestimosAtivos = dadosEmprestimos.filter((e) => !e.dataEntrega);
   const emprestimosFinalizados = dadosEmprestimos.filter((e) => e.dataEntrega);
+  const reservasAtivas = dadosReservas.filter((e) => e.idStatus === 1 || e.idStatus === 3);
 
-  const getTituloObra = (idExemplar) => {
-    const obra = dadosExemplares.find((x) => x.id === idExemplar);
-    const ex = dadosObras.find((x) => x.id === obra.id);
-    return ex ? `${ex.titulo}` : "Obra não encontrada";
+  const getObraPorId = (idObra) => dadosObras.find(o => o.id === idObra);
+
+  const getTituloObra = (idObra) => getObraPorId(idObra)?.titulo ?? "Obra não encontrada";
+
+  const getTituloObraPorIdExemplar = (idExemplar) => {
+    const exemplar = dadosExemplares.find(e => e.id === idExemplar);
+    if (!exemplar) return "Exemplar não encontrado";
+
+    return getTituloObra(exemplar.idObra);
   };
 
   return (
@@ -120,14 +167,24 @@ function PerfilCliente() {
           </tbody>
         </table>
 
-        <Stack spacing={1} padding={0} direction='row' justifyContent="flex-end" className="mb-4">
+        <Stack direction="row" spacing={2} mt={3}>
+          <Button variant="contained" onClick={editar}>
+            Editar Cliente
+          </Button>
+
+          <Button variant="contained" color="error" onClick={abrirConfirmacao}>
+            Excluir Cliente
+          </Button>
+        </Stack>
+
+        {/* <Stack spacing={1} padding={0} direction='row' justifyContent="flex-end" className="mb-4">
           <IconButton aria-label='edit' onClick={() => editar(dados.id)}>
-            <EditIcon sx={{ fontSize: 28 }}/>
+            <EditIcon sx={{ fontSize: 28 }} />
           </IconButton>
           <IconButton aria-label='delete' onClick={() => excluir(dados.id)}>
-            <DeleteIcon sx={{ fontSize: 28 }}/>
+            <DeleteIcon sx={{ fontSize: 28 }} />
           </IconButton>
-        </Stack>
+        </Stack> */}
 
         <div className="d-flex justify-content-center mb-4">
           <Button
@@ -139,11 +196,45 @@ function PerfilCliente() {
           </Button>
         </div>
 
+        <h4>Reservas</h4>
+        {reservasAtivas.length === 0 ? (
+          <p>Nenhuma reserva ativa.</p>
+        ) : (
+          <table className="table table-striped mb-5">
+            <thead>
+              <tr>
+                <th>Obra</th>
+                <th>Data Reseva</th>
+                <th>Posição na fila</th>
+                <th>Praso para retirada</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reservasAtivas.map((e) => (
+                <tr key={e.id}>
+                  <td>{getTituloObra(e.idObra)}</td>
+                  <td>{formatarData(e.dataReserva)}</td>
+                  <td>{formatarData(e.dataReserva)}</td>
+                  <td>{e.posicaoFila}</td>
+                  <td>{e.idStatus}</td>
+                  <td>
+                    <IconButton aria-label="delete" onClick={() => { excluirReserva(e); }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
         <h4>Empréstimos Ativos</h4>
         {emprestimosAtivos.length === 0 ? (
           <p>Nenhum empréstimo ativo.</p>
         ) : (
-          <table className="table table-striped">
+          <table className="table table-striped mb-5">
             <thead>
               <tr>
                 <th>Obra</th>
@@ -155,7 +246,7 @@ function PerfilCliente() {
             <tbody>
               {emprestimosAtivos.map((e) => (
                 <tr key={e.id}>
-                  <td>{getTituloObra(e.idExemplar)}</td>
+                  <td>{getTituloObraPorIdExemplar(e.idExemplar)}</td>
                   <td>{e.idExemplar}</td>
                   <td>{formatarData(e.dataEmprestimo)}</td>
                   <td>{formatarData(e.dataEntrega) || "—"}</td>
@@ -165,11 +256,11 @@ function PerfilCliente() {
           </table>
         )}
 
-        <h4 className="mt-4">Histórico de Empréstimos</h4>
+        <h4 className="mt-4">Empréstimos Finalizados</h4>
         {emprestimosFinalizados.length === 0 ? (
           <p>Nenhum empréstimo finalizado.</p>
         ) : (
-          <table className="table table-striped">
+          <table className="table table-striped mb-5">
             <thead>
               <tr>
                 <th>Obra</th>
@@ -190,6 +281,30 @@ function PerfilCliente() {
             </tbody>
           </table>
         )}
+
+        <Dialog open={open} onClose={fecharConfirmacao}>
+          <DialogTitle>Confirmar exclusão</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Tem certeza que deseja excluir o cliente{" "}
+              <strong>{dados.nome}</strong>?
+              <br />
+              Essa ação não poderá ser desfeita.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={fecharConfirmacao}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={excluir}
+              color="error"
+              variant="contained"
+            >
+              Excluir
+            </Button>
+          </DialogActions>
+        </Dialog>
 
       </Card>
     </div>
