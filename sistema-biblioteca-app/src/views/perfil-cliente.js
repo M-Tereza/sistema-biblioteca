@@ -23,7 +23,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 import axios from "axios";
 import { API_URLS } from "../config/axios";
-import { formatarData } from "../utils/formatadores"
+import { formatarData } from "../utils/formatadores";
 
 const baseURL = `${API_URLS.clientes}/clientes`;
 const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
@@ -36,14 +36,14 @@ function PerfilCliente() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const [dados, setDados] = React.useState(null);
-  const [dadosEmprestimos, setDadosEmprestimos] = React.useState([]);
-  const [dadosReservas, setDadosReservas] = React.useState([]);
-  const [dadosStatusReservas, setDadosStatusReservas] = React.useState([]);
-  const [dadosExemplares, setDadosExemplares] = React.useState([]);
-  const [dadosObras, setDadosObras] = React.useState([]);
+  const [dados, setDados] = useState(null);
+  const [dadosEmprestimos, setDadosEmprestimos] = useState([]);
+  const [dadosReservas, setDadosReservas] = useState([]);
+  const [dadosStatusReservas, setDadosStatusReservas] = useState([]);
+  const [dadosExemplares, setDadosExemplares] = useState([]);
+  const [dadosObras, setDadosObras] = useState([]);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const editar = () => {
     navigate(`/edicao-cliente/${id}`);
@@ -55,6 +55,10 @@ function PerfilCliente() {
 
   const adicionarEmprestimo = () => {
     navigate(`/selecionar-obra/${id}`);
+  };
+
+  const adicionarReserva = () => {
+    navigate(`/selecionar-obra/${id}?tipo=reserva`);
   };
 
   const abrirConfirmacao = () => setOpen(true);
@@ -74,7 +78,6 @@ function PerfilCliente() {
   };
 
   const excluirReserva = async (reserva) => {
-
     let url = `${baseURL}/${reserva.id}`;
 
     await axios
@@ -88,8 +91,7 @@ function PerfilCliente() {
       .finally(fecharConfirmacao);
   };
 
-
-  React.useEffect(() => {
+  useEffect(() => {
     async function carregar() {
       try {
         const responseCliente = await axios.get(`${baseURL}/${id}`);
@@ -128,19 +130,15 @@ function PerfilCliente() {
   const reservasAtivas = dadosReservas.filter((e) => e.idStatus === 1 || e.idStatus === 3);
 
   const getObraPorId = (idObra) => dadosObras.find(o => o.id === idObra);
-
   const getTituloObra = (idObra) => getObraPorId(idObra)?.titulo ?? "Obra não encontrada";
-
   const getTituloObraPorIdExemplar = (idExemplar) => {
     const exemplar = dadosExemplares.find(e => e.id === idExemplar);
     if (!exemplar) return "Exemplar não encontrado";
-
     return getTituloObra(exemplar.idObra);
   };
 
   return (
     <div className="container">
-
       <Card title={
         <Stack direction="row" spacing={1} alignItems="left">
           <IconButton aria-label="voltar" onClick={voltar}>
@@ -149,7 +147,6 @@ function PerfilCliente() {
           <span>Perfil do Cliente</span>
         </Stack>
       }>
-
         <table className="table table-bordered mb-2">
           <tbody>
             <tr><th>Nome</th><td>{dados.nome}</td></tr>
@@ -177,22 +174,22 @@ function PerfilCliente() {
           </Button>
         </Stack>
 
-        {/* <Stack spacing={1} padding={0} direction='row' justifyContent="flex-end" className="mb-4">
-          <IconButton aria-label='edit' onClick={() => editar(dados.id)}>
-            <EditIcon sx={{ fontSize: 28 }} />
-          </IconButton>
-          <IconButton aria-label='delete' onClick={() => excluir(dados.id)}>
-            <DeleteIcon sx={{ fontSize: 28 }} />
-          </IconButton>
-        </Stack> */}
-
         <div className="d-flex justify-content-center mb-4">
           <Button
             variant="contained"
             color="primary"
             onClick={adicionarEmprestimo}
+            style={{ marginRight: "10px" }}
           >
             Adicionar Empréstimo
+          </Button>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={adicionarReserva}
+          >
+            Fazer Reserva
           </Button>
         </div>
 
@@ -216,8 +213,8 @@ function PerfilCliente() {
                 <tr key={e.id}>
                   <td>{getTituloObra(e.idObra)}</td>
                   <td>{formatarData(e.dataReserva)}</td>
-                  <td>{formatarData(e.dataReserva)}</td>
                   <td>{e.posicaoFila}</td>
+                  <td>{formatarData(e.dataReserva)}</td>
                   <td>{e.idStatus}</td>
                   <td>
                     <IconButton aria-label="delete" onClick={() => { excluirReserva(e); }}>
@@ -293,19 +290,12 @@ function PerfilCliente() {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={fecharConfirmacao}>
-              Cancelar
-            </Button>
-            <Button
-              onClick={excluir}
-              color="error"
-              variant="contained"
-            >
+            <Button onClick={fecharConfirmacao}>Cancelar</Button>
+            <Button onClick={excluir} color="error" variant="contained">
               Excluir
             </Button>
           </DialogActions>
         </Dialog>
-
       </Card>
     </div>
   );
