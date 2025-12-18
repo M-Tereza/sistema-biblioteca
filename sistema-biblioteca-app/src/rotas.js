@@ -25,11 +25,13 @@ import PerfilCliente from './views/perfil-cliente';
 import PerfilObra from './views/perfil-obra';
 import PerfilExemplar from './views/perfil-exemplar';
 
+
 import SelecionarExemplar from './views/selecionar-exemplar';
 import SelecionarObra from './views/selecionar-obra';
 import ConfirmarEmprestimo from "./views/confirmar-emprestimo";
 
 import EdicaoCliente from './views/edicao-cliente';
+import EdicaoExemplar from './views/edicao-exemplar';
 
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
@@ -70,6 +72,7 @@ function Rotas(props) {
         <Route path="/confirmar-emprestimo/:idCliente/:idObra/:idExemplar" element={<ConfirmarEmprestimo />} />
 
         <Route path="/edicao-cliente/:id" element={<EdicaoCliente />} />
+        <Route path="/edicao-exemplar/:id" element={<EdicaoExemplar />} />
 
       </Routes>
     </BrowserRouter>
