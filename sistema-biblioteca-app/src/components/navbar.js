@@ -29,13 +29,13 @@ function Navbar(props) {
               label="Clientes"
             />
           </ul>
-          <ul className="navbar-nav">
+          {/* <ul className="navbar-nav">
             <NavbarItem
               render="true"
               href="/listagem-exemplares"
               label="Exemplares"
             />
-          </ul>
+          </ul> */}
           <ul className="navbar-nav">
             <NavbarItem
               render="true"
