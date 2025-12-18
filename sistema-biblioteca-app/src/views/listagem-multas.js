@@ -19,11 +19,24 @@ function ListagemMultas() {
       .catch(() => mensagemErro('Erro ao carregar valores diários das multas'));
   }, []);
 
+  const cadastrar = () => {
+    window.location.href = "/cadastro-multa";
+  };
+
   if (!dados) return null;
 
   return (
     <div className="container">
       <Card title="Listagem de Valores Diários das Multas">
+        <div className="d-flex mb-3">
+          <button
+            className="btn btn-warning"
+            onClick={cadastrar}
+          >
+            Cadastrar Multa
+          </button>
+        </div>
+
         <table className="table table-hover">
           <thead>
             <tr>
