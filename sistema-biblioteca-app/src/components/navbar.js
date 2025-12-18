@@ -81,13 +81,8 @@ function Navbar(props) {
           <ul className="navbar-nav">
             <NavbarItem
               render="true"
-              dropdown
-              label="Relatórios"
-              items={[
-                { label: "item1", href: "/relatorios" },
-                { label: "item2", href: "/relatorios" }
-              ]}
-            />
+              href="/relatorios"
+              label="Relatórios" />
           </ul>
         </div>
       </div>
