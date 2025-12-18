@@ -29,7 +29,7 @@ const baseURL = `${API_URLS.clientes}/clientes`;
 const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
 const reservasURL = `${API_URLS.reservas}/reservas`;
 const statusReservasURL = `${API_URLS.statusReservas}/statusReservas`;
-const exemplaresURL = `${API_URLS.clientes}/exemplares`;
+const exemplaresURL = `${API_URLS.exemplares}/exemplares`;
 const obrasURL = `${API_URLS.obras}/obras`;
 
 function PerfilCliente() {
@@ -45,21 +45,10 @@ function PerfilCliente() {
 
   const [open, setOpen] = useState(false);
 
-  const editar = () => {
-    navigate(`/edicao-cliente/${id}`);
-  };
-
-  const voltar = () => {
-    navigate("/listagem-clientes");
-  };
-
-  const adicionarEmprestimo = () => {
-    navigate(`/selecionar-obra/${id}`);
-  };
-
-  const adicionarReserva = () => {
-    navigate(`/selecionar-obra/${id}?tipo=reserva`);
-  };
+  const editar = () => navigate(`/edicao-cliente/${id}`);
+  const voltar = () => navigate("/listagem-clientes");
+  const adicionarEmprestimo = () => navigate(`/selecionar-obra/${id}`);
+  const adicionarReserva = () => navigate(`/selecionar-obra/${id}?tipo=reserva`);
 
   const abrirConfirmacao = () => setOpen(true);
   const fecharConfirmacao = () => setOpen(false);
@@ -78,17 +67,16 @@ function PerfilCliente() {
   };
 
   const excluirReserva = async (reserva) => {
-    let url = `${baseURL}/${reserva.id}`;
-
+    if (!reserva) return;
     await axios
-      .delete(url)
+      .delete(`${reservasURL}/${reserva.id}`)
       .then(() => {
         mensagemSucesso("Reserva excluída com sucesso!");
+        setDadosReservas(prev => prev.filter(r => r.id !== reserva.id));
       })
       .catch(() => {
         mensagemErro("Erro ao excluir reserva");
-      })
-      .finally(fecharConfirmacao);
+      });
   };
 
   useEffect(() => {
@@ -98,14 +86,10 @@ function PerfilCliente() {
         setDados(responseCliente.data);
 
         const responseEmprestimos = await axios.get(emprestimosURL);
-        setDadosEmprestimos(
-          responseEmprestimos.data.filter((e) => e.idCliente === Number(id))
-        );
+        setDadosEmprestimos(responseEmprestimos.data.filter(e => e.idCliente === Number(id)));
 
         const responseReservas = await axios.get(reservasURL);
-        setDadosReservas(
-          responseReservas.data.filter((e) => e.idCliente === Number(id))
-        );
+        setDadosReservas(responseReservas.data.filter(e => e.idCliente === Number(id)));
 
         const responseStatusReservas = await axios.get(statusReservasURL);
         setDadosStatusReservas(responseStatusReservas.data);
@@ -125,9 +109,12 @@ function PerfilCliente() {
 
   if (!dados) return null;
 
-  const emprestimosAtivos = dadosEmprestimos.filter((e) => !e.dataEntrega);
-  const emprestimosFinalizados = dadosEmprestimos.filter((e) => e.dataEntrega);
-  const reservasAtivas = dadosReservas.filter((e) => e.idStatus === 1 || e.idStatus === 3);
+  const emprestimosAtivos = dadosEmprestimos.filter(e => !e.dataEntrega);
+  const emprestimosFinalizados = dadosEmprestimos.filter(e => e.dataEntrega);
+
+  const reservasAtivas = dadosReservas.filter(
+    e => e.idStatus === 1 || e.idStatus === 3
+  );
 
   const getObraPorId = (idObra) => dadosObras.find(o => o.id === idObra);
   const getTituloObra = (idObra) => getObraPorId(idObra)?.titulo ?? "Obra não encontrada";
@@ -135,6 +122,11 @@ function PerfilCliente() {
     const exemplar = dadosExemplares.find(e => e.id === idExemplar);
     if (!exemplar) return "Exemplar não encontrado";
     return getTituloObra(exemplar.idObra);
+  };
+
+  const nomeStatusReserva = (idStatus) => {
+    const status = dadosStatusReservas.find(s => s.id === idStatus);
+    return status ? status.nome : "Status não cadastrado";
   };
 
   return (
@@ -183,14 +175,14 @@ function PerfilCliente() {
           >
             Adicionar Empréstimo
           </Button>
-
+{/* 
           <Button
             variant="contained"
             color="secondary"
             onClick={adicionarReserva}
           >
             Fazer Reserva
-          </Button>
+          </Button> */}
         </div>
 
         <h4>Reservas</h4>
@@ -201,9 +193,9 @@ function PerfilCliente() {
             <thead>
               <tr>
                 <th>Obra</th>
-                <th>Data Reseva</th>
+                <th>Data Reserva</th>
                 <th>Posição na fila</th>
-                <th>Praso para retirada</th>
+                <th>Prazo para retirada</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
@@ -215,9 +207,9 @@ function PerfilCliente() {
                   <td>{formatarData(e.dataReserva)}</td>
                   <td>{e.posicaoFila}</td>
                   <td>{formatarData(e.dataReserva)}</td>
-                  <td>{e.idStatus}</td>
+                  <td>{nomeStatusReserva(e.idStatus)}</td>
                   <td>
-                    <IconButton aria-label="delete" onClick={() => { excluirReserva(e); }}>
+                    <IconButton aria-label="delete" onClick={() => excluirReserva(e)}>
                       <DeleteIcon />
                     </IconButton>
                   </td>
@@ -269,7 +261,7 @@ function PerfilCliente() {
             <tbody>
               {emprestimosFinalizados.map((e) => (
                 <tr key={e.id}>
-                  <td>{getTituloObra(e.idExemplar)}</td>
+                  <td>{getTituloObraPorIdExemplar(e.idExemplar)}</td>
                   <td>{e.idExemplar}</td>
                   <td>{formatarData(e.dataEmprestimo)}</td>
                   <td>{formatarData(e.dataEntrega)}</td>

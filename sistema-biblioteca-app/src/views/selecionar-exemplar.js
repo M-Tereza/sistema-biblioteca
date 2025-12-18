@@ -11,7 +11,7 @@ import { mensagemErro, mensagemSucesso } from "../components/toastr";
 import { API_URLS } from "../config/axios";
 
 const EXEMPLARES_URL = `${API_URLS.exemplares}/exemplares`;
-const STATUS_URL = `${API_URLS.exemplares}/status`;
+const STATUS_EXEMPLARES_URL = `${API_URLS.statusExemplares}/statusExemplar`;
 const OBRAS_URL = `${API_URLS.obras}/obras`;
 
 function SelecionarExemplar() {
@@ -23,13 +23,15 @@ function SelecionarExemplar() {
   const [obra, setObra] = useState(null);
 
   useEffect(() => {
-    axios.get(`${OBRAS_URL}/${idObra}`).then((r) => setObra(r.data)).catch(() => {});
+    axios.get(`${OBRAS_URL}/${idObra}`)
+      .then((r) => setObra(r.data))
+      .catch(() => {});
 
     axios
-      .get(STATUS_URL)
+      .get(STATUS_EXEMPLARES_URL)
       .then((res) => setStatusList(res.data))
       .catch(() => {
-        mensagemErro("Erro ao carregar status");
+        mensagemErro("Erro ao carregar status dos exemplares");
       });
 
     axios
