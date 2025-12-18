@@ -120,7 +120,7 @@ function PerfilObra() {
   return (
     <div className="container">
       <Card title="Perfil da Obra">
-        <p><strong>ID:</strong> {obra.id}</p>
+        <p><strong>Código:</strong> {obra.id}</p>
         <p><strong>Título:</strong> {obra.titulo}</p>
         <p><strong>ISBN:</strong> {obra.isbn}</p>
         <p><strong>Edição:</strong> {obra.edicao}</p>

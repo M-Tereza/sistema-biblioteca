@@ -39,7 +39,6 @@ function PerfilExemplar() {
 
   const [openExcluir, setOpenExcluir] = useState(false);
 
-  // Carrega dados principais
   useEffect(() => {
     axios.get(`${exemplaresURL}/${id}`)
       .then((res) => setExemplar(res.data))
@@ -58,7 +57,7 @@ function PerfilExemplar() {
       .catch(() => setClientes([]));
   }, [id]);
 
-  // Histórico de empréstimos do exemplar
+
   useEffect(() => {
     if (!exemplar) return;
 
