@@ -37,7 +37,6 @@ const STATUS_EXEMPLAR = {
   DISPONIVEL: 1,
   RESERVADO: 2,
   EM_POSSE: 3,
-  EM_ATRASO: 4,
   EXTRAVIADO: 5
 };
 
@@ -63,8 +62,7 @@ function Relatorios() {
 
   const exemplaresEmPosse = exemplares.filter(
     e =>
-      e.idStatus === STATUS_EXEMPLAR.EM_POSSE ||
-      e.idStatus === STATUS_EXEMPLAR.EM_ATRASO
+      e.idStatus === STATUS_EXEMPLAR.EM_POSSE
   );
 
   const clientesComEmprestimo = new Set(
@@ -93,6 +91,14 @@ function Relatorios() {
   const exemplaresEmprestados = exemplaresEmPosse.length;
   const exemplaresDisponiveis = exemplares.filter(
     e => e.idStatus === STATUS_EXEMPLAR.DISPONIVEL
+  ).length;
+
+  const exemplaresReservados = exemplares.filter(
+    e => e.idStatus === STATUS_EXEMPLAR.RESERVADO
+  ).length;
+
+  const exemplaresExtraviados = exemplares.filter(
+    e => e.idStatus === STATUS_EXEMPLAR.EXTRAVIADO
   ).length;
 
   const hoje = new Date();
@@ -155,20 +161,26 @@ function Relatorios() {
   };
 
   const graficoExemplares = {
-    labels: ["Emprestados", "Disponíveis"],
+    labels: ["Disponível", "Reservado", "Em posse", "Extraviado/Danificado"],
     datasets: [
       {
         data: [
-          exemplaresEmprestados,
           exemplaresDisponiveis,
+          exemplaresReservados,
+          exemplaresEmprestados,
+          exemplaresExtraviados
         ],
         backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
           "rgba(75, 192, 192, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(201, 203, 207, 0.6)"
         ],
         borderColor: [
-          "rgba(255, 99, 132, 1)",
           "rgba(75, 192, 192, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(255, 99, 132, 1)",
+          "rgba(201, 203, 207, 1)"
         ],
       },
     ],
@@ -230,8 +242,10 @@ function Relatorios() {
           </div>
           <div className="col-lg-8">
             <h6>Total de exemplares: {exemplares.length}</h6>
-            <h6>Emprestados: {exemplaresEmprestados}</h6>
             <h6>Disponíveis: {exemplaresDisponiveis}</h6>
+            <h6>Reservados: {exemplaresReservados}</h6>
+            <h6>Em posse: {exemplaresEmprestados}</h6>
+            <h6>Extraviados/Danificados: {exemplaresExtraviados}</h6>
           </div>
         </div>
       </Card>
