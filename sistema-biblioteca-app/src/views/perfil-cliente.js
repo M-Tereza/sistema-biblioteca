@@ -175,14 +175,14 @@ function PerfilCliente() {
           >
             Adicionar Empréstimo
           </Button>
-{/* 
+ 
           <Button
             variant="contained"
             color="secondary"
             onClick={adicionarReserva}
           >
             Fazer Reserva
-          </Button> */}
+          </Button>
         </div>
 
         <h4>Reservas</h4>
