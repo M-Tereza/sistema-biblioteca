@@ -25,8 +25,8 @@ import { mensagemSucesso, mensagemErro } from "../components/toastr";
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const obrasURL = `${API_URLS.obras}/obras`;
-const editorasURL = `${API_URLS.editoras}/editoras`;
+const obrasURL = `${API_URLS}/obras`;
+const editorasURL = `${API_URLS}/editoras`;
 
 function ListagemObras() {
   const navigate = useNavigate();

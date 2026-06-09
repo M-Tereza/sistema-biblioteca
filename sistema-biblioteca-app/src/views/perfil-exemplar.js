@@ -20,11 +20,11 @@ import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 import { formatarData } from "../utils/formatadores";
 
-const exemplaresURL = `${API_URLS.exemplares}/exemplares`;
-const obrasURL = `${API_URLS.obras}/obras`;
-const secoesURL = `${API_URLS.secoes}/secoes`;
-const clientesURL = `${API_URLS.clientes}/clientes`;
-const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
+const exemplaresURL = `${API_URLS}/exemplares`;
+const obrasURL = `${API_URLS}/obras`;
+const secoesURL = `${API_URLS}/secoes`;
+const clientesURL = `${API_URLS}/clientes`;
+const emprestimosURL = `${API_URLS}/emprestimos`;
 
 function PerfilExemplar() {
   const { id } = useParams();

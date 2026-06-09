@@ -10,9 +10,9 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { mensagemErro, mensagemSucesso } from "../components/toastr";
 import { API_URLS } from "../config/axios";
 
-const EXEMPLARES_URL = `${API_URLS.exemplares}/exemplares`;
-const STATUS_EXEMPLARES_URL = `${API_URLS.statusExemplares}/statusExemplar`;
-const OBRAS_URL = `${API_URLS.obras}/obras`;
+const EXEMPLARES_URL = `${API_URLS}/exemplares`;
+const STATUS_EXEMPLARES_URL = `${API_URLS}/statusExemplar`;
+const OBRAS_URL = `${API_URLS}/obras`;
 
 function SelecionarExemplar() {
   const navigate = useNavigate();

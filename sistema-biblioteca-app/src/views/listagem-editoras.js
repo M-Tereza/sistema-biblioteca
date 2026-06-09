@@ -20,7 +20,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.editoras}/editoras`;
+const baseURL = `${API_URLS}/editoras`;
 
 function ListagemEditoras() {
   const navigate = useNavigate();

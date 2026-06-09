@@ -20,7 +20,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.idiomas}/idiomas`;
+const baseURL = `${API_URLS}/idiomas`;
 
 function ListagemIdiomas() {
   const navigate = useNavigate();

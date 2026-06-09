@@ -19,7 +19,7 @@ import "../custom.css";
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.generos}/generos`;
+const baseURL = `${API_URLS}/generos`;
 
 function CadastroGenero() {
   const { idParam } = useParams();

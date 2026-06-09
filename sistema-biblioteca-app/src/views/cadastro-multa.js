@@ -19,7 +19,7 @@ import "../custom.css";
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.multas}/multas`;
+const baseURL = `${API_URLS}/multas`;
 
 function CadastroMulta() {
   const { idParam } = useParams();

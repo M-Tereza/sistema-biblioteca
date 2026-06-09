@@ -27,11 +27,11 @@ ChartJS.register(
   Legend
 );
 
-const clientesURL = `${API_URLS.clientes}/clientes`;
-const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
-const exemplaresURL = `${API_URLS.exemplares}/exemplares`;
-const multasURL = `${API_URLS.multas}/multas`;
-const duracoesURL = `${API_URLS.duracaoPadraoEmprestimos}/duracaoPadraoEmprestimos`;
+const clientesURL = `${API_URLS}/clientes`;
+const emprestimosURL = `${API_URLS}/emprestimos`;
+const exemplaresURL = `${API_URLS}/exemplares`;
+const multasURL = `${API_URLS}/multas`;
+const duracoesURL = `${API_URLS}/duracaoPadraoEmprestimos`;
 
 const STATUS_EXEMPLAR = {
   DISPONIVEL: 1,

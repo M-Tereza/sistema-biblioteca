@@ -11,8 +11,8 @@ import "../custom.css";
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.exemplares}/exemplares`;
-const secoesURL = `${API_URLS.secoes}/secoes`;
+const baseURL = `${API_URLS}/exemplares`;
+const secoesURL = `${API_URLS}/secoes`;
 
 function CadastroExemplar() {
   const { idParam } = useParams();

@@ -20,7 +20,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.generos}/generos`;
+const baseURL = `${API_URLS}/generos`;
 
 function ListagemGeneros() {
   const navigate = useNavigate();

@@ -20,7 +20,7 @@
 // import axios from "../config/axios";
 // import { API_URLS } from "../config/axios";
 
-// const baseURL = `${API_URLS.exemplares}/exemplares`;
+// const baseURL = `${API_URLS}/exemplares`;
 
 // function ListagemExemplares() {
 //   const navigate = useNavigate();

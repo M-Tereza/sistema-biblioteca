@@ -6,11 +6,11 @@ import axios from "axios";
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 import { API_URLS } from "../config/axios";
 
-const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
-const exemplaresURL = `${API_URLS.exemplares}/exemplares`;
-const obrasURL = `${API_URLS.obras}/obras`;
-const autoresURL = `${API_URLS.autores}/autores`;
-const editorasURL = `${API_URLS.editoras}/editoras`;
+const emprestimosURL = `${API_URLS}/emprestimos`;
+const exemplaresURL = `${API_URLS}/exemplares`;
+const obrasURL = `${API_URLS}/obras`;
+const autoresURL = `${API_URLS}/autores`;
+const editorasURL = `${API_URLS}/editoras`;
 
 function ConfirmarEmprestimo() {
   const navigate = useNavigate();

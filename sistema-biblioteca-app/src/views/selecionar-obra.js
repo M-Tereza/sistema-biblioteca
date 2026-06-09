@@ -9,7 +9,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBack";
 import { mensagemErro } from "../components/toastr";
 import { API_URLS } from "../config/axios";
 
-const OBRAS_URL = `${API_URLS.obras}/obras`;
+const OBRAS_URL = `${API_URLS}/obras`;
 
 function SelecionarObra() {
   const navigate = useNavigate();

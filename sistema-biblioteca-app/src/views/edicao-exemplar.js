@@ -9,9 +9,9 @@ import { TextField, Button, Stack, MenuItem } from "@mui/material";
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.exemplares}/exemplares`;
-const obrasURL = `${API_URLS.obras}/obras`;
-const secoesURL = `${API_URLS.secoes}/secoes`;
+const baseURL = `${API_URLS}/exemplares`;
+const obrasURL = `${API_URLS}/obras`;
+const secoesURL = `${API_URLS}/secoes`;
 
 function EdicaoExemplar() {
   const { id } = useParams();

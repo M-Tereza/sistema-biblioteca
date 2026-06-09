@@ -20,7 +20,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 import { API_URLS } from '../config/axios';
 
-const baseURL = `${API_URLS.autores}/autores`;
+const baseURL = `${API_URLS}/autores`;
 
 function ListagemAutores() {
   const navigate = useNavigate();

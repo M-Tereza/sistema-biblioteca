@@ -8,7 +8,7 @@ import { formatarDataHora } from '../utils/formatadores';
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const VALORES_MULTAS_URL = `${API_URLS.valorDiarioMultas}/valorDiarioMultas`;
+const VALORES_MULTAS_URL = `${API_URLS}/valorDiarioMultas`;
 
 function ListagemMultas() {
   const [dados, setDados] = React.useState([]);

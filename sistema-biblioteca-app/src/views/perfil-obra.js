@@ -22,11 +22,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-const obrasURL = `${API_URLS.obras}/obras`;
-const exemplaresURL = `${API_URLS.exemplares}/exemplares`;
-const autoresURL = `${API_URLS.autores}/autores`;
-const editorasURL = `${API_URLS.editoras}/editoras`;
-const secoesURL = `${API_URLS.secoes}/secoes`;
+const obrasURL = `${API_URLS}/obras`;
+const exemplaresURL = `${API_URLS}/exemplares`;
+const autoresURL = `${API_URLS}/autores`;
+const editorasURL = `${API_URLS}/editoras`;
+const secoesURL = `${API_URLS}/secoes`;
 
 function PerfilObra() {
   const { id } = useParams();

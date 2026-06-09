@@ -20,7 +20,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.secoes}/secoes`;
+const baseURL = `${API_URLS}/secoes`;
 
 function ListagemSecoes() {
   const navigate = useNavigate();

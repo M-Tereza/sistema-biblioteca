@@ -25,12 +25,12 @@ import axios from "axios";
 import { API_URLS } from "../config/axios";
 import { formatarData } from "../utils/formatadores";
 
-const baseURL = `${API_URLS.clientes}/clientes`;
-const emprestimosURL = `${API_URLS.emprestimos}/emprestimos`;
-const reservasURL = `${API_URLS.reservas}/reservas`;
-const statusReservasURL = `${API_URLS.statusReservas}/statusReservas`;
-const exemplaresURL = `${API_URLS.exemplares}/exemplares`;
-const obrasURL = `${API_URLS.obras}/obras`;
+const baseURL = `${API_URLS}/clientes`;
+const emprestimosURL = `${API_URLS}/emprestimos`;
+const reservasURL = `${API_URLS}/reservas`;
+const statusReservasURL = `${API_URLS}/statusReservas`;
+const exemplaresURL = `${API_URLS}/exemplares`;
+const obrasURL = `${API_URLS}/obras`;
 
 function PerfilCliente() {
   const navigate = useNavigate();

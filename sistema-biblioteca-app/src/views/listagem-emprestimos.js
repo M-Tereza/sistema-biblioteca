@@ -11,9 +11,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import { API_URLS } from "../config/axios";
 
-const emprestimosURL = `${API_URLS.exemplares}/emprestimos`;
-const clientesURL = `${API_URLS.clientes}/clientes`;
-const exemplaresURL = `${API_URLS.exemplares}/exemplares`;
+const emprestimosURL = `${API_URLS}/emprestimos`;
+const clientesURL = `${API_URLS}/clientes`;
+const exemplaresURL = `${API_URLS}/exemplares`;
 
 function ListagemEmprestimos() {
   const navigate = useNavigate();

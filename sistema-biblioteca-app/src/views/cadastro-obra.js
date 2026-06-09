@@ -19,7 +19,7 @@ import "../custom.css";
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS.obras}/obras`;
+const baseURL = `${API_URLS}/obras`;
 
 function CadastroObra() {
   const { idParam } = useParams();
@@ -112,25 +112,25 @@ function CadastroObra() {
   }
 
   useEffect(() => {
-    axios.get(`${API_URLS.autores}/autores`).then((response) => {
+    axios.get(`${API_URLS}/autores`).then((response) => {
       setDadosAutores(response.data);
     });
   }, []);
 
   useEffect(() => {
-    axios.get(`${API_URLS.editoras}/editoras`).then((response) => {
+    axios.get(`${API_URLS}/editoras`).then((response) => {
       setDadosEditoras(response.data);
     });
   }, []);
 
   useEffect(() => {
-    axios.get(`${API_URLS.generos}/generos`).then((response) => {
+    axios.get(`${API_URLS}/generos`).then((response) => {
       setDadosGeneros(response.data);
     });
   }, []);
 
   useEffect(() => {
-    axios.get(`${API_URLS.idiomas}/idiomas`).then((response) => {
+    axios.get(`${API_URLS}/idiomas`).then((response) => {
       setDadosIdiomas(response.data);
     });
   }, []);
