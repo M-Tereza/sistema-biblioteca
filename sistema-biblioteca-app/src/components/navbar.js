@@ -13,8 +13,8 @@ function Navbar(props) {
         <button
           className="navbar-toggler"
           type="button"
-          data-toggle="collapse"
-          data-target="#navbarResponsive"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
           aria-controls="navbarResponsive"
           aria-expanded="false"
           aria-label="Toggle navigation"
