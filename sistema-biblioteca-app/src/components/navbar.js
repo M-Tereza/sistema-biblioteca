@@ -10,6 +10,7 @@ function Navbar(props) {
         <a href="/" className="navbar-brand">
           Sistema de Biblioteca
         </a>
+
         <button
           className="navbar-toggler"
           type="button"
@@ -21,76 +22,144 @@ function Navbar(props) {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarResponsive">
-          <ul className="navbar-nav">
+
+        <div
+          className="collapse navbar-collapse"
+          id="navbarResponsive"
+        >
+          <ul className="navbar-nav me-auto">
+
+            {/* Clientes */}
             <NavbarItem
               render="true"
               href="/listagem-clientes"
               label="Clientes"
             />
-          </ul>
-          {/* <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-exemplares"
-              label="Exemplares"
-            />
-          </ul> */}
-          <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-valorDiarioMultas"
-              label="Multas" />
-          </ul>
-          {/* Valores para Multas */}
-          <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-duracaoPadraoEmprestimos"
-              label="Durações" /> 
-          </ul>
-          {/* Durações para Empréstimos */}
-          <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-autores"
-              label="Autores" />
-          </ul>
-          <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-idiomas"
-              label="Idiomas" />
-          </ul>
-          <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-secoes"
-              label="Seções" />
-          </ul>
-          <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-editoras"
-              label="Editoras" />
-          </ul>
-          <ul className="navbar-nav">
-            <NavbarItem
-              render="true"
-              href="/listagem-generos"
-              label="Gêneros" />
-          </ul>
-          <ul className="navbar-nav">
+
+            {/* Regras de Circulação */}
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle"
+                href="/#"
+                id="regrasDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Regras de Circulação
+              </a>
+
+              <ul
+                className="dropdown-menu"
+                aria-labelledby="regrasDropdown"
+              >
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-valorDiarioMultas"
+                  >
+                    Valor para Multas
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-duracaoPadraoEmprestimos"
+                  >
+                    Duração de Empréstimos
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-duracaoPadraoReservas"
+                  >
+                    Duração de Reservas
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            {/* Classificações */}
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle"
+                href="/#"
+                id="classificacoesDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Classificações
+              </a>
+
+              <ul
+                className="dropdown-menu"
+                aria-labelledby="classificacoesDropdown"
+              >
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-autores"
+                  >
+                    Autores
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-idiomas"
+                  >
+                    Idiomas
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-secoes"
+                  >
+                    Seções
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-editoras"
+                  >
+                    Editoras
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-generos"
+                  >
+                    Gêneros
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            {/* Obras */}
             <NavbarItem
               render="true"
               href="/listagem-obras"
-              label="Obras" />
-          </ul>
-          <ul className="navbar-nav">
+              label="Obras"
+            />
+
+            {/* Relatórios */}
             <NavbarItem
               render="true"
               href="/relatorios"
-              label="Relatórios" />
+              label="Relatórios"
+            />
+
           </ul>
         </div>
       </div>
