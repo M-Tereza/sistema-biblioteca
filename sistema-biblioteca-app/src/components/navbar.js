@@ -42,6 +42,14 @@ function Navbar(props) {
               href="/listagem-valorDiarioMultas"
               label="Multas" />
           </ul>
+          {/* Valores para Multas */}
+          <ul className="navbar-nav">
+            <NavbarItem
+              render="true"
+              href="/listagem-duracaoPadraoEmprestimos"
+              label="Durações" /> 
+          </ul>
+          {/* Durações para Empréstimos */}
           <ul className="navbar-nav">
             <NavbarItem
               render="true"
