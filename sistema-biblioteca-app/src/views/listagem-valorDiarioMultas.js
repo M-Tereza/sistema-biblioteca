@@ -25,6 +25,9 @@ function ListagemValorDiarioMultas() {
 
   if (!dados) return null;
 
+  //const dadosOrdenados = [...dados].sort((a, b) => new Date(b.dataHoraAlteracao) - new Date(b.dataHoraAlteracao));
+  const dadosOrdenados = [...dados].sort((a, b) => b.id - a.id);
+
   return (
     <div className="container">
       <Card title="Histórico de Valores Diários para Multas">
@@ -44,9 +47,10 @@ function ListagemValorDiarioMultas() {
               <th>Data da Alteração</th>
             </tr>
           </thead>
+
           <tbody>
-            {dados.length > 0 ? (
-              dados.map(item => (
+            {dadosOrdenados.length > 0 ? (
+              dadosOrdenados.map(item => (
                 <tr key={item.id}>
                   <td>R$ {(item.valorDia ?? 0).toFixed(2)}</td>
                   <td>{formatarDataHora(item.dataHoraAlteracao) || "—"}</td>
@@ -54,7 +58,9 @@ function ListagemValorDiarioMultas() {
               ))
             ) : (
               <tr>
-                <td colSpan="2" className="text-center">Nenhum valor diário para multas cadastrado</td>
+                <td colSpan="2" className="text-center">
+                  Nenhum valor diário para multas cadastrado
+                </td>
               </tr>
             )}
           </tbody>

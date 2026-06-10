@@ -13,11 +13,11 @@ import Card from "../components/card";
 import FormGroup from "../components/form-group";
 
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
-import { normalizarStringValorMonetario } from '../utils/formatadores';
+import { normalizarStringValorMonetario } from "../utils/formatadores";
 
 import "../custom.css";
 
-import axios from 'axios';
+import axios from "axios";
 import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS}/valorDiarioMultas`;
@@ -26,17 +26,17 @@ function CadastroValorDiarioMulta() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const [id, setId] = useState('');
-  const [valorDia, setValorDia] = useState('');
-  const [dataHoraAlteracao, setDataHoraAlteracao] = useState('');
+  const [id, setId] = useState("");
+  const [valorDia, setValorDia] = useState("");
+  const [dataHoraAlteracao, setDataHoraAlteracao] = useState("");
 
   const [dados, setDados] = React.useState([]);
 
   function inicializar() {
     if (idParam == null) {
-      setId('');
-      setValorDia(0.00);
-      setDataHoraAlteracao('');
+      setId("");
+      setValorDia(0.0);
+      setDataHoraAlteracao("");
     } else {
       setId(dados.id);
       setValorDia(dados.valorDia);
@@ -45,11 +45,10 @@ function CadastroValorDiarioMulta() {
   }
 
   const voltar = () => {
-    navigate(`/listagem-valorDiarioMultas`);
+    navigate("/listagem-valorDiarioMultas");
   };
 
   async function salvar() {
-
     const valorDiaNormalizado = normalizarStringValorMonetario(valorDia);
 
     if (valorDiaNormalizado == null) {
@@ -64,22 +63,37 @@ function CadastroValorDiarioMulta() {
       return;
     }
 
-    let data = {
-      id,
-      valorDia: parseFloat(valorDiaNormalizado),
-      dataHoraAlteracao
-    };
-
-    data = JSON.stringify(data);
-
     try {
+      const resposta = await axios.get(baseURL);
+
+      const ultimoValor = [...(resposta.data || [])]
+        .sort((a, b) => b.id - a.id)[0];
+
+      if (
+        ultimoValor &&
+        Number(ultimoValor.valorDia) === Number(valorDiaNormalizado)
+      ) {
+        mensagemErro("O valor informado já é o valor diário vigente.");
+        return;
+      }
+
+      let data = {
+        id,
+        valorDia: parseFloat(valorDiaNormalizado),
+        dataHoraAlteracao
+      };
+
+      data = JSON.stringify(data);
+
       if (idParam == null) {
         await axios.post(baseURL, data, {
           headers: { "Content-Type": "application/json" }
         });
 
         mensagemSucesso(
-          `Valor diario para multas alterado para R$ ${Number(valorDiaNormalizado).toFixed(2)} com sucesso!`
+          `Valor diario para multas alterado para R$ ${Number(
+            valorDiaNormalizado
+          ).toFixed(2)} com sucesso!`
         );
       } else {
         await axios.put(`${baseURL}/${idParam}`, data, {
@@ -87,12 +101,13 @@ function CadastroValorDiarioMulta() {
         });
 
         mensagemSucesso(
-          `Valor diario para multas alterado para R$ ${Number(valorDiaNormalizado).toFixed(2)} com sucesso!`
+          `Valor diario para multas alterado para R$ ${Number(
+            valorDiaNormalizado
+          ).toFixed(2)} com sucesso!`
         );
       }
 
       navigate("/listagem-valorDiarioMultas");
-
     } catch (error) {
       mensagemErro(
         error.response?.data || "Erro ao salvar valor diario para multas."
@@ -100,10 +115,10 @@ function CadastroValorDiarioMulta() {
     }
   }
 
-
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`)
-      .then(response => {
+    await axios
+      .get(`${baseURL}/${idParam}`)
+      .then((response) => {
         setDados(response.data);
       })
       .catch(() => {
@@ -113,45 +128,52 @@ function CadastroValorDiarioMulta() {
     setId(dados.id);
     setValorDia(dados.valorDia);
     setDataHoraAlteracao(dados.dataHoraAlteracao);
-
   }
 
   useEffect(() => {
     if (idParam) {
       buscar();
-    } // eslint-disable-next-line
+    }
+    // eslint-disable-next-line
   }, [id]);
 
   if (!dados) return null;
 
   return (
-    <div className='container'>
-      <Card title='Cadastro de ValorDiarioMulta'>
-        <div className='row'>
-          <div className='col-lg-12'>
-            <div className='bs-component'>
-
-              <FormGroup label='Valor da Multa *' htmlFor='inputValor'>
+    <div className="container">
+      <Card title="Cadastro de ValorDiarioMulta">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="bs-component">
+              <FormGroup label="Valor da Multa *" htmlFor="inputValor">
                 <input
-                  type='text'
-                  maxLength='30'
-                  id='inputValor'
+                  type="text"
+                  maxLength="30"
+                  id="inputValor"
                   value={valorDia}
-                  className='form-control'
-                  name='valorDia'
+                  className="form-control"
+                  name="valorDia"
                   onChange={(e) => setValorDia(e.target.value)}
                 />
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction="row">
-                <button onClick={salvar} type="button" className="btn btn-success">
+                <button
+                  onClick={salvar}
+                  type="button"
+                  className="btn btn-success"
+                >
                   Salvar
                 </button>
-                <button onClick={voltar} type="button" className="btn btn-danger">
+
+                <button
+                  onClick={voltar}
+                  type="button"
+                  className="btn btn-danger"
+                >
                   Cancelar
                 </button>
               </Stack>
-
             </div>
           </div>
         </div>
