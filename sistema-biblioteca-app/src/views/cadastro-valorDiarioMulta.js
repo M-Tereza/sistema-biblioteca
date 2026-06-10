@@ -27,7 +27,7 @@ function CadastroValorDiarioMulta() {
   const navigate = useNavigate();
 
   const [id, setId] = useState("");
-  const [valorDia, setValorDia] = useState("");
+  const [valorDia, setValorDia] = useState(0);
   const [dataHoraAlteracao, setDataHoraAlteracao] = useState("");
 
   const [dados, setDados] = React.useState([]);
@@ -35,7 +35,7 @@ function CadastroValorDiarioMulta() {
   function inicializar() {
     if (idParam == null) {
       setId("");
-      setValorDia(0.0);
+      setValorDia(0);
       setDataHoraAlteracao("");
     } else {
       setId(dados.id);
