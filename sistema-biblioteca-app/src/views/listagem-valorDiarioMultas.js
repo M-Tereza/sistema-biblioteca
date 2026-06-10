@@ -36,7 +36,7 @@ function ListagemValorDiarioMultas() {
             className="btn btn-warning"
             onClick={cadastrar}
           >
-            Cadastrar Novo Valor Diário para Multa
+            Novo Valor Diário para Multa
           </button>
         </div>
 

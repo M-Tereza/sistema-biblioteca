@@ -8,19 +8,19 @@ import { formatarDataHora } from '../utils/formatadores';
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS}/duracaoPadraoEmprestimos`;
+const baseURL = `${API_URLS}/duracaoPadraoReservas`;
 
-function ListagemDuracaoPadraoEmprestimos() {
+function ListagemDuracaoPadraoReservas() {
   const [dados, setDados] = React.useState([]);
 
   React.useEffect(() => {
     axios.get(baseURL)
       .then(res => setDados(res.data || []))
-      .catch(() => mensagemErro('Erro ao carregar durações padrões para empréstimos'));
+      .catch(() => mensagemErro('Erro ao carregar durações padrões para reservas'));
   }, []);
 
   const cadastrar = () => {
-    window.location.href = "/cadastro-duracaoPadraoEmprestimo";
+    window.location.href = "/cadastro-duracaoPadraoReserva";
   };
 
   if (!dados) return null;
@@ -30,13 +30,13 @@ function ListagemDuracaoPadraoEmprestimos() {
 
   return (
     <div className="container">
-      <Card title="Histórico de Durações Padrões para Empréstimos">
+      <Card title="Histórico de Durações Padrões para Reservas">
         <div className="d-flex mb-3">
           <button
             className="btn btn-warning"
             onClick={cadastrar}
           >
-            Nova Duração para Empréstimos
+            Nova Duração para Reservas
           </button>
         </div>
 
@@ -59,7 +59,7 @@ function ListagemDuracaoPadraoEmprestimos() {
             ) : (
               <tr>
                 <td colSpan="2" className="text-center">
-                  Nenhuma duração para empréstimos encontrada
+                  Nenhuma duração para reservas encontrada
                 </td>
               </tr>
             )}
@@ -70,4 +70,4 @@ function ListagemDuracaoPadraoEmprestimos() {
   );
 }
 
-export default ListagemDuracaoPadraoEmprestimos;
+export default ListagemDuracaoPadraoReservas;
