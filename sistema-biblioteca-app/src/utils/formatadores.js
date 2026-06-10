@@ -37,3 +37,11 @@ export const normalizarStringValorMonetario = (stringValor) => {
     return stringValor;
 };
 
+// function gerarNomePadronizado(texto) {
+//     return texto
+//       .normalize("NFD")
+//       .replace(/[\u0300-\u036f]/g, "")
+//       .toLowerCase()
+//       .replace(/[^a-z0-9]/g, "")
+//       .trim();
+//   }
