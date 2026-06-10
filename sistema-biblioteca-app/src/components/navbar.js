@@ -39,7 +39,7 @@ function Navbar(props) {
           <ul className="navbar-nav">
             <NavbarItem
               render="true"
-              href="/listagem-multas"
+              href="/listagem-valorDiarioMultas"
               label="Multas" />
           </ul>
           <ul className="navbar-nav">

@@ -13,39 +13,62 @@ import Card from "../components/card";
 import FormGroup from "../components/form-group";
 
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
+import { normalizarStringValorMonetario } from '../utils/formatadores';
 
 import "../custom.css";
 
 import axios from 'axios';
 import { API_URLS } from "../config/axios";
 
-const baseURL = `${API_URLS}/multas`;
+const baseURL = `${API_URLS}/valorDiarioMultas`;
 
-function CadastroMulta() {
+function CadastroValorDiarioMulta() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
   const [id, setId] = useState('');
-  const [nome, setNome] = useState('');
+  const [valorDia, setValorDia] = useState('');
+  const [dataHoraAlteracao, setDataHoraAlteracao] = useState('');
 
-  const [dados, setDados] = React.useState([]); 
+  const [dados, setDados] = React.useState([]);
 
   function inicializar() {
     if (idParam == null) {
       setId('');
-      setNome('');
+      setValorDia(0.00);
+      setDataHoraAlteracao('');
     } else {
       setId(dados.id);
-      setNome(dados.nome);
+      setValorDia(dados.valorDia);
+      setDataHoraAlteracao(dados.dataHoraAlteracao);
     }
   }
 
   const voltar = () => {
-    navigate(`/listagem-multas`);
+    navigate(`/listagem-valorDiarioMultas`);
   };
 
   async function salvar() {
-    let data = { id, nome };
+
+    const valorDiaNormalizado = normalizarStringValorMonetario(valorDia);
+
+    if (valorDiaNormalizado == null) {
+      mensagemErro("Informe um valor monetário válido.");
+      return;
+    }
+
+    const partes = valorDiaNormalizado.split(".");
+
+    if (partes.length > 1 && partes[1].length > 2) {
+      mensagemErro("Informe um valor com no máximo 2 casas decimais.");
+      return;
+    }
+
+    let data = {
+      id,
+      valorDia: parseFloat(valorDiaNormalizado),
+      dataHoraAlteracao
+    };
 
     data = JSON.stringify(data);
 
@@ -54,18 +77,26 @@ function CadastroMulta() {
         await axios.post(baseURL, data, {
           headers: { "Content-Type": "application/json" }
         });
-        mensagemSucesso(`Multa ${nome} cadastrada com sucesso!`);
+
+        mensagemSucesso(
+          `Valor diario para multas alterado para R$ ${Number(valorDiaNormalizado).toFixed(2)} com sucesso!`
+        );
       } else {
         await axios.put(`${baseURL}/${idParam}`, data, {
           headers: { "Content-Type": "application/json" }
         });
-        mensagemSucesso(`Multa ${nome} alterada com sucesso!`);
+
+        mensagemSucesso(
+          `Valor diario para multas alterado para R$ ${Number(valorDiaNormalizado).toFixed(2)} com sucesso!`
+        );
       }
 
-      navigate("/listagem-multas");
+      navigate("/listagem-valorDiarioMultas");
 
     } catch (error) {
-      mensagemErro(error.response?.data || "Erro ao salvar multa.");
+      mensagemErro(
+        error.response?.data || "Erro ao salvar valor diario para multas."
+      );
     }
   }
 
@@ -76,40 +107,42 @@ function CadastroMulta() {
         setDados(response.data);
       })
       .catch(() => {
-        mensagemErro("Erro ao buscar multa.");
+        mensagemErro("Erro ao buscar valor diario para multas.");
       });
 
     setId(dados.id);
-    setNome(dados.nome);
+    setValorDia(dados.valorDia);
+    setDataHoraAlteracao(dados.dataHoraAlteracao);
+
   }
 
   useEffect(() => {
-        if (idParam) {
-          buscar();
-        } // eslint-disable-next-line
-      }, [id]);
+    if (idParam) {
+      buscar();
+    } // eslint-disable-next-line
+  }, [id]);
 
   if (!dados) return null;
 
   return (
     <div className='container'>
-      <Card title='Cadastro de Multa'>
+      <Card title='Cadastro de ValorDiarioMulta'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              
+
               <FormGroup label='Valor da Multa *' htmlFor='inputValor'>
                 <input
                   type='text'
                   maxLength='30'
                   id='inputValor'
-                  value={nome}
+                  value={valorDia}
                   className='form-control'
-                  name='nome'
-                  onChange={(e) => setNome(e.target.value)}
+                  name='valorDia'
+                  onChange={(e) => setValorDia(e.target.value)}
                 />
               </FormGroup>
-              
+
               <Stack spacing={1} padding={1} direction="row">
                 <button onClick={salvar} type="button" className="btn btn-success">
                   Salvar
@@ -127,4 +160,4 @@ function CadastroMulta() {
   );
 }
 
-export default CadastroMulta;
+export default CadastroValorDiarioMulta;

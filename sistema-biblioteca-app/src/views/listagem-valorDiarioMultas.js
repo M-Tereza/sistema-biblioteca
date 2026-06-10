@@ -8,32 +8,32 @@ import { formatarDataHora } from '../utils/formatadores';
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-const VALORES_MULTAS_URL = `${API_URLS}/valorDiarioMultas`;
+const baseURL = `${API_URLS}/valorDiarioMultas`;
 
-function ListagemMultas() {
+function ListagemValorDiarioMultas() {
   const [dados, setDados] = React.useState([]);
 
   React.useEffect(() => {
-    axios.get(VALORES_MULTAS_URL)
+    axios.get(baseURL)
       .then(res => setDados(res.data || []))
-      .catch(() => mensagemErro('Erro ao carregar valores diários das multas'));
+      .catch(() => mensagemErro('Erro ao carregar valores diários para multas'));
   }, []);
 
   const cadastrar = () => {
-    window.location.href = "/cadastro-multa";
+    window.location.href = "/cadastro-valorDiarioMulta";
   };
 
   if (!dados) return null;
 
   return (
     <div className="container">
-      <Card title="Listagem de Valores Diários das Multas">
+      <Card title="Histórico de Valores Diários para Multas">
         <div className="d-flex mb-3">
           <button
             className="btn btn-warning"
             onClick={cadastrar}
           >
-            Cadastrar Multa
+            Cadastrar Novo Valor Diário para Multa
           </button>
         </div>
 
@@ -54,7 +54,7 @@ function ListagemMultas() {
               ))
             ) : (
               <tr>
-                <td colSpan="2" className="text-center">Nenhum valor diário cadastrado</td>
+                <td colSpan="2" className="text-center">Nenhum valor diário para multas cadastrado</td>
               </tr>
             )}
           </tbody>
@@ -64,4 +64,4 @@ function ListagemMultas() {
   );
 }
 
-export default ListagemMultas;
+export default ListagemValorDiarioMultas;

@@ -2,7 +2,7 @@ import React from 'react';
 
 import ListagemClientes from './views/listagem-clientes';
 //import ListagemExemplares from './views/listagem-exemplares';
-import ListagemMultas from './views/listagem-multas';
+import ListagemValorDiarioMultas from './views/listagem-valorDiarioMultas';
 import ListagemObras from './views/listagem-obras';
 import ListagemGeneros from './views/listagem-generos';
 import ListagemIdiomas from './views/listagem-idiomas';
@@ -14,7 +14,7 @@ import ListagemEmprestimos from './views/listagem-emprestimos';
 import CadastroCliente from './views/cadastro-cliente';
 import CadastroObra from './views/cadastro-obra';
 import CadastroExemplar from './views/cadastro-exemplar';
-import CadastroMulta from './views/cadastro-multa';
+import CadastroValorDiarioMulta from './views/cadastro-valorDiarioMulta';
 import CadastroGenero from './views/cadastro-genero';
 import CadastroSecao from './views/cadastro-secao';
 import CadastroIdioma from './views/cadastro-idioma';
@@ -45,7 +45,7 @@ function Rotas(props) {
         <Route path='/cadastro-cliente/:idParam?' element={<CadastroCliente />} />
         <Route path='/cadastro-obra/:idParam?' element={<CadastroObra />} />
         <Route path='/cadastro-exemplar/:idParam?' element={<CadastroExemplar />} />
-        <Route path='/cadastro-multa/:idParam?' element={<CadastroMulta />} />
+        <Route path='/cadastro-valorDiarioMulta/:idParam?' element={<CadastroValorDiarioMulta />} />
         <Route path='/cadastro-genero/:idParam?' element={<CadastroGenero />} />
         <Route path='/cadastro-idioma/:idParam?' element={<CadastroIdioma />} />
         <Route path='/cadastro-secao/:idParam?' element={<CadastroSecao />} />
@@ -56,7 +56,7 @@ function Rotas(props) {
         <Route path='/listagem-clientes' element={<ListagemClientes />} />
         <Route path='/listagem-obras' element={<ListagemObras />} />
         {/* <Route path='/listagem-exemplares' element={<ListagemExemplares />} /> */}
-        <Route path='/listagem-multas' element={<ListagemMultas />} />
+        <Route path='/listagem-valorDiarioMultas' element={<ListagemValorDiarioMultas />} />
         <Route path='/listagem-generos' element={<ListagemGeneros />} />
         <Route path='/listagem-idiomas' element={<ListagemIdiomas />} />
         <Route path='/listagem-secoes' element={<ListagemSecoes />} />
