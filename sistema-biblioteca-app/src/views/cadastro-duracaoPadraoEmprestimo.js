@@ -26,7 +26,7 @@ function CadastroDuracaoPadraoEmprestimo() {
   const navigate = useNavigate();
 
   const [id, setId] = useState("");
-  const [diasUteis, setDiasUteis] = useState("");
+  const [diasUteis, setDiasUteis] = useState(0);
   const [dataHoraAlteracao, setDataHoraAlteracao] = useState("");
 
   const [dados, setDados] = React.useState([]);
@@ -34,7 +34,7 @@ function CadastroDuracaoPadraoEmprestimo() {
   function inicializar() {
     if (idParam == null) {
       setId("");
-      setDiasUteis("");
+      setDiasUteis(0);
       setDataHoraAlteracao("");
     } else {
       setId(dados.id);
@@ -49,26 +49,46 @@ function CadastroDuracaoPadraoEmprestimo() {
 
   async function salvar() {
 
-    if (
-      diasUteis === "" ||
-      !Number.isInteger(diasUteis) ||
-      diasUteis <= 0
+    if (diasUteis === "" || !Number.isInteger(diasUteis) || diasUteis <= 0
     ) {
       mensagemErro("Informe uma quantidade de dias úteis maior que zero.");
       return;
     }
 
-    const data = { id, diasUteis, dataHoraAlteracao, };
-
     try {
+      const resposta = await axios.get(baseURL);
+
+      const ultimoValor = [...(resposta.data || [])]
+        .sort((a, b) => b.id - a.id)[0];
+
+      if (
+        ultimoValor &&
+        ultimoValor.diasUteis === diasUteis
+      ) {
+        mensagemErro("O valor informado já é a duração padrão  vigente.");
+        return;
+      }
+
+      let data = { id, diasUteis, dataHoraAlteracao };
+
+      data = JSON.stringify(data);
+
       if (idParam == null) {
-        await axios.post(baseURL, data);
+        console.log(data);
+        console.log(typeof diasUteis);
+        await axios.post(baseURL, data, {
+          headers: { "Content-Type": "application/json" }
+        });
 
         mensagemSucesso(
           `Duração padrão alterada para ${diasUteis} dias úteis com sucesso!`
         );
       } else {
-        await axios.put(`${baseURL}/${idParam}`, data);
+        console.log(data);
+        console.log(typeof diasUteis);
+        await axios.put(`${baseURL}/${idParam}`, data, {
+          headers: { "Content-Type": "application/json" }
+        });
 
         mensagemSucesso(
           `Duração padrão alterada para ${diasUteis} dias úteis com sucesso!`
@@ -78,25 +98,24 @@ function CadastroDuracaoPadraoEmprestimo() {
       navigate("/listagem-duracaoPadraoEmprestimos");
     } catch (error) {
       mensagemErro(
-        error.response?.data ||
-          "Erro ao salvar valor diário para empréstimos."
+        error.response?.data || "Erro ao salvar valor diário para empréstimos."
       );
     }
   }
 
   async function buscar() {
-    try {
-      const response = await axios.get(`${baseURL}/${idParam}`);
+    await axios
+      .get(`${baseURL}/${idParam}`)
+      .then((response) => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro("Erro ao buscar duração padrão para empréstimos.");
+      });
 
-      const dados = response.data;
-
-      setDados(dados);
-      setId(dados.id);
-      setDiasUteis(dados.diasUteis);
-      setDataHoraAlteracao(dados.dataHoraAlteracao);
-    } catch (error) {
-      mensagemErro("Erro ao buscar valor diário para empréstimos.");
-    }
+    setId(dados.id);
+    setDiasUteis(dados.diasUteis);
+    setDataHoraAlteracao(dados.dataHoraAlteracao);
   }
 
   useEffect(() => {

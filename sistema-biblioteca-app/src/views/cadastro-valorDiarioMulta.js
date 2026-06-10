@@ -49,6 +49,7 @@ function CadastroValorDiarioMulta() {
   };
 
   async function salvar() {
+    
     const valorDiaNormalizado = normalizarStringValorMonetario(valorDia);
 
     if (valorDiaNormalizado == null) {
