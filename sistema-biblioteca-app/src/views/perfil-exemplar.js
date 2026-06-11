@@ -5,7 +5,6 @@ import Card from "../components/card";
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 import { Button, Stack, IconButton } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBack";
@@ -21,96 +20,73 @@ import { API_URLS } from "../config/axios";
 import { formatarData } from "../utils/formatadores";
 
 const exemplaresURL = `${API_URLS}/exemplares`;
-const obrasURL = `${API_URLS}/obras`;
-const secoesURL = `${API_URLS}/secoes`;
 const clientesURL = `${API_URLS}/clientes`;
 const emprestimosURL = `${API_URLS}/emprestimos`;
 
 function PerfilExemplar() {
+
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [exemplar, setExemplar] = useState(null);
-  const [obra, setObra] = useState(null);
-  const [secao, setSecao] = useState(null);
-
   const [clientes, setClientes] = useState([]);
   const [emprestimos, setEmprestimos] = useState([]);
-
   const [openExcluir, setOpenExcluir] = useState(false);
 
   useEffect(() => {
+
     axios.get(`${exemplaresURL}/${id}`)
       .then((res) => setExemplar(res.data))
       .catch(() => mensagemErro("Erro ao carregar exemplar"));
 
-    axios.get(secoesURL)
-      .then((res) => setSecao(res.data))
-      .catch(() => setSecao([]));
-
-    axios.get(obrasURL)
-      .then((res) => setObra(res.data))
-      .catch(() => setObra(null));
-
     axios.get(clientesURL)
       .then((res) => setClientes(res.data))
       .catch(() => setClientes([]));
+
   }, [id]);
 
-
   useEffect(() => {
+
     if (!exemplar) return;
 
     axios.get(emprestimosURL)
-      .then((res) => {
-        const filtrados = res.data.filter(e => e.idExemplar === exemplar.id);
-        setEmprestimos(filtrados);
-      })
+      .then((res) => setEmprestimos(res.data.filter((e) => e.idExemplar === exemplar.id)))
       .catch(() => setEmprestimos([]));
+
   }, [exemplar]);
 
-  const nomeObra = () => {
-    if (!obra || !exemplar) return "Obra não encontrada";
-    const o = obra.find((o) => o.id === exemplar.idObra);
-    return o ? o.titulo : "Obra não encontrada";
-  };
-
-  const nomeSecao = () => {
-    if (!secao || !exemplar) return "Seção não informada";
-    const s = secao.find((s) => s.id === exemplar.idSecao);
-    return s ? s.nome : "Seção não informada";
-  };
-
   const nomeCliente = (idCliente) => {
-    const c = clientes.find((c) => c.id === idCliente);
-    return c ? c.nome : "Cliente não encontrado";
-  };
-
-  const statusExemplar = () => {
-    if (!exemplar) return "Indefinido";
-    if (exemplar.idStatus === 1) return "Disponível";
-    if (exemplar.idStatus === 2) return "Emprestado";
-    return "Indefinido";
+    const cliente = clientes.find((c) => c.id === idCliente);
+    return cliente ? cliente.nome : "Cliente não encontrado";
   };
 
   const excluir = async () => {
+
     if (!exemplar) return;
+
     try {
+
       await axios.delete(`${exemplaresURL}/${exemplar.id}`);
+
       mensagemSucesso("Exemplar excluído com sucesso!");
-      navigate(-1);
+
+      navigate(`/perfil-obra/${exemplar.idObra}`);
+
     } catch {
+
       mensagemErro("Erro ao excluir exemplar");
+
     } finally {
+
       setOpenExcluir(false);
+
     }
+
   };
 
-  const editar = () => {
-    navigate(`/edicao-exemplar/${exemplar.id}`);
-  };
+  const editar = () => navigate(`/cadastro-exemplar/${exemplar.id}`);
 
-  const voltar = () => navigate(-1);
+  const voltar = () => navigate(`/perfil-obra/${exemplar.idObra}`);
 
   if (!exemplar) return null;
 
@@ -129,12 +105,25 @@ function PerfilExemplar() {
           </Stack>
         }
       >
+
         <table className="table table-bordered mb-2">
           <tbody>
-            <tr><th>Código</th><td>{exemplar.id}</td></tr>
-            <tr><th>Status</th><td>{statusExemplar()}</td></tr>
-            <tr><th>Seção</th><td>{nomeSecao()}</td></tr>
-            <tr><th>Obra</th><td>{nomeObra()}</td></tr>
+            <tr>
+              <th>Código</th>
+              <td>{exemplar.id}</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td>{exemplar.nomeStatusExemplar}</td>
+            </tr>
+            <tr>
+              <th>Seção</th>
+              <td>{exemplar.nomeSecao || "Seção não informada"}</td>
+            </tr>
+            <tr>
+              <th>Obra</th>
+              <td>{exemplar.tituloObra}</td>
+            </tr>
           </tbody>
         </table>
 
@@ -148,6 +137,7 @@ function PerfilExemplar() {
         </Stack>
 
         <h4>Histórico de Clientes</h4>
+
         {emprestimosAtivos.length + emprestimosFinalizados.length === 0 ? (
           <p>Nenhum cliente realizou empréstimo deste exemplar.</p>
         ) : (
@@ -187,11 +177,10 @@ function PerfilExemplar() {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpenExcluir(false)}>Cancelar</Button>
-            <Button color="error" variant="contained" onClick={excluir}>
-              Excluir
-            </Button>
+            <Button color="error" variant="contained" onClick={excluir}>Excluir</Button>
           </DialogActions>
         </Dialog>
+
       </Card>
     </div>
   );
