@@ -120,15 +120,6 @@ function Navbar(props) {
                 <li>
                   <a
                     className="dropdown-item"
-                    href="/listagem-secoes"
-                  >
-                    Seções
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="dropdown-item"
                     href="/listagem-editoras"
                   >
                     Editoras
@@ -141,6 +132,15 @@ function Navbar(props) {
                     href="/listagem-generos"
                   >
                     Gêneros
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    className="dropdown-item"
+                    href="/listagem-secoes"
+                  >
+                    Seções
                   </a>
                 </li>
               </ul>

@@ -2,16 +2,12 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import Card from "../components/card";
-import { mensagemSucesso, mensagemErro } from "../components/toastr";
+import { mensagemSucesso, mensagemErro} from "../components/toastr";
 
 import axios from "../config/axios";
 import { API_URLS } from "../config/axios";
 
-import {
-  Button,
-  Stack,
-  IconButton
-} from "@mui/material";
+import { Button, Stack, IconButton } from "@mui/material";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,141 +17,324 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBack';
 
 const obrasURL = `${API_URLS}/obras`;
 const exemplaresURL = `${API_URLS}/exemplares`;
-const autoresURL = `${API_URLS}/autores`;
-const editorasURL = `${API_URLS}/editoras`;
 const secoesURL = `${API_URLS}/secoes`;
 
 function PerfilObra() {
+
   const { id } = useParams();
   const navigate = useNavigate();
+  const voltar = () => navigate("/listagem-obras");
 
-  const [obra, setObra] = React.useState(null);
-  const [autor, setAutor] = React.useState(null);
-  const [editora, setEditora] = React.useState(null);
-  const [exemplares, setExemplares] = React.useState([]);
-  const [secoes, setSecoes] = React.useState([]);
+  const [obra, setObra] =
+    React.useState(null);
 
-  const [openExcluirObra, setOpenExcluirObra] = React.useState(false);
-  const [openExcluirExemplar, setOpenExcluirExemplar] = React.useState(false);
-  const [exemplarSelecionado, setExemplarSelecionado] = React.useState(null);
+  const [exemplares, setExemplares] =
+    React.useState([]);
+
+  const [secoes, setSecoes] =
+    React.useState([]);
+
+  const [openExcluirObra,
+    setOpenExcluirObra] =
+    React.useState(false);
+
+  const [openExcluirExemplar,
+    setOpenExcluirExemplar] =
+    React.useState(false);
+
+  const [exemplarSelecionado,
+    setExemplarSelecionado] =
+    React.useState(null);
 
   React.useEffect(() => {
-    axios.get(`${obrasURL}/${id}`).then((res) => {
-      setObra(res.data);
-
-      if (res.data.idAutor) {
-        axios
-          .get(`${autoresURL}/${res.data.idAutor}`)
-          .then((r) => setAutor(r.data))
-          .catch(() => setAutor(null));
-      }
-
-      if (res.data.idEditora) {
-        axios
-          .get(`${editorasURL}/${res.data.idEditora}`)
-          .then((r) => setEditora(r.data))
-          .catch(() => setEditora(null));
-      }
-    });
 
     axios
-      .get(`${exemplaresURL}?idObra=${id}`)
-      .then((res) => setExemplares(res.data || []));
+      .get(`${obrasURL}/${id}`)
+      .then((res) => {
+        setObra(res.data);
+      })
+      .catch(() => {
+        mensagemErro(
+          "Erro ao carregar obra."
+        );
+      });
 
-    axios.get(secoesURL).then((res) => setSecoes(res.data || []));
+    axios
+      .get(
+        `${exemplaresURL}?idObra=${id}`
+      )
+      .then((res) =>
+        setExemplares(
+          res.data || []
+        )
+      )
+      .catch(() => {
+        setExemplares([]);
+      });
+
+    axios
+      .get(secoesURL)
+      .then((res) =>
+        setSecoes(
+          res.data || []
+        )
+      )
+      .catch(() => {
+        setSecoes([]);
+      });
+
   }, [id]);
 
-  const nomeSecao = (idSecao) => {
-    const secao = secoes.find((s) => s.id === idSecao);
-    return secao ? secao.nome : "Seção não cadastrada";
+  const nomeSecao = (
+    idSecao
+  ) => {
+
+    const secao =
+      secoes.find(
+        (s) => s.id === idSecao
+      );
+
+    return secao
+      ? secao.nome
+      : "Seção não cadastrada";
   };
 
-  const nomeStatus = (status) => {
-    if (status === 1) return "Disponível";
-    if (status === 2) return "Emprestado";
+  const nomeStatus = (
+    status
+  ) => {
+
+    if (status === 1)
+      return "Disponível";
+
+    if (status === 2)
+      return "Emprestado";
+
     return "Indefinido";
   };
 
-  const editar = () => navigate(`/cadastro-obra/${id}`);
-  const cadastrarExemplar = () =>
-    navigate(`/cadastro-exemplar/${obra.id}`);
+  const editar = () =>
+    navigate(
+      `/cadastro-obra/${id}`
+    );
 
-  const verExemplar = (idExemplar) =>
-    navigate(`/perfil-exemplar/${idExemplar}`);
+  const cadastrarExemplar = () =>
+    navigate(
+      `/cadastro-exemplar/${obra.id}`
+    );
+
+  const verExemplar = (
+    idExemplar
+  ) =>
+    navigate(
+      `/perfil-exemplar/${idExemplar}`
+    );
 
   const excluirObra = async () => {
-    await axios
-      .delete(`${obrasURL}/${id}`)
-      .then(() => {
-        mensagemSucesso("Obra excluída com sucesso!");
-        navigate("/listagem-obras");
-      })
-      .catch(() => mensagemErro("Erro ao excluir a obra"))
-      .finally(() => setOpenExcluirObra(false));
-  };
-
-  const excluirExemplar = async () => {
-    if (!exemplarSelecionado) return;
 
     await axios
-      .delete(`${exemplaresURL}/${exemplarSelecionado.id}`)
+      .delete(
+        `${obrasURL}/${id}`
+      )
       .then(() => {
-        mensagemSucesso("Exemplar excluído com sucesso!");
-        setExemplares((prev) =>
-          prev.filter((e) => e.id !== exemplarSelecionado.id)
+
+        mensagemSucesso(
+          "Obra excluída com sucesso!"
+        );
+
+        navigate(
+          "/listagem-obras"
         );
       })
-      .catch(() => mensagemErro("Erro ao excluir exemplar"))
-      .finally(() => {
-        setOpenExcluirExemplar(false);
-        setExemplarSelecionado(null);
-      });
+      .catch(() =>
+        mensagemErro(
+          "Erro ao excluir a obra"
+        )
+      )
+      .finally(() =>
+        setOpenExcluirObra(
+          false
+        )
+      );
   };
+
+  const excluirExemplar =
+    async () => {
+
+      if (
+        !exemplarSelecionado
+      ) return;
+
+      await axios
+        .delete(
+          `${exemplaresURL}/${exemplarSelecionado.id}`
+        )
+        .then(() => {
+
+          mensagemSucesso(
+            "Exemplar excluído com sucesso!"
+          );
+
+          setExemplares(
+            (prev) =>
+              prev.filter(
+                (e) =>
+                  e.id !==
+                  exemplarSelecionado.id
+              )
+          );
+        })
+        .catch(() =>
+          mensagemErro(
+            "Erro ao excluir exemplar"
+          )
+        )
+        .finally(() => {
+
+          setOpenExcluirExemplar(
+            false
+          );
+
+          setExemplarSelecionado(
+            null
+          );
+        });
+    };
 
   if (!obra) return null;
 
   return (
     <div className="container">
-      <Card title="Perfil da Obra">
-        <p><strong>Código:</strong> {obra.id}</p>
-        <p><strong>Título:</strong> {obra.titulo}</p>
-        <p><strong>ISBN:</strong> {obra.isbn}</p>
-        <p><strong>Edição:</strong> {obra.edicao}</p>
-        <p><strong>Autor:</strong> {autor?.nome || "Autor não cadastrado"}</p>
-        <p><strong>Editora:</strong> {editora?.nome || "Editora não cadastrada"}</p>
 
-        <Stack direction="row" spacing={2} mt={3}>
-          <Button variant="contained" onClick={editar}>
+      <Card title={
+        <Stack direction="row" spacing={1} alignItems="left">
+          <IconButton aria-label="voltar" onClick={voltar}>
+            <ArrowBackIosIcon />
+          </IconButton>
+          <span>Perfil da Obra</span>
+        </Stack>
+      }>
+
+        <p>
+          <strong>Código:</strong>{" "}
+          {obra.id}
+        </p>
+
+        <p>
+          <strong>Título:</strong>{" "}
+          {obra.titulo}
+        </p>
+
+        <p>
+          <strong>ISBN:</strong>{" "}
+          {obra.isbn}
+        </p>
+
+        <p>
+          <strong>Edição:</strong>{" "}
+          {obra.edicao}
+        </p>
+
+        <p>
+          <strong>Autores:</strong>{" "}
+          {
+            obra.autores &&
+            obra.autores.length > 0
+              ? obra.autores.join(
+                  ", "
+                )
+              : "Nenhum autor cadastrado"
+          }
+        </p>
+
+        <p>
+          <strong>Editoras:</strong>{" "}
+          {
+            obra.editoras &&
+            obra.editoras.length > 0
+              ? obra.editoras.join(
+                  ", "
+                )
+              : "Nenhuma editora cadastrada"
+          }
+        </p>
+
+        <p>
+          <strong>Gêneros:</strong>{" "}
+          {
+            obra.generos &&
+            obra.generos.length > 0
+              ? obra.generos.join(
+                  ", "
+                )
+              : "Nenhum gênero cadastrado"
+          }
+        </p>
+
+        <p>
+          <strong>Idiomas:</strong>{" "}
+          {
+            obra.idiomas &&
+            obra.idiomas.length > 0
+              ? obra.idiomas.join(
+                  ", "
+                )
+              : "Nenhum idioma cadastrado"
+          }
+        </p>
+
+        <Stack
+          direction="row"
+          spacing={2}
+          mt={3}
+        >
+
+          <Button
+            variant="contained"
+            onClick={editar}
+          >
             Editar
           </Button>
 
           <Button
             variant="contained"
             color="error"
-            onClick={() => setOpenExcluirObra(true)}
+            onClick={() =>
+              setOpenExcluirObra(
+                true
+              )
+            }
           >
             Excluir Obra
           </Button>
+
         </Stack>
 
         <hr />
 
         <div className="d-flex justify-content-between align-items-center mt-4">
-          <h5>Exemplares</h5>
+
+          <h5>
+            Exemplares
+          </h5>
 
           <Button
             variant="contained"
             color="warning"
-            onClick={cadastrarExemplar}
+            onClick={
+              cadastrarExemplar
+            }
           >
             Novo Exemplar
           </Button>
+
         </div>
 
         <table className="table table-hover mt-3">
+
           <thead>
             <tr>
               <th>ID</th>
@@ -166,78 +345,200 @@ function PerfilObra() {
           </thead>
 
           <tbody>
-            {exemplares.length > 0 ? (
-              exemplares.map((ex) => (
-                <tr key={ex.id}>
-                  <td>{ex.id}</td>
-                  <td>{nomeStatus(ex.idStatus)}</td>
-                  <td>{nomeSecao(ex.idSecao)}</td>
-                  <td>
-                    <IconButton onClick={() => verExemplar(ex.id)}>
-                      <VisibilityIcon />
-                    </IconButton>
 
-                    <IconButton
-                      onClick={() => {
-                        setExemplarSelecionado(ex);
-                        setOpenExcluirExemplar(true);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </td>
-                </tr>
-              ))
+            {exemplares.length > 0 ? (
+
+              exemplares.map(
+                (ex) => (
+
+                  <tr key={ex.id}>
+
+                    <td>
+                      {ex.id}
+                    </td>
+
+                    <td>
+                      {nomeStatus(
+                        ex.idStatus
+                      )}
+                    </td>
+
+                    <td>
+                      {nomeSecao(
+                        ex.idSecao
+                      )}
+                    </td>
+
+                    <td>
+
+                      <IconButton
+                        onClick={() =>
+                          verExemplar(
+                            ex.id
+                          )
+                        }
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+
+                      <IconButton
+                        onClick={() => {
+
+                          setExemplarSelecionado(
+                            ex
+                          );
+
+                          setOpenExcluirExemplar(
+                            true
+                          );
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+
+                    </td>
+
+                  </tr>
+                )
+              )
+
             ) : (
+
               <tr>
-                <td colSpan="4" className="text-center">
-                  Nenhum exemplar cadastrado para esta obra
+
+                <td
+                  colSpan="4"
+                  className="text-center"
+                >
+                  Nenhum exemplar
+                  cadastrado para esta
+                  obra
                 </td>
+
               </tr>
+
             )}
+
           </tbody>
+
         </table>
 
-        {/* Dialog excluir obra */}
-        <Dialog open={openExcluirObra} onClose={() => setOpenExcluirObra(false)}>
-          <DialogTitle>Excluir Obra</DialogTitle>
+        <Dialog
+          open={
+            openExcluirObra
+          }
+          onClose={() =>
+            setOpenExcluirObra(
+              false
+            )
+          }
+        >
+
+          <DialogTitle>
+            Excluir Obra
+          </DialogTitle>
+
           <DialogContent>
+
             <DialogContentText>
-              Tem certeza que deseja excluir a obra{" "}
-              <strong>{obra.titulo}</strong>?
+
+              Tem certeza que deseja
+              excluir a obra{" "}
+
+              <strong>
+                {obra.titulo}
+              </strong>
+              ?
+
             </DialogContentText>
+
           </DialogContent>
+
           <DialogActions>
-            <Button onClick={() => setOpenExcluirObra(false)}>
+
+            <Button
+              onClick={() =>
+                setOpenExcluirObra(
+                  false
+                )
+              }
+            >
               Cancelar
             </Button>
-            <Button color="error" variant="contained" onClick={excluirObra}>
+
+            <Button
+              color="error"
+              variant="contained"
+              onClick={
+                excluirObra
+              }
+            >
               Excluir
             </Button>
+
           </DialogActions>
+
         </Dialog>
 
-        {/* Dialog excluir exemplar */}
         <Dialog
-          open={openExcluirExemplar}
-          onClose={() => setOpenExcluirExemplar(false)}
+          open={
+            openExcluirExemplar
+          }
+          onClose={() =>
+            setOpenExcluirExemplar(
+              false
+            )
+          }
         >
-          <DialogTitle>Excluir Exemplar</DialogTitle>
+
+          <DialogTitle>
+            Excluir Exemplar
+          </DialogTitle>
+
           <DialogContent>
+
             <DialogContentText>
-              Deseja excluir o exemplar de ID{" "}
-              <strong>{exemplarSelecionado?.id}</strong>?
+
+              Deseja excluir o exemplar
+              de ID{" "}
+
+              <strong>
+                {
+                  exemplarSelecionado?.id
+                }
+              </strong>
+              ?
+
             </DialogContentText>
+
           </DialogContent>
+
           <DialogActions>
-            <Button onClick={() => setOpenExcluirExemplar(false)}>
+
+            <Button
+              onClick={() =>
+                setOpenExcluirExemplar(
+                  false
+                )
+              }
+            >
               Cancelar
             </Button>
-            <Button color="error" variant="contained" onClick={excluirExemplar}>
+
+            <Button
+              color="error"
+              variant="contained"
+              onClick={
+                excluirExemplar
+              }
+            >
               Excluir
             </Button>
+
           </DialogActions>
+
         </Dialog>
+
       </Card>
     </div>
   );

@@ -3,146 +3,244 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
-import "dayjs/locale/pt-br";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import Card from "../components/card";
 import FormGroup from "../components/form-group";
 
-import { mensagemSucesso, mensagemErro } from "../components/toastr";
+import {
+  mensagemSucesso,
+  mensagemErro
+} from "../components/toastr";
 
 import "../custom.css";
 
-import axios from 'axios';
+import axios from "axios";
 import { API_URLS } from "../config/axios";
 
 const baseURL = `${API_URLS}/obras`;
 
 function CadastroObra() {
+
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const [id, setId] = useState('');
-  const [titulo, setTitulo] = useState('');
-  const [isbn, setIsbn] = useState('');
-  const [edicao, setEdicao] = useState('');
-  const [idAutor, setIdAutor] = useState('');
-  const [idEditora, setIdEditora] = useState('');
-  const [idGenero, setIdGenero] = useState('');
-  const [idIdioma, setIdIdioma] = useState('');
+  const [id, setId] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [isbn, setIsbn] = useState("");
+  const [edicao, setEdicao] = useState("");
 
-  const [dados, setDados] = React.useState([]);
-  const [dadosAutores, setDadosAutores] = React.useState(null);
-  const [dadosEditoras, setDadosEditoras] = React.useState(null);
-  const [dadosGeneros, setDadosGeneros] = React.useState(null);
-  const [dadosIdiomas, setDadosIdiomas] = React.useState(null);
+  const [autoresIds, setAutoresIds] = useState([]);
+  const [editorasIds, setEditorasIds] = useState([]);
+  const [generosIds, setGenerosIds] = useState([]);
+  const [idiomasIds, setIdiomasIds] = useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setTitulo('');
-      setIsbn('');
-      setEdicao('');
-      setIdAutor('');
-      setIdEditora('');
-      setIdGenero('');
-      setIdIdioma('');
-    } else {
-      setId(dados.id);
-      setTitulo(dados.titulo);
-      setIsbn(dados.isbn);
-      setEdicao(dados.edicao);
-      setIdAutor(dados.idAutor);
-      setIdEditora(dados.idEditora);
-      setIdGenero(dados.idGenero);
-      setIdIdioma(dados.idIdioma);
-    }
-  }
+  const [dadosAutores, setDadosAutores] =
+    useState(null);
+
+  const [dadosEditoras, setDadosEditoras] =
+    useState(null);
+
+  const [dadosGeneros, setDadosGeneros] =
+    useState(null);
+
+  const [dadosIdiomas, setDadosIdiomas] =
+    useState(null);
 
   const voltar = () => {
-    navigate(`/listagem-obras`);
+    navigate("/listagem-obras");
   };
 
   async function salvar() {
-    let data = { id, titulo, isbn, edicao, idAutor, idEditora, idGenero, idIdioma };
 
-    data = JSON.stringify(data);
+    if (!titulo || titulo.trim() === "") {
+      mensagemErro(
+        "O título é obrigatório."
+      );
+      return;
+    }
+
+    if (!isbn || isbn.trim() === "") {
+      mensagemErro(
+        "O ISBN é obrigatório."
+      );
+      return;
+    }
+
+    if (!edicao || edicao.trim() === "") {
+      mensagemErro(
+        "A edição é obrigatória."
+      );
+      return;
+    }
+
+    const data = {
+      id,
+      titulo,
+      isbn,
+      edicao,
+      autoresIds,
+      editorasIds,
+      generosIds,
+      idiomasIds
+    };
 
     try {
+
       if (idParam == null) {
-        await axios.post(baseURL, data, {
-          headers: { "Content-Type": "application/json" }
-        });
-        mensagemSucesso(`Obra ${titulo} cadastrada com sucesso!`);
+
+        await axios.post(
+          baseURL,
+          data,
+          {
+            headers: {
+              "Content-Type":
+                "application/json"
+            }
+          }
+        );
+
+        mensagemSucesso(
+          `Obra ${titulo} cadastrada com sucesso!`
+        );
+
       } else {
-        await axios.put(`${baseURL}/${idParam}`, data, {
-          headers: { "Content-Type": "application/json" }
-        });
-        mensagemSucesso(`Obra ${titulo} alterada com sucesso!`);
+
+        await axios.put(
+          `${baseURL}/${idParam}`,
+          data,
+          {
+            headers: {
+              "Content-Type":
+                "application/json"
+            }
+          }
+        );
+
+        mensagemSucesso(
+          `Obra ${titulo} alterada com sucesso!`
+        );
       }
 
       navigate("/listagem-obras");
 
     } catch (error) {
-      mensagemErro(error.response?.data || "Erro ao salvar obra.");
+
+      mensagemErro(
+        error.response?.data ||
+        "Erro ao salvar obra."
+      );
     }
   }
 
-
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`)
-      .then(response => {
-        setDados(response.data);
-      })
-      .catch(() => {
-        mensagemErro("Erro ao buscar obra.");
-      });
 
-    setId(dados.id);
-    setTitulo(dados.titulo);
-    setIsbn(dados.isbn);
-    setEdicao(dados.edicao);
-    setIdAutor(dados.idAutor);
-    setIdEditora(dados.idEditora);
-    setIdGenero(dados.idGenero);
-    setIdIdioma(dados.idIdioma);
+    try {
+
+      const response =
+        await axios.get(
+          `${baseURL}/${idParam}`
+        );
+
+      const obra =
+        response.data;
+
+      setId(
+        obra.id
+      );
+
+      setTitulo(
+        obra.titulo || ""
+      );
+
+      setIsbn(
+        obra.isbn || ""
+      );
+
+      setEdicao(
+        obra.edicao || ""
+      );
+
+      setAutoresIds(
+        obra.autoresIds || []
+      );
+
+      setEditorasIds(
+        obra.editorasIds || []
+      );
+
+      setGenerosIds(
+        obra.generosIds || []
+      );
+
+      setIdiomasIds(
+        obra.idiomasIds || []
+      );
+
+    } catch {
+
+      mensagemErro(
+        "Erro ao buscar obra."
+      );
+    }
   }
 
   useEffect(() => {
-    axios.get(`${API_URLS}/autores`).then((response) => {
-      setDadosAutores(response.data);
-    });
+
+    axios
+      .get(`${API_URLS}/autores`)
+      .then((response) => {
+        setDadosAutores(
+          response.data
+        );
+      });
+
   }, []);
 
   useEffect(() => {
-    axios.get(`${API_URLS}/editoras`).then((response) => {
-      setDadosEditoras(response.data);
-    });
+
+    axios
+      .get(`${API_URLS}/editoras`)
+      .then((response) => {
+        setDadosEditoras(
+          response.data
+        );
+      });
+
   }, []);
 
   useEffect(() => {
-    axios.get(`${API_URLS}/generos`).then((response) => {
-      setDadosGeneros(response.data);
-    });
+
+    axios
+      .get(`${API_URLS}/generos`)
+      .then((response) => {
+        setDadosGeneros(
+          response.data
+        );
+      });
+
   }, []);
 
   useEffect(() => {
-    axios.get(`${API_URLS}/idiomas`).then((response) => {
-      setDadosIdiomas(response.data);
-    });
+
+    axios
+      .get(`${API_URLS}/idiomas`)
+      .then((response) => {
+        setDadosIdiomas(
+          response.data
+        );
+      });
+
   }, []);
 
-
   useEffect(() => {
-      if (idParam) {
-        buscar();
-      } // eslint-disable-next-line
-    }, [id]);
 
-  if (!dados) return null;
+    if (idParam) {
+      buscar();
+    }
+
+  }, [idParam]);
+
   if (!dadosAutores) return null;
   if (!dadosEditoras) return null;
   if (!dadosGeneros) return null;
@@ -151,22 +249,34 @@ function CadastroObra() {
   return (
     <div className='container'>
       <Card title='Cadastro de Obra'>
+
         <div className='row'>
           <div className='col-lg-12'>
+
             <div className='bs-component'>
-             
-              <FormGroup label='Título: *' htmlFor='inputTitulo'>
+
+              <FormGroup
+                label='Título: *'
+                htmlFor='inputTitulo'
+              >
                 <input
                   type='text'
                   id='inputTitulo'
                   value={titulo}
                   className='form-control'
                   name='titulo'
-                  onChange={(e) => setTitulo(e.target.value)}
+                  onChange={(e) =>
+                    setTitulo(
+                      e.target.value
+                    )
+                  }
                 />
               </FormGroup>
-              
-              <FormGroup label='ISBN: *' htmlFor='inputIsbn'>
+
+              <FormGroup
+                label='ISBN: *'
+                htmlFor='inputIsbn'
+              >
                 <input
                   type='text'
                   maxLength='13'
@@ -174,90 +284,209 @@ function CadastroObra() {
                   value={isbn}
                   className='form-control'
                   name='isbn'
-                  onChange={(e) => setIsbn(e.target.value)}
+                  onChange={(e) =>
+                    setIsbn(
+                      e.target.value
+                    )
+                  }
                 />
               </FormGroup>
-              
-              <FormGroup label='Edição: *' htmlFor='inputEdicao'>
+
+              <FormGroup
+                label='Edição: *'
+                htmlFor='inputEdicao'
+              >
                 <input
                   type='text'
                   id='inputEdicao'
                   value={edicao}
                   className='form-control'
                   name='edicao'
-                  onChange={(e) => setEdicao(e.target.value)}
+                  onChange={(e) =>
+                    setEdicao(
+                      e.target.value
+                    )
+                  }
                 />
               </FormGroup>
-              
-              <FormGroup label='Editora: *' htmlFor='selectEditora'>
-                <select
-                  className='form-select'
-                  id='selectEditora'
-                  name='idEditora'
-                  value={idEditora}
-                  onChange={(e) => setIdEditora(e.target.value)}
-                >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosEditoras.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
-              </FormGroup>
-              
-              <FormGroup label='Genero: *' htmlFor='selectGenero'>
-                <select
-                  className='form-select'
-                  id='selectGenero'
-                  name='idGenero'
-                  value={idGenero}
-                  onChange={(e) => setIdGenero(e.target.value)}
-                >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosGeneros.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
-              </FormGroup>
-              
-              <FormGroup label='Idioma: *' htmlFor='selectIdioma'>
-                <select
-                  className='form-select'
-                  id='selectIdioma'
-                  name='idIdioma'
-                  value={idIdioma}
-                  onChange={(e) => setIdIdioma(e.target.value)}
-                >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosIdiomas.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
+
+              <FormGroup label='Autores:'>
+
+                <Autocomplete
+                  multiple
+                  options={dadosAutores}
+                  getOptionLabel={
+                    (option) =>
+                      option.nome
+                  }
+                  value={
+                    dadosAutores.filter(
+                      (autor) =>
+                        autoresIds.includes(
+                          autor.id
+                        )
+                    )
+                  }
+                  onChange={(
+                    event,
+                    novosValores
+                  ) =>
+                    setAutoresIds(
+                      novosValores.map(
+                        (a) => a.id
+                      )
+                    )
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder='Selecione autores'
+                    />
+                  )}
+                />
+
               </FormGroup>
 
-              <Stack spacing={1} padding={1} direction="row">
-                <button onClick={salvar} type="button" className="btn btn-success">
+              <FormGroup label='Editoras:'>
+
+                <Autocomplete
+                  multiple
+                  options={dadosEditoras}
+                  getOptionLabel={
+                    (option) =>
+                      option.nome
+                  }
+                  value={
+                    dadosEditoras.filter(
+                      (editora) =>
+                        editorasIds.includes(
+                          editora.id
+                        )
+                    )
+                  }
+                  onChange={(
+                    event,
+                    novosValores
+                  ) =>
+                    setEditorasIds(
+                      novosValores.map(
+                        (e) => e.id
+                      )
+                    )
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder='Selecione editoras'
+                    />
+                  )}
+                />
+
+              </FormGroup>
+
+              <FormGroup label='Gêneros:'>
+
+                <Autocomplete
+                  multiple
+                  options={dadosGeneros}
+                  getOptionLabel={
+                    (option) =>
+                      option.nome
+                  }
+                  value={
+                    dadosGeneros.filter(
+                      (genero) =>
+                        generosIds.includes(
+                          genero.id
+                        )
+                    )
+                  }
+                  onChange={(
+                    event,
+                    novosValores
+                  ) =>
+                    setGenerosIds(
+                      novosValores.map(
+                        (g) => g.id
+                      )
+                    )
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder='Selecione gêneros'
+                    />
+                  )}
+                />
+
+              </FormGroup>
+
+              <FormGroup label='Idiomas:'>
+
+                <Autocomplete
+                  multiple
+                  options={dadosIdiomas}
+                  getOptionLabel={
+                    (option) =>
+                      option.nome
+                  }
+                  value={
+                    dadosIdiomas.filter(
+                      (idioma) =>
+                        idiomasIds.includes(
+                          idioma.id
+                        )
+                    )
+                  }
+                  onChange={(
+                    event,
+                    novosValores
+                  ) =>
+                    setIdiomasIds(
+                      novosValores.map(
+                        (i) => i.id
+                      )
+                    )
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder='Selecione idiomas'
+                    />
+                  )}
+                />
+
+              </FormGroup>
+
+              <Stack
+                spacing={1}
+                padding={1}
+                direction="row"
+              >
+
+                <button
+                  onClick={salvar}
+                  type="button"
+                  className="btn btn-success"
+                >
                   Salvar
                 </button>
-                <button onClick={voltar} type="button" className="btn btn-danger">
+
+                <button
+                  onClick={voltar}
+                  type="button"
+                  className="btn btn-danger"
+                >
                   Cancelar
                 </button>
+
               </Stack>
 
             </div>
+
           </div>
         </div>
+
       </Card>
     </div>
   );
