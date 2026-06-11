@@ -5,90 +5,115 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 import { API_URLS } from "../config/axios";
+import { IconButton, Stack } from "@mui/material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBack";
 
-const emprestimosURL = `${API_URLS}/emprestimos`;
-const exemplaresURL = `${API_URLS}/exemplares`;
-const obrasURL = `${API_URLS}/obras`;
-const autoresURL = `${API_URLS}/autores`;
-const editorasURL = `${API_URLS}/editoras`;
+const EMPRESTIMOS_URL = `${API_URLS}/emprestimos`;
+const EXEMPLARES_URL = `${API_URLS}/exemplares`;
+const OBRAS_URL = `${API_URLS}/obras`;
 
 function ConfirmarEmprestimo() {
   const navigate = useNavigate();
-  const { idCliente, idExemplar } = useParams();
+  const { idCliente, idObra, idExemplar } = useParams();
+
+  const voltar = () =>
+    navigate(`/selecionar-exemplar/${idCliente}/${idObra}`);
 
   const [exemplar, setExemplar] = useState(null);
   const [obra, setObra] = useState(null);
-  const [autor, setAutor] = useState(null);
-  const [editora, setEditora] = useState(null);
 
   useEffect(() => {
     async function carregar() {
       try {
-        const exResponse = await axios.get(`${exemplaresURL}/${idExemplar}`);
-        const ex = exResponse.data;
+        const { data: ex } = await axios.get(`${EXEMPLARES_URL}/${idExemplar}`);
         setExemplar(ex);
 
-        const obraResponse = await axios.get(`${obrasURL}/${ex.idObra}`);
-        const obraData = obraResponse.data;
+        const { data: obraData } = await axios.get(`${OBRAS_URL}/${ex.idObra}`);
         setObra(obraData);
-
-        if (obraData.idAutor) {
-          const autorResponse = await axios.get(`${autoresURL}/${obraData.idAutor}`);
-          setAutor(autorResponse.data);
-        }
-
-        if (obraData.idEditora) {
-          const editoraResponse = await axios.get(`${editorasURL}/${obraData.idEditora}`);
-          setEditora(editoraResponse.data);
-        }
-      } catch (error) {
-        mensagemErro("Erro ao carregar dados do exemplar/obra");
+      } catch {
+        mensagemErro("Erro ao carregar dados do exemplar.");
       }
     }
 
     carregar();
   }, [idExemplar]);
 
-  if (!exemplar || !obra || !autor || !editora) return <p>Carregando...</p>;
-
   async function confirmar() {
-    const payload = {
-      idCliente: Number(idCliente),
-      idExemplar: Number(idExemplar),
-      dataEmprestimo: new Date().toISOString().split("T")[0],
-      dataEntrega: null,
-    };
-
     try {
-      await axios.post(emprestimosURL, payload);
+      await axios.post(EMPRESTIMOS_URL, {
+        idCliente: Number(idCliente),
+        idExemplar: Number(idExemplar),
+      });
+
       mensagemSucesso("Empréstimo registrado com sucesso!");
       navigate(`/perfil-cliente/${idCliente}`);
-    } catch (err) {
-      mensagemErro("Erro ao registrar o empréstimo");
+    } catch {
+      mensagemErro("Erro ao registrar o empréstimo.");
     }
+  }
+
+  if (!exemplar || !obra) {
+    return (
+      <div className="container">
+        <p>Carregando...</p>
+      </div>
+    );
   }
 
   return (
     <div className="container">
-      <Card title="Confirmar Empréstimo">
-        <h4>Dados do Exemplar</h4>
+      <Card
+        title={
+          <Stack direction="row" spacing={1} alignItems="center">
+            <IconButton aria-label="voltar" onClick={voltar}>
+              <ArrowBackIosIcon />
+            </IconButton>
+            <span>Confirmar Empréstimo</span>
+          </Stack>
+        }
+      >
+        <h4 className="mb-3">Obra Selecionada</h4>
+
         <table className="table table-bordered mb-4">
           <tbody>
-            <tr>
-              <th>Código</th>
-              <td>{exemplar.id}</td>
-            </tr>
             <tr>
               <th>Título</th>
               <td>{obra.titulo}</td>
             </tr>
             <tr>
-              <th>Autor</th>
-              <td>{autor.nome}</td>
+              <th>Autores</th>
+              <td>{(obra.autores || []).join(", ")}</td>
             </tr>
             <tr>
-              <th>Editora</th>
-              <td>{editora.nome}</td>
+              <th>Editoras</th>
+              <td>{(obra.editoras || []).join(", ")}</td>
+            </tr>
+            <tr>
+              <th>Gêneros</th>
+              <td>{(obra.generos || []).join(", ")}</td>
+            </tr>
+            <tr>
+              <th>Idiomas</th>
+              <td>{(obra.idiomas || []).join(", ")}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4 className="mb-3">Exemplar Selecionado</h4>
+
+        <table className="table table-bordered mb-4">
+          <tbody>
+            <tr>
+              <th>Código do Exemplar</th>
+              <td>{exemplar.id}</td>
+            </tr>
+            <tr>
+              <th>Seção</th>
+              <td>{exemplar.nomeSecao || "-"}</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td>{exemplar.nomeStatusExemplar}</td>
             </tr>
           </tbody>
         </table>
